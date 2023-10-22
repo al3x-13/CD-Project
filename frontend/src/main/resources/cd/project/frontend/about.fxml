@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="400.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #434343;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cd.project.frontend.AboutController">
+   <children>
+      <MenuBar fx:id="menuBar" style="-fx-background-color: #636363;">
+         <menus>
+            <Menu mnemonicParsing="false" text="Application">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleMenuAbout" text="About" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+      <Label alignment="CENTER" prefHeight="88.0" prefWidth="422.0" text="Distributed Computing Project" textAlignment="CENTER" textFill="#14c777" wrapText="true">
+         <font>
+            <Font name="System Bold" size="30.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="120.0" />
+         </VBox.margin>
+      </Label>
+      <Label text="Made by" textFill="#14c777">
+         <VBox.margin>
+            <Insets top="50.0" />
+         </VBox.margin>
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <VBox alignment="CENTER">
+         <children>
+            <Text fill="#14c777" strokeType="OUTSIDE" strokeWidth="0.0" text="Alexandre Marques - a22202130">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Text>
+            <Text fill="#14c777" strokeType="OUTSIDE" strokeWidth="0.0" text="Antonio Antunes - a22202276">
+               <font>
+                  <Font size="17.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Text>
+         </children>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </VBox>
+   </children>
+</VBox>

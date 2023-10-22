@@ -1,8 +1,10 @@
 package cd.project.frontend;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 
@@ -35,5 +37,11 @@ public class HomeController {
     @FXML
     private void handleSubmit() {
         testLabel.setText("user: " + username.getText() + ", pw: " + password.getText());
+    }
+
+    @FXML
+    private void handleMenuAbout() {
+        Router router = new Router();
+        router.navigateToAbout();
     }
 }
