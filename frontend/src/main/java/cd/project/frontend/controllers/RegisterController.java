@@ -1,5 +1,6 @@
 package cd.project.frontend.controllers;
 
+import cd.project.frontend.Router;
 import cd.project.frontend.components.AppMenu;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,6 +21,8 @@ public class RegisterController implements Initializable {
     private TextField password;
     @FXML
     private Button submit;
+    @FXML
+    private Button home;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -38,6 +41,8 @@ public class RegisterController implements Initializable {
         });
 
         submit.setOnAction(actionEvent -> handleSubmit());
+
+        home.setOnAction(actionEvent -> Router.navigateToHome());
     }
 
     private void handleSubmit() {

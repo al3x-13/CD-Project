@@ -1,5 +1,6 @@
 package cd.project.frontend.controllers;
 
+import cd.project.frontend.Router;
 import cd.project.frontend.components.AppMenu;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,6 +10,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,6 +24,8 @@ public class LoginController implements Initializable {
     private TextField password;
     @FXML
     private Button submit;
+    @FXML
+    private Button home;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -41,6 +45,8 @@ public class LoginController implements Initializable {
         });
 
         submit.setOnAction(actionEvent -> handleSubmit());
+
+        home.setOnAction(actionEvent -> Router.navigateToHome());
     }
 
     private void handleSubmit() {

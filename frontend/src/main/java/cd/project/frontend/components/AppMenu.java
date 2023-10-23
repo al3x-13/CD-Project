@@ -13,7 +13,7 @@ public class AppMenu extends MenuBar {
     private MenuItem home;
     @FXML
     private MenuItem about;
-    private final String backgroundColor = "#636363";
+    private final String backgroundColor = "#50565A";
 
     public AppMenu() {
         // Components properties
@@ -26,9 +26,13 @@ public class AppMenu extends MenuBar {
         home.setOnAction(actionEvent -> Router.navigateToHome());
         MenuItem about = new MenuItem("About");
         about.setOnAction(actionEvent -> Router.navigateToAbout());
-        application.getItems().addAll(home, about);
+
+        // TODO: remove this
+        MenuItem dashboard = new MenuItem("Dashboard");
+        dashboard.setOnAction(actionEvent -> Router.navigateToDashboard());
 
         // Adds menu
+        application.getItems().addAll(home, about, dashboard);
         getMenus().add(application);
     }
 }

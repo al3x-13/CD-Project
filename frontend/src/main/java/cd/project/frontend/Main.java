@@ -13,6 +13,11 @@ import java.io.IOException;
 
 public class Main extends Application {
     private static Stage rootStage;
+    public static String BACKGROUND_COLOR = "#25282a";
+    public static String DRAWER_BACKGROUND_COLOR = "#35383a";
+    public static String DRAWER_TEXT_COLOR = "#b8baba";
+    public static String TITLE_COLOR_PRIMARY = "#377DFF";
+    public static String TEXT_COLOR_PRIMARY = "#666D72";
 
     @Override
     public void start(Stage stage) throws IOException {

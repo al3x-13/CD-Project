@@ -47,4 +47,9 @@ public class Router {
     public static void navigateToRegister() {
         loadAndSetScene("scenes/register.fxml");
     }
+
+    @FXML
+    public static void navigateToDashboard() {
+        loadAndSetScene("scenes/dashboard.fxml");
+    }
 }
