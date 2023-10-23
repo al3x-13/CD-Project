@@ -8,4 +8,6 @@ module cd.project.frontend {
 
     opens cd.project.frontend to javafx.fxml;
     exports cd.project.frontend;
+    exports cd.project.frontend.controllers;
+    opens cd.project.frontend.controllers to javafx.fxml;
 }

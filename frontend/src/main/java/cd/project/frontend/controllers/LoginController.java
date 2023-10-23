@@ -1,4 +1,4 @@
-package cd.project.frontend;
+package cd.project.frontend.controllers;
 
 import cd.project.frontend.components.AppMenu;
 import javafx.fxml.FXML;
@@ -43,7 +43,6 @@ public class LoginController implements Initializable {
         submit.setOnAction(actionEvent -> handleSubmit());
     }
 
-    @FXML
     private void handleSubmit() {
         System.out.println("user: " + username.getText() + ", pw: " + password.getText());
     }

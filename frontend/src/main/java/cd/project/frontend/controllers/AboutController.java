@@ -1,5 +1,6 @@
-package cd.project.frontend;
+package cd.project.frontend.controllers;
 
+import cd.project.frontend.Router;
 import cd.project.frontend.components.AppMenu;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

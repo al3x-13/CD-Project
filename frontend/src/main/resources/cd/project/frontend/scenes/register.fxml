@@ -41,7 +41,7 @@
             <Insets top="50.0" />
          </VBox.margin>
       </GridPane>
-      <Button fx:id="submit" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #14c777;" text="Login">
+      <Button fx:id="submit" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: #14c777;" text="Register">
          <VBox.margin>
             <Insets top="40.0" />
          </VBox.margin>

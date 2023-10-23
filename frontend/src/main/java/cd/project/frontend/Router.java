@@ -42,4 +42,9 @@ public class Router {
     public static void navigateToLogin() {
         loadAndSetScene("scenes/login.fxml");
     }
+
+    @FXML
+    public static void navigateToRegister() {
+        loadAndSetScene("scenes/register.fxml");
+    }
 }

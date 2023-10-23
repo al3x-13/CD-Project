@@ -1,5 +1,6 @@
-package cd.project.frontend;
+package cd.project.frontend.controllers;
 
+import cd.project.frontend.Router;
 import cd.project.frontend.components.AppMenu;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,5 +23,6 @@ public class HomeController implements Initializable {
         container.getChildren().addFirst(new AppMenu());
 
         login.setOnAction(actionEvent -> Router.navigateToLogin());
+        register.setOnAction(actionEvent -> Router.navigateToRegister());
     }
 }
