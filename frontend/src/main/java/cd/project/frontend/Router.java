@@ -11,9 +11,9 @@ import java.io.IOException;
 public class Router {
     private final Stage rootStage = Main.getRootStage();
 
-    private void loadAndSetScene(String fxmlFile) {
+    private static void loadAndSetScene(String fxmlFile) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxmlFile));
             Parent page = loader.load();
             Stage stage = new Stage();
             Scene scene = new Scene(page, 800, 600);
@@ -29,12 +29,17 @@ public class Router {
     }
 
     @FXML
-    public void navigateToHome() {
-        loadAndSetScene("home.fxml");
+    public static void navigateToHome() {
+        loadAndSetScene("scenes/home.fxml");
     }
 
     @FXML
-    public void navigateToAbout() {
-        loadAndSetScene("about.fxml");
+    public static void navigateToAbout() {
+        loadAndSetScene("scenes/about.fxml");
+    }
+
+    @FXML
+    public static void navigateToLogin() {
+        loadAndSetScene("scenes/login.fxml");
     }
 }

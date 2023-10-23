@@ -9,17 +9,8 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="400.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #434343;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cd.project.frontend.AboutController">
+<VBox fx:id="container" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="400.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #434343;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cd.project.frontend.AboutController">
    <children>
-      <MenuBar fx:id="menuBar" style="-fx-background-color: #636363;">
-         <menus>
-            <Menu mnemonicParsing="false" text="Application">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#handleMenuAbout" text="About" />
-               </items>
-            </Menu>
-         </menus>
-      </MenuBar>
       <Label alignment="CENTER" prefHeight="88.0" prefWidth="422.0" text="Distributed Computing Project" textAlignment="CENTER" textFill="#14c777" wrapText="true">
          <font>
             <Font name="System Bold" size="30.0" />

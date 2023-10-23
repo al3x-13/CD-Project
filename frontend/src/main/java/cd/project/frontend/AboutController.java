@@ -1,11 +1,20 @@
 package cd.project.frontend;
 
+import cd.project.frontend.components.AppMenu;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.layout.VBox;
 
-public class AboutController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class AboutController implements Initializable {
     @FXML
-    public void initialize() {
-        // TODO
+    private VBox container;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        container.getChildren().addFirst(new AppMenu());
     }
 
     @FXML
