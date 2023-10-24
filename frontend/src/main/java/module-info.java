@@ -5,6 +5,7 @@ module cd.project.frontend {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires org.kordamp.ikonli.javafx;
+    requires jbcrypt;
 
     opens cd.project.frontend to javafx.fxml;
     exports cd.project.frontend;

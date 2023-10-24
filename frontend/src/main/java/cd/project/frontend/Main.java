@@ -19,6 +19,9 @@ public class Main extends Application {
     public static String TITLE_COLOR_PRIMARY = "#377DFF";
     public static String TEXT_COLOR_PRIMARY = "#666D72";
 
+    // User session
+    private static final UserSession session = new UserSession();
+
     @Override
     public void start(Stage stage) throws IOException {
         rootStage = stage;
@@ -39,5 +42,9 @@ public class Main extends Application {
 
     public static Stage getRootStage() {
         return rootStage;
+    }
+
+    public static UserSession getUserSession() {
+        return session;
     }
 }

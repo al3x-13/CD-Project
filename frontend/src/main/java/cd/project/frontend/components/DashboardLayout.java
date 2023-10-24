@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 public class DashboardLayout extends HBox {
     @FXML
@@ -46,14 +47,25 @@ public class DashboardLayout extends HBox {
         );
 
         // layout
-        Label appTitle = new Label("CD Project");
-        appTitle.setPadding(new Insets(25, 0, 20, 0));  // t r b l
+        Label appTitle = new Label("OceanView Seats");
+        appTitle.setPadding(new Insets(25, 0, 30, 0));  // t r b l
         appTitle.setFont(Font.font(appTitle.getFont().getName(), FontWeight.BOLD, 24));
+        appTitle.setTextAlignment(TextAlignment.CENTER);
+        appTitle.setWrapText(true);
         appTitle.setTextFill(Color.valueOf(Main.TITLE_COLOR_PRIMARY));
 
         Hyperlink myReservations = new Hyperlink("My Reservations");
-        myReservations.setFont(Font.font(myReservations.getFont().getFamily(), 16));
+        myReservations.setPadding(new Insets(10));
+        myReservations.setFont(Font.font(myReservations.getFont().getName(), FontWeight.BOLD, 16));
         myReservations.setTextFill(Color.valueOf(Main.DRAWER_TEXT_COLOR));
+        myReservations.setOnMouseEntered(mouseEvent -> {
+            myReservations.setStyle("-fx-underline: false; -fx-focus-color: transparent;");
+            myReservations.setTextFill(Color.valueOf(Main.TITLE_COLOR_PRIMARY));
+        });
+        myReservations.setOnMouseExited(mouseEvent -> {
+            myReservations.setTextFill(Color.valueOf(Main.DRAWER_TEXT_COLOR));
+        });
+        myReservations.setOnAction(actionEvent -> System.out.println("TODO"));
 
         // adds elements
         drawer.getChildren().addAll(appTitle, myReservations);
@@ -68,11 +80,11 @@ public class DashboardLayout extends HBox {
         title.setFont(Font.font(title.getFont().getName(), FontWeight.BOLD, 30));
         title.setTextFill(Color.valueOf(Main.TITLE_COLOR_PRIMARY));
 
-        Label reservationTitle = new Label("My Reservations");
-        reservationTitle.setPadding(new Insets(30, 0, 0, 0));
-        reservationTitle.setFont(Font.font(title.getFont().getName(), FontWeight.BOLD, 20));
-        reservationTitle.setTextFill(Color.valueOf(Main.TEXT_COLOR_PRIMARY));
+        Label reservationLink = new Label("My Reservations");
+        reservationLink.setPadding(new Insets(30, 0, 0, 0));
+        reservationLink.setFont(Font.font(title.getFont().getName(), FontWeight.BOLD, 20));
+        reservationLink.setTextFill(Color.valueOf(Main.TEXT_COLOR_PRIMARY));
 
-        content.getChildren().addAll(title, reservationTitle);
+        content.getChildren().addAll(title, reservationLink);
     }
 }

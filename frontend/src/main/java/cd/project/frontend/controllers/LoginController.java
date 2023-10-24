@@ -1,16 +1,16 @@
 package cd.project.frontend.controllers;
 
+import cd.project.frontend.Main;
 import cd.project.frontend.Router;
 import cd.project.frontend.components.AppMenu;
+import cd.project.frontend.components.SuccessLabel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -26,6 +26,8 @@ public class LoginController implements Initializable {
     private Button submit;
     @FXML
     private Button home;
+    @FXML
+    private Label label;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -51,5 +53,12 @@ public class LoginController implements Initializable {
 
     private void handleSubmit() {
         System.out.println("user: " + username.getText() + ", pw: " + password.getText());
+
+        if (Main.getUserSession().authenticate(username.getText(), password.getText())) {
+            new SuccessLabel(label, "Loggin successful", true);
+            Router.navigateToDashboard();
+        } else {
+            new SuccessLabel(this.label, "Invalid credentials", false);
+        }
     }
 }

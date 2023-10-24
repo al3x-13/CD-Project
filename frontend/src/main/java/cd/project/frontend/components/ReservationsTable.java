@@ -7,7 +7,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class ReservationsTable extends TableView {
-    public ReservationsTable() {
+    private int entriesPerPage;
+
+    public ReservationsTable(int entriesPerPage) {
+        this.entriesPerPage = entriesPerPage;
+
         // Component properties
         HBox.setHgrow(this, Priority.ALWAYS);
         this.setStyle(
