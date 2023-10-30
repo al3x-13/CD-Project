@@ -28,4 +28,4 @@ jobs:
       with:
         context: ./db
         push: true
-        tags: ghcr.io/cd-db-dev:latest
+        tags: ghcr.io/${{ github.repository }}:latest
