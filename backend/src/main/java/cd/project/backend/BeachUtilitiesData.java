@@ -1,4 +1,4 @@
-package org.example;
+package cd.project.backend;
 
 public class BeachUtilitiesData {
     private int loungeFor2People;
