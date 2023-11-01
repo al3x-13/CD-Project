@@ -19,7 +19,6 @@ public class Router {
             Scene scene = new Scene(page, 800, 600);
             stage.setScene(scene);
             Stage rootStage = Main.getRootStage();
-            rootStage.hide();
             rootStage.setScene(scene);
             rootStage.show();
         } catch (IOException e) {
