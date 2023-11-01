@@ -1,0 +1,38 @@
+package cd.project.client.components;
+
+import cd.project.client.Router;
+import javafx.fxml.FXML;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+
+public class AppMenu extends MenuBar {
+    @FXML
+    private MenuItem home;
+    @FXML
+    private MenuItem about;
+    private final String backgroundColor = "#50565A";
+
+    public AppMenu() {
+        // Components properties
+        HBox.setHgrow(this, Priority.ALWAYS);
+        this.setStyle("-fx-background-color: " + backgroundColor + ";");
+
+        // Menu items
+        Menu application = new Menu("Application");
+        MenuItem home = new MenuItem("Home");
+        home.setOnAction(actionEvent -> Router.navigateToHome());
+        MenuItem about = new MenuItem("About");
+        about.setOnAction(actionEvent -> Router.navigateToAbout());
+
+        // TODO: remove this
+        MenuItem dashboard = new MenuItem("Dashboard");
+        dashboard.setOnAction(actionEvent -> Router.navigateToDashboard());
+
+        // Adds menu
+        application.getItems().addAll(home, about, dashboard);
+        getMenus().add(application);
+    }
+}
