@@ -5,6 +5,10 @@ import java.sql.*;
 public class DbConnection {
     private static Connection conn = null;
 
+    /**
+     * Initializes sqlite database connection.
+     * @param dbPath sqlite db path
+     */
     public static void initialize(String dbPath) throws SQLException, ClassNotFoundException {
         if (conn == null) {
             Class.forName("org.sqlite.JDBC");
@@ -12,6 +16,12 @@ public class DbConnection {
         }
     }
 
+    /**
+     * Executes a query that uses INSERT, UPDATE or DELETE.
+     * @param query sql query
+     * @param params query parameters
+     * @return number of affected rows
+     */
     public static int executeUpdate(String query, Object... params) {
         try {
             PreparedStatement statement = conn.prepareStatement(query);
@@ -25,6 +35,12 @@ public class DbConnection {
         }
     }
 
+    /**
+     * Executes a data query.
+     * @param query sql query
+     * @param params query parameters
+     * @return ResultSet object
+     */
     public static ResultSet executeQuery(String query, Object... params) {
         try {
             PreparedStatement statement = conn.prepareStatement(query);
@@ -38,6 +54,10 @@ public class DbConnection {
         }
     }
 
+    /**
+     * Closes the db connection.
+     * @return whether connection was successfully closed
+     */
     public static boolean close() {
         try {
             if (conn != null) {
