@@ -52,7 +52,7 @@ public class RegisterController implements Initializable {
         // Only allow alphanumeric characters on input field
         UnaryOperator<TextFormatter.Change> alphanumericFilter = change -> {
             String text = change.getText();
-            String regex = "[a-zA-Z0-9]*";
+            String regex = "[a-z0-9]*";
 
             if (text.isEmpty() || text.matches(regex)) {
                 return change;
