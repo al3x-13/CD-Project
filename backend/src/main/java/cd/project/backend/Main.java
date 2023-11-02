@@ -1,7 +1,6 @@
 package cd.project.backend;
 
 import cd.project.backend.database.DbConnection;
-import cd.project.backend.services.AuthenticationService;
 import cd.project.backend.services.ReservationService;
 import cd.project.backend.services.ReservationServiceInterface;
 
