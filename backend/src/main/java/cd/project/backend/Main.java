@@ -1,14 +1,13 @@
 package cd.project.backend;
 
 import cd.project.backend.database.DbConnection;
+import cd.project.backend.services.AuthenticationService;
 import cd.project.backend.services.ReservationService;
 import cd.project.backend.services.ReservationServiceInterface;
 
-import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.ResultSet;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,16 +18,18 @@ public class Main {
 
         try {
             int port = Integer.parseInt(args[0]);
-            /*String url = "//localhost:" + port + "/ReservationService";
-            Naming.rebind(url, new ReservationService());*/
 
-            ReservationServiceInterface server = new ReservationService();
-            UnicastRemoteObject.unexportObject((ReservationServiceInterface) server, true);
-            ReservationServiceInterface stub = (ReservationServiceInterface) UnicastRemoteObject.exportObject((ReservationServiceInterface) server, 0);
+            // services
+            ReservationServiceInterface reservationService = new ReservationService();
+
+            // stubs
+            UnicastRemoteObject.unexportObject((ReservationServiceInterface) reservationService, true);
+            ReservationServiceInterface reservationServiceStub = (ReservationServiceInterface)
+                    UnicastRemoteObject.exportObject((ReservationServiceInterface) reservationService, 0);
 
             // local registry
             Registry registry = LocateRegistry.createRegistry(port);
-            registry.bind("ReservationService", stub);
+            registry.bind("ReservationService", reservationServiceStub);
 
             // Initializes DB connection
             DbConnection.initialize(args[1]);
