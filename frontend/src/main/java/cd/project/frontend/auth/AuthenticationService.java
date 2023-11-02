@@ -68,6 +68,15 @@ public class AuthenticationService {
     }
 
     /**
+     * Deletes a user account.
+     * @param username username
+     * @return Whether user account was successfully deleted
+     */
+    public boolean deleteAccount(String username) {
+        return db.executeUpdate("DELETE FROM users WHERE username = ?", username) == 1;
+    }
+
+    /**
      * Checks if a username is available to be taken.
      * @param username username
      * @return Whether username is available
