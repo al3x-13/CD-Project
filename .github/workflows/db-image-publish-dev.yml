@@ -1,6 +1,9 @@
 name: Publish DB (dev) Docker image
 
 on:
+  push:
+    paths:
+      - 'db/*'
   workflow_dispatch:
 
 jobs:
