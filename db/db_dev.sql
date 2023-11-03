@@ -1,4 +1,4 @@
-PRAGMA foreign_keys=OFF;
+PRAGMA foreign_keys=ON;
 BEGIN TRANSACTION;
 CREATE TABLE users(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -13,18 +13,26 @@ id char PRIMARY KEY
 INSERT INTO beaches VALUES('A');
 INSERT INTO beaches VALUES('B');
 INSERT INTO beaches VALUES('C');
-CREATE TABLE bookings(
+CREATE TABLE bookings (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-beach_id CHAR UNIQUE NOT NULL,
-lounges_2 INTEGER,
-lounges_3 INTEGER,
-lounges_4 INTEGER,
-from_timestamp TIMESTAMP NOT NULL,
-to_timestamp TIMESTAMP NOT NULL,
+beach_id CHAR NOT NULL,
+date DATE NOT NULL,
+from_time TIME NOT NULL,
+to_time TIME NOT NULL,
 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 user_id INTEGER NOT NULL,
 FOREIGN KEY (beach_id) REFERENCES beaches (id),
 FOREIGN KEY (user_id) REFERENCES users (id)
 );
+CREATE TABLE booking_lounges (
+booking_id INTEGER NOT NULL,
+lounge_id INTEGER NOT NULL,
+PRIMARY KEY (booking_id, lounge_id));
+CREATE TABLE lounges (
+id VARCHAR(2) PRIMARY KEY,
+beach_id CHAR NOT NULL,
+max_capacity INTEGER NOT NULL,
+FOREIGN KEY (beach_id) REFERENCES beaches (id));
 DELETE FROM sqlite_sequence;
+INSERT INTO sqlite_sequence VALUES('users',1);
 COMMIT;
