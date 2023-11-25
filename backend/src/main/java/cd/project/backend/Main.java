@@ -10,8 +10,9 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class Main {
     public static void main(String[] args) {
-        if (args.length != 2) {
-            System.err.println("Usage: java Main rmi_port db_path");
+        if (args.length != 4) {
+            System.err.println("Usage: java Main rmi_port db_url db_username db_password");
+            System.err.println("Example usage: java Main 1099 localhost:5432/db username password");
             System.exit(1);
         }
 
@@ -31,7 +32,7 @@ public class Main {
             registry.bind("ReservationService", reservationServiceStub);
 
             // Initializes DB connection
-            DbConnection db = new DbConnection(args[1]);
+            DbConnection db = new DbConnection(args[1], args[2], args[3]);
 
             System.out.println("RMI server is running");
         } catch (Exception e) {

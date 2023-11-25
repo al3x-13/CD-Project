@@ -7,11 +7,10 @@ public class DbConnection {
 
     /**
      * Initializes sqlite database connection.
-     * @param dbPath sqlite db path
+     * @param dbUrl sqlite db path
      */
-    public DbConnection(String dbPath) throws SQLException, ClassNotFoundException {
-        Class.forName("org.sqlite.JDBC");
-        this.conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+    public DbConnection(String dbUrl, String dbUsername, String dbPassword) throws SQLException, ClassNotFoundException {
+        this.conn = DriverManager.getConnection("jdbc:postgresql://" + dbUrl, dbUsername, dbPassword);
     }
 
     /**

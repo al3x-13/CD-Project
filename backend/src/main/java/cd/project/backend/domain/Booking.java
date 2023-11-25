@@ -27,7 +27,7 @@ public class Booking {
      * @param toTime end time
      * @param userID user identifier
      */
-    public Booking(DbConnection db, char beachID, LocalDate date, LocalTime fromTime, LocalTime toTime, int userID) {
+    public Booking(DbConnection db, char beachID, LocalDate date, LocalTime fromTime, LocalTime toTime, int userID) throws SQLException {
         this.beachID = beachID;
         this.date = date;
         this.fromTime = fromTime;
