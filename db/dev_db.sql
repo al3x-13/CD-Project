@@ -31,17 +31,6 @@ CREATE TABLE public.beaches (
 
 ALTER TABLE public.beaches OWNER TO admin;
 
---
--- Name: booking_lounges; Type: TABLE; Schema: public; Owner: admin
---
-
-CREATE TABLE public.booking_lounges (
-    booking_id integer NOT NULL,
-    lounge_id character varying(3) NOT NULL
-);
-
-
-ALTER TABLE public.booking_lounges OWNER TO admin;
 
 --
 -- Name: bookings; Type: TABLE; Schema: public; Owner: admin
@@ -54,7 +43,8 @@ CREATE TABLE public.bookings (
     from_time time without time zone NOT NULL,
     to_time time without time zone NOT NULL,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    user_id integer NOT NULL
+    user_id integer NOT NULL,
+	lounge_ids varchar[] NOT NULL
 );
 
 
@@ -157,18 +147,10 @@ C
 
 
 --
--- Data for Name: booking_lounges; Type: TABLE DATA; Schema: public; Owner: admin
---
-
-COPY public.booking_lounges (booking_id, lounge_id) FROM stdin;
-\.
-
-
---
 -- Data for Name: bookings; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public.bookings (id, beach_id, date, from_time, to_time, created_at, user_id) FROM stdin;
+COPY public.bookings (id, beach_id, date, from_time, to_time, created_at, user_id, lounge_ids) FROM stdin;
 \.
 
 
@@ -252,13 +234,6 @@ ALTER TABLE ONLY public.beaches
     ADD CONSTRAINT beaches_pkey PRIMARY KEY (id);
 
 
---
--- Name: booking_lounges booking_lounges_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.booking_lounges
-    ADD CONSTRAINT booking_lounges_pkey PRIMARY KEY (booking_id, lounge_id);
-
 
 --
 -- Name: bookings bookings_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
@@ -298,22 +273,6 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_username_key UNIQUE (username);
-
-
---
--- Name: booking_lounges booking_lounges_booking_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.booking_lounges
-    ADD CONSTRAINT booking_lounges_booking_id_fkey FOREIGN KEY (booking_id) REFERENCES public.bookings(id);
-
-
---
--- Name: booking_lounges booking_lounges_lounge_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.booking_lounges
-    ADD CONSTRAINT booking_lounges_lounge_id_fkey FOREIGN KEY (lounge_id) REFERENCES public.lounges(id);
 
 
 --
