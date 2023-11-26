@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class Booking {
     private int id;
@@ -16,11 +17,13 @@ public class Booking {
     private LocalTime toTime;
     private LocalDateTime createdAt;
     private int userID;
+    private ArrayList<Lounge> lounges;
 
     // TODO: add lounges data
 
     /**
      * Creates a new lounge booking and saves it to the database.
+     * @param db database connection
      * @param beachID beach identifier
      * @param date booking date
      * @param fromTime start time
@@ -87,7 +90,7 @@ public class Booking {
     private boolean saveToDB(DbConnection db) throws SQLException {
         // checks if a database record already exists
         ResultSet data = db.executeQuery("SELECT id FROM bookings WHERE id = ?", this.id);
-        if (!data.next()) return false;
+        if (data.next()) return false;
 
         db.setAutoCommit(false);
 
@@ -105,6 +108,8 @@ public class Booking {
                 ""
         ) == 1;
 
+        db.commit();
+        db.setAutoCommit(true);
         return bookingsUpdated && bookingLoungesUpdated;
     }
 }
