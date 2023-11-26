@@ -1,8 +1,6 @@
 package cd.project.frontend;
 
-import cd.project.frontend.auth.AuthenticationService;
-import cd.project.frontend.database.DbConnection;
-import cd.project.rmi.interfaces.BookingServiceInterface;
+import cd.project.backend.interfaces.BookingServiceInterface;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -20,6 +18,7 @@ public class Main {
             // initializing db connection and authentication
             // DbConnection db = new DbConnection(dbPath);
             // AuthenticationService auth = new AuthenticationService(db);
+
 
             // rmi setup
             Registry registry = LocateRegistry.getRegistry();

@@ -19,8 +19,6 @@ public class Booking {
     private int userID;
     private ArrayList<Lounge> lounges;
 
-    // TODO: add lounges data
-
     /**
      * Creates a new lounge booking and saves it to the database.
      * @param db database connection
@@ -30,12 +28,13 @@ public class Booking {
      * @param toTime end time
      * @param userID user identifier
      */
-    public Booking(DbConnection db, char beachID, LocalDate date, LocalTime fromTime, LocalTime toTime, int userID) throws SQLException {
+    public Booking(DbConnection db, char beachID, LocalDate date, LocalTime fromTime, LocalTime toTime, int userID, ArrayList<Lounge> lounges) throws SQLException {
         this.beachID = beachID;
         this.date = date;
         this.fromTime = fromTime;
         this.toTime = toTime;
         this.userID = userID;
+        this.lounges = lounges;
         this.saveToDB(db);
     }
 
@@ -85,6 +84,10 @@ public class Booking {
 
     public int getUserID() {
         return this.userID;
+    }
+
+    public ArrayList<Lounge> getLounges() {
+        return this.lounges;
     }
 
     private boolean saveToDB(DbConnection db) throws SQLException {

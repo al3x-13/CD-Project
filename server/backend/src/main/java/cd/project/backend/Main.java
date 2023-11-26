@@ -2,7 +2,7 @@ package cd.project.backend;
 
 import cd.project.backend.database.DbConnection;
 import cd.project.backend.services.BookingService;
-import cd.project.rmi.interfaces.BookingServiceInterface;
+import cd.project.backend.interfaces.BookingServiceInterface;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -19,8 +19,11 @@ public class Main {
         try {
             int port = Integer.parseInt(args[0]);
 
+            // Initializes DB connection
+            DbConnection db = new DbConnection(args[1], args[2], args[3]);
+
             // services
-            BookingServiceInterface reservationService = new BookingService();
+            BookingServiceInterface reservationService = new BookingService(db);
 
             // stubs
             UnicastRemoteObject.unexportObject((BookingServiceInterface) reservationService, true);
@@ -30,9 +33,6 @@ public class Main {
             // local registry
             Registry registry = LocateRegistry.createRegistry(port);
             registry.bind("ReservationService", reservationServiceStub);
-
-            // Initializes DB connection
-            DbConnection db = new DbConnection(args[1], args[2], args[3]);
 
             System.out.println("RMI server is running");
         } catch (Exception e) {

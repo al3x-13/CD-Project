@@ -1,4 +1,4 @@
-package cd.project.rmi.interfaces;
+package cd.project.backend.interfaces;
 
 import cd.project.backend.domain.Lounge;
 

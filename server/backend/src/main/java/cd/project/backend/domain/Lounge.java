@@ -3,6 +3,8 @@ package cd.project.backend.domain;
 import cd.project.backend.database.DbConnection;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Lounge {
     private final String id;
@@ -10,17 +12,15 @@ public class Lounge {
     private final int maxCapacity;
 
     /**
-     * Creates a new lounge object from an existing database entry.
-     * @param db database connection
+     * Creates a new lounge object.
      * @param loungeId lounge id
-     * @throws Exception db entry not found
+     * @param beachId beach id
+     * @param maxCapacity max capacity
      */
-    public Lounge(DbConnection db, String loungeId) throws Exception {
+    public Lounge(String loungeId, char beachId, int maxCapacity) {
         this.id = loungeId;
-        ResultSet data = db.executeQuery("SELECT * FROM lounges WHERE id = ?", loungeId);
-        if (!data.next()) throw new Exception("Failed to instantiate object: lounge id not found");
-        this.beachId = data.getString("beach_id").charAt(0);
-        this.maxCapacity = data.getInt("max_capacity");
+        this.beachId = beachId;
+        this.maxCapacity = maxCapacity;
     }
 
     public String getId() {
@@ -33,5 +33,34 @@ public class Lounge {
 
     public int getMaxCapacity() {
         return this.maxCapacity;
+    }
+
+    @Override
+    public String toString() {
+        return this.id;
+    }
+
+    /**
+     * Gets lounges from database by id.
+     * @param db db connection
+     * @param loungeIds lounge ids
+     * @return Lounges
+     */
+    public static ArrayList<Lounge> getLoungesByID(DbConnection db, ArrayList<Integer> loungeIds) {
+        ArrayList<Lounge> lounges = new ArrayList<>();
+
+        ResultSet data = db.executeQuery("SELECT * FROM ?", loungeIds);
+        while (true) {
+            try {
+                if (!data.next()) break;
+                String id = data.getString("id");
+                char beachId = data.getString("beach_id").charAt(0);
+                int maxCapacity = data.getInt("max_capacity");
+                lounges.add(new Lounge(id, beachId, maxCapacity));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return lounges.isEmpty() ? null : lounges;
     }
 }
