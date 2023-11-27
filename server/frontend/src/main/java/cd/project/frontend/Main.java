@@ -9,7 +9,8 @@ public class Main {
     public static void main(String[] args) {
         try {
             if (args.length < 2) {
-                System.err.println("Usage: java Main rmi_server_port db_path...");
+                System.err.println("Usage: java Main rmi_server_port db_url db_user db_password...");
+                System.err.println("Usage example: java Main 1099 localhost:5432/db username password");
                 System.exit(1);
             }
             int port = Integer.parseInt(args[0]);
