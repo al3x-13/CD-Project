@@ -6,8 +6,8 @@ public class DbConnection {
     private Connection conn = null;
 
     /**
-     * Initializes sqlite database connection.
-     * @param dbUrl sqlite db path
+     * Initializes postgresql database connection.
+     * @param dbUrl db path
      */
     public DbConnection(String dbUrl, String dbUsername, String dbPassword) throws SQLException, ClassNotFoundException {
         this.conn = DriverManager.getConnection("jdbc:postgresql://" + dbUrl, dbUsername, dbPassword);
