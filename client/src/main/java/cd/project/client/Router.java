@@ -7,13 +7,22 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Router {
-    private final Stage rootStage = Main.getRootStage();
+    private static ArrayList<String> noAuthScenes = new ArrayList<>(Arrays.asList(
+            "home.fxml",
+            "login.fxml",
+            "register.fxml",
+            "about.fxml"
+    ));
 
     private static void loadAndSetScene(String fxmlFile) {
+        String fxmlFileToLoad = getSceneToLoadBasedOnAuthState(fxmlFile);
+
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxmlFile));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("scenes/" + fxmlFileToLoad));
             Parent page = loader.load();
             Stage stage = new Stage();
             Scene scene = new Scene(page, 800, 600);
@@ -27,28 +36,35 @@ public class Router {
         }
     }
 
+    // Redirects (by loading) 'Home' scene if user is not authenticated and is trying to access a page that requires auth
+    private static String getSceneToLoadBasedOnAuthState(String fxmlFile) {
+        return !UserSession.isAuthenticated() && !noAuthScenes.contains(fxmlFile) ?
+                "home.fxml" :
+                fxmlFile;
+    }
+
     @FXML
     public static void navigateToHome() {
-        loadAndSetScene("scenes/home.fxml");
+        loadAndSetScene("home.fxml");
     }
 
     @FXML
     public static void navigateToAbout() {
-        loadAndSetScene("scenes/about.fxml");
+        loadAndSetScene("about.fxml");
     }
 
     @FXML
     public static void navigateToLogin() {
-        loadAndSetScene("scenes/login.fxml");
+        loadAndSetScene("login.fxml");
     }
 
     @FXML
     public static void navigateToRegister() {
-        loadAndSetScene("scenes/register.fxml");
+        loadAndSetScene("register.fxml");
     }
 
     @FXML
     public static void navigateToDashboard() {
-        loadAndSetScene("scenes/dashboard.fxml");
+        loadAndSetScene("dashboard.fxml");
     }
 }

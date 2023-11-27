@@ -3,47 +3,44 @@ package cd.project.client;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class UserSession {
-    private String username;
-    private String passwordHash;
-    private String sessionToken = null;
-    private final String testUsername = "test";
-    private final String testPasswordHash = BCrypt.hashpw("testing", BCrypt.gensalt());
+    private static String username;
+    private static String passwordHash;
+    private static String sessionToken = null;
+    private static final String testUsername = "test";
+    private static final String testPasswordHash = BCrypt.hashpw("testing", BCrypt.gensalt());
 
-    public UserSession() {}
-
-    public String getUsername() {
-        return this.username;
+    public static String getUsername() {
+        return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public static void setUsername(String username) {
+        username = username;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public static void setPasswordHash(String passwordHash) {
+        passwordHash = passwordHash;
     }
 
-    public boolean authenticate(String username, String password) {
+    public static boolean authenticate(String username, String password) {
         // TODO
-        if (!username.equals(this.testUsername) || !BCrypt.checkpw(password, this.testPasswordHash)) {
+        if (!username.equals(testUsername) || !BCrypt.checkpw(password, testPasswordHash)) {
             return false;
         }
-        this.username = username;
-        this.passwordHash = passwordHash;
-        this.sessionToken = "test";
+        username = username;
+        passwordHash = passwordHash;
+        sessionToken = "test";
         return true;
     }
 
-    public String getSessionToken() {
-        return this.sessionToken;
+    public static String getSessionToken() {
+        return sessionToken;
     }
 
-    public void setSessionToken(String sessionToken) {
-        this.sessionToken = sessionToken;
+    public static void setSessionToken(String sessionToken) {
+        sessionToken = sessionToken;
     }
 
-    public boolean validSession() {
-        // TODO
-        return this.sessionToken != null;
+    public static boolean isAuthenticated() {
+        return sessionToken != null;
     }
 }
