@@ -3,15 +3,21 @@ package cd.project.frontend.database;
 import java.sql.*;
 
 public class DbConnection {
-    private Connection conn = null;
+    private static Connection conn;
 
-    /**
-     * Initializes sqlite database connection.
-     * @param dbPath sqlite db path
-     */
-    public DbConnection(String dbPath) throws SQLException, ClassNotFoundException {
-        Class.forName("org.sqlite.JDBC");
-        conn = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+    static {
+        try {
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection(
+                    "jdbc:postgresql://" + System.getenv("DB_URL"),
+                    System.getenv("DB_USERNAME"),
+                    System.getenv("DB_PASSWORD")
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -20,9 +26,9 @@ public class DbConnection {
      * @param params query parameters
      * @return number of affected rows
      */
-    public int executeUpdate(String query, Object... params) {
+    public static int executeUpdate(String query, Object... params) {
         try {
-            PreparedStatement statement = this.conn.prepareStatement(query);
+            PreparedStatement statement = conn.prepareStatement(query);
             for (int i = 0; i < params.length; i++) {
                 statement.setObject(i + 1, params[i]);
             }
@@ -39,9 +45,9 @@ public class DbConnection {
      * @param params query parameters
      * @return ResultSet object
      */
-    public ResultSet executeQuery(String query, Object... params) {
+    public static ResultSet executeQuery(String query, Object... params) {
         try {
-            PreparedStatement statement = this.conn.prepareStatement(query);
+            PreparedStatement statement = conn.prepareStatement(query);
             for (int i = 0; i < params.length; i++) {
                 statement.setObject(i + 1, params[i]);
             }
@@ -56,11 +62,11 @@ public class DbConnection {
      * Closes the db connection.
      * @return whether connection was successfully closed
      */
-    public boolean close() {
+    public static boolean close() {
         try {
-            if (this.conn != null) {
-                this.conn.close();
-                this.conn = null;
+            if (conn != null) {
+                conn.close();
+                conn = null;
                 return true;
             }
             return false;
