@@ -1,6 +1,7 @@
 package cd.project.client.components;
 
 import cd.project.client.Router;
+import cd.project.client.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -9,10 +10,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
 public class AppMenu extends MenuBar {
-    @FXML
-    private MenuItem home;
-    @FXML
-    private MenuItem about;
     private final String backgroundColor = "#50565A";
 
     public AppMenu() {
@@ -27,12 +24,17 @@ public class AppMenu extends MenuBar {
         MenuItem about = new MenuItem("About");
         about.setOnAction(actionEvent -> Router.navigateToAbout());
 
-        // TODO: remove this
-        MenuItem dashboard = new MenuItem("Dashboard");
-        dashboard.setOnAction(actionEvent -> Router.navigateToDashboard());
+        // Adds unprotected menu items
+        application.getItems().addAll(home, about);
 
-        // Adds menu
-        application.getItems().addAll(home, about, dashboard);
+        // Protected (auth required) buttons
+        if (UserSession.isAuthenticated()) {
+            MenuItem dashboard = new MenuItem("Dashboard");
+            dashboard.setOnAction(actionEvent -> Router.navigateToDashboard());
+
+            // Adds protected menu items
+            application.getItems().add(dashboard);
+        }
         getMenus().add(application);
     }
 }
