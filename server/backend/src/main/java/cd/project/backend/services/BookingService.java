@@ -24,8 +24,8 @@ public class BookingService extends UnicastRemoteObject implements BookingServic
                 this.db,
                 'A',
                 LocalDate.of(2023, 11, 29),
-                LocalTime.of(13, 00),
-                LocalTime.of(14, 00)
+                LocalTime.of(10, 00),
+                LocalTime.of(11, 00)
         );
         return "TESTING: " + Arrays.toString(new ArrayList[]{out});
     }

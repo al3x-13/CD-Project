@@ -39,7 +39,12 @@ public class BookingServiceHelpers {
      * @param toTime time interval end
      * @return Booking IDs
      */
-    public static ArrayList<Integer> getBookingIdsForDateAndTime(DbConnection db, LocalDate date, LocalTime fromTime, LocalTime toTime) {
+    public static ArrayList<Integer> getBookingIdsForDateAndTime(
+            DbConnection db,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime
+    ) {
         ArrayList<Integer> ids = new ArrayList<>();
 
         ResultSet data = db.executeQuery(
@@ -59,14 +64,29 @@ public class BookingServiceHelpers {
         return ids.isEmpty() ? null : ids;
     }
 
-    public static ArrayList<Lounge> getAvailableLounges(DbConnection db, char beachId, LocalDate date, LocalTime fromTime, LocalTime toTime) {
+    /**
+     * Gets all available lounges from the selected beach for the specified date and time.
+     * @param db db connection
+     * @param beachId beach id
+     * @param date date
+     * @param fromTime start time
+     * @param toTime end time
+     * @return Available Lounges
+     */
+    public static ArrayList<Lounge> getAvailableLounges(
+            DbConnection db,
+            char beachId,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime
+    ) {
         ArrayList<Lounge> lounges = new ArrayList<>();
         ResultSet data = db.executeQuery(
-                "SELECT * FROM lounges WHERE beach_id = ? AND id NOT IN (SELECT UNNEST(lounge_ids) FROM bookings WHERE date = ? AND from_time >= ? AND to_time <= ?)",
+                "SELECT * FROM lounges WHERE beach_id = ? AND id NOT IN (SELECT UNNEST(lounge_ids) FROM bookings WHERE date = ? AND from_time < ? AND to_time > ?)",
                 beachId,
                 date,
-                fromTime,
-                toTime
+                toTime,
+                fromTime
         );
         while (true) {
             try {
