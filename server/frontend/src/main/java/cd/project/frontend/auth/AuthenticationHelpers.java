@@ -8,10 +8,10 @@ import java.util.UUID;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-public class AuthenticationService {
+public class AuthenticationHelpers {
     private DbConnection db = null;
 
-    public AuthenticationService(DbConnection database){
+    public AuthenticationHelpers(DbConnection database){
         this.db = database;
     }
 
