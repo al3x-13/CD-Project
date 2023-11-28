@@ -9,11 +9,7 @@ import java.util.UUID;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class AuthenticationHelpers {
-    private DbConnection db = null;
-
-    public AuthenticationHelpers(DbConnection database){
-        this.db = database;
-    }
+    public AuthenticationHelpers(){}
 
     /**
      * Register a new user.
@@ -23,7 +19,7 @@ public class AuthenticationHelpers {
      */
     public boolean register(String username, String password) {
         String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
-        return db.executeUpdate(
+        return DbConnection.executeUpdate(
                 "INSERT INTO users (username, password_hash) VALUES (?, ?)",
                 username,
                 passwordHash
@@ -37,7 +33,7 @@ public class AuthenticationHelpers {
      * @return User session token or null
      */
     public String authenticate(String username, String password) {
-        ResultSet data = db.executeQuery("SELECT password_hash FROM users WHERE username = ?", username);
+        ResultSet data = DbConnection.executeQuery("SELECT password_hash FROM users WHERE username = ?", username);
         boolean validPassword = false;
 
         try {
@@ -51,7 +47,7 @@ public class AuthenticationHelpers {
 
         // generating new session token
         String newSessionToken = UUID.randomUUID().toString();
-        return db.executeUpdate(
+        return DbConnection.executeUpdate(
                 "UPDATE users SET session_token = ? WHERE username = ?",
                 newSessionToken,
                 username
@@ -64,7 +60,7 @@ public class AuthenticationHelpers {
      * @return Whether user session was invalidated successfully
      */
     public boolean invalidateSession(String username) {
-        return db.executeUpdate("UPDATE users SET session_token = null WHERE username = ?", username) == 1;
+        return DbConnection.executeUpdate("UPDATE users SET session_token = null WHERE username = ?", username) == 1;
     }
 
     /**
@@ -73,7 +69,7 @@ public class AuthenticationHelpers {
      * @return Whether user account was successfully deleted
      */
     public boolean deleteAccount(String username) {
-        return db.executeUpdate("DELETE FROM users WHERE username = ?", username) == 1;
+        return DbConnection.executeUpdate("DELETE FROM users WHERE username = ?", username) == 1;
     }
 
     /**
@@ -82,7 +78,7 @@ public class AuthenticationHelpers {
      * @return Whether username is available
      */
     public boolean usernameIsAvailable(String username) {
-        ResultSet data = db.executeQuery("SELECT * FROM users WHERE username = ?", username);
+        ResultSet data = DbConnection.executeQuery("SELECT * FROM users WHERE username = ?", username);
         if (data == null) return false;
 
         try {
