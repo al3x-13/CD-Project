@@ -93,7 +93,8 @@ CREATE TABLE public.users (
     id integer NOT NULL,
     username character varying(50) NOT NULL,
     password_hash text NOT NULL,
-    session_token text
+    session_token text,
+	session_expires_at timestamp with time zone
 );
 
 
