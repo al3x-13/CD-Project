@@ -10,11 +10,17 @@
 >
     <!-- Define your web service implementation bean -->
     <bean id="test" class="cd.project.frontend.soap.TestImpl"/>
+    <bean id="auth" class="cd.project.frontend.soap.AuthenticationImpl" />
 
     <!-- Configure the server -->
     <jaxws:endpoint
             id="Test"
             implementor="#test"
             address="/TestImpl"
+    />
+    <jaxws:endpoint
+            id="Auth"
+            implementor="#auth"
+            address="/auth"
     />
 </beans>
