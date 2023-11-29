@@ -24,7 +24,11 @@ public class AuthMiddleware implements Filter {
         System.out.println("Auth header: " + request.getHeader("Authorization"));
 
         // TODO: auth validation
-        filterChain.doFilter(servletRequest, servletResponse);
+        if (AuthenticationHelpers.endpointIsProtected(request.getServletPath())) {
+            System.out.println("PROTECTED ENDPOINT");
+        }
+
+        filterChain.doFilter(request, response);
     }
 
     @Override

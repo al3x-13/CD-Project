@@ -9,15 +9,13 @@ import java.util.UUID;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class AuthenticationHelpers {
-    public AuthenticationHelpers(){}
-
     /**
      * Register a new user.
      * @param username username
      * @param password password
      * @return Whether user registration was successful
      */
-    public boolean register(String username, String password) {
+    public static boolean register(String username, String password) {
         String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
         return DbConnection.executeUpdate(
                 "INSERT INTO users (username, password_hash) VALUES (?, ?)",
@@ -32,7 +30,7 @@ public class AuthenticationHelpers {
      * @param password password
      * @return User session token or null
      */
-    public String authenticate(String username, String password) {
+    public static String authenticate(String username, String password) {
         ResultSet data = DbConnection.executeQuery("SELECT password_hash FROM users WHERE username = ?", username);
         boolean validPassword = false;
 
@@ -59,7 +57,7 @@ public class AuthenticationHelpers {
      * @param username username
      * @return Whether user session was invalidated successfully
      */
-    public boolean invalidateSession(String username) {
+    public static boolean invalidateSession(String username) {
         return DbConnection.executeUpdate("UPDATE users SET session_token = null WHERE username = ?", username) == 1;
     }
 
@@ -68,7 +66,7 @@ public class AuthenticationHelpers {
      * @param username username
      * @return Whether user account was successfully deleted
      */
-    public boolean deleteAccount(String username) {
+    public static boolean deleteAccount(String username) {
         return DbConnection.executeUpdate("DELETE FROM users WHERE username = ?", username) == 1;
     }
 
@@ -77,7 +75,7 @@ public class AuthenticationHelpers {
      * @param username username
      * @return Whether username is available
      */
-    public boolean usernameIsAvailable(String username) {
+    public static boolean usernameIsAvailable(String username) {
         ResultSet data = DbConnection.executeQuery("SELECT * FROM users WHERE username = ?", username);
         if (data == null) return false;
 
@@ -88,5 +86,13 @@ public class AuthenticationHelpers {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static boolean endpointIsProtected(String endpoint) {
+        boolean protectedEndpoint = true;
+        for (UnprotectedEndpointsSOAP value : UnprotectedEndpointsSOAP.values()) {
+            if (value.getEndpoint().equals(endpoint)) protectedEndpoint = false;
+        }
+        return protectedEndpoint;
     }
 }
