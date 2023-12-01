@@ -9,5 +9,8 @@ public interface Authentication {
     String authenticate(String username, String password);
 
     @WebMethod
+    boolean invalidateSession();
+
+    @WebMethod
     boolean register();
 }
