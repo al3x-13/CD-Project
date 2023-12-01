@@ -4,6 +4,7 @@ import cd.project.frontend.database.DbConnection;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -13,6 +14,8 @@ import jakarta.xml.ws.handler.MessageContext;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class AuthenticationHelpers {
+    private static final int sessionExpireMinutes = 360;
+
     /**
      * Register a new user.
      * @param username username
@@ -47,22 +50,29 @@ public class AuthenticationHelpers {
 
         if (!validPassword) return null;
 
-        // generating new session token
+        // generating new session token and token expiration timestamp
         String newSessionToken = UUID.randomUUID().toString();
+        LocalDateTime tokenExpireTimestamp = LocalDateTime.now().plusMinutes(sessionExpireMinutes);
+
         return DbConnection.executeUpdate(
-                "UPDATE users SET session_token = ? WHERE username = ?",
+                "UPDATE users SET session_token = ?, session_expires_at = ? WHERE username = ?",
                 newSessionToken,
+                tokenExpireTimestamp,
                 username
         ) == 1 ? newSessionToken : null;
     }
 
     /**
      * Invalidates a user session.
-     * @param username username
+     * @param sessionToken session token
      * @return Whether user session was invalidated successfully
      */
-    public static boolean invalidateSession(String username) {
-        return DbConnection.executeUpdate("UPDATE users SET session_token = null WHERE username = ?", username) == 1;
+    public static boolean invalidateSession(String sessionToken) {
+        if (sessionToken == null) return false;
+        return DbConnection.executeUpdate(
+                "UPDATE users SET session_token = null, session_expires_at = null WHERE session_token = ?",
+                sessionToken
+        ) == 1;
     }
 
     /**
@@ -115,6 +125,9 @@ public class AuthenticationHelpers {
      */
     public static String getSessionTokenFromMessageContext(MessageContext messageContext) {
         Map<String, List<String>> headers = (Map<String, List<String>>) messageContext.get(MessageContext.HTTP_REQUEST_HEADERS);
-        return headers.get("Authorization").get(0);
+        List<String> authHeader = headers.get("Authorization");
+        System.out.println("HEADERS: " + headers);
+        if (authHeader == null) return null;
+        return headers.get("Authorization").get(0).split(" ")[1];
     }
 }
