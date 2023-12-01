@@ -4,8 +4,12 @@ import cd.project.frontend.database.DbConnection;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import jakarta.jws.WebMethod;
+import jakarta.xml.ws.handler.MessageContext;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class AuthenticationHelpers {
@@ -88,11 +92,29 @@ public class AuthenticationHelpers {
         }
     }
 
+    /**
+     * Returns whether an endpoint is protected, i.e. requires authentication.
+     * @param endpoint endpoint
+     * @return Whether the endpoint is protected
+     */
     public static boolean endpointIsProtected(String endpoint) {
         boolean protectedEndpoint = true;
         for (UnprotectedEndpointsSOAP value : UnprotectedEndpointsSOAP.values()) {
-            if (value.getEndpoint().equals(endpoint)) protectedEndpoint = false;
+            if (value.getEndpoint().equals(endpoint)) {
+                protectedEndpoint = false;
+                break;
+            }
         }
         return protectedEndpoint;
+    }
+
+    /**
+     * Gets session token from authorization header if it exists.
+     * @param messageContext jakarta message context
+     * @return session token or null
+     */
+    public static String getSessionTokenFromMessageContext(MessageContext messageContext) {
+        Map<String, List<String>> headers = (Map<String, List<String>>) messageContext.get(MessageContext.HTTP_REQUEST_HEADERS);
+        return headers.get("Authorization").get(0);
     }
 }
