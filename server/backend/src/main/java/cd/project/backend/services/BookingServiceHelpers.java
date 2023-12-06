@@ -12,14 +12,13 @@ import java.util.ArrayList;
 public class BookingServiceHelpers {
     /**
      * Gets Ids from Bookings for the specified date.
-     * @param db db connection
      * @param date date input
      * @return Booking IDs
      */
-    public static ArrayList<Integer> getBookingIdsForDate(DbConnection db, LocalDate date) {
+    public static ArrayList<Integer> getBookingIdsForDate(LocalDate date) {
         ArrayList<Integer> ids = new ArrayList<>();
 
-        ResultSet data = db.executeQuery("SELECT id FROM bookings WHERE date = ?", date);
+        ResultSet data = DbConnection.executeQuery("SELECT id FROM bookings WHERE date = ?", date);
         while (true) {
             try {
                 if (!data.next()) break;
@@ -33,21 +32,19 @@ public class BookingServiceHelpers {
 
     /**
      * Gets Ids from Bookings for the specified date and time interval.
-     * @param db db connection
      * @param date date input
      * @param fromTime time interval start
      * @param toTime time interval end
      * @return Booking IDs
      */
     public static ArrayList<Integer> getBookingIdsForDateAndTime(
-            DbConnection db,
             LocalDate date,
             LocalTime fromTime,
             LocalTime toTime
     ) {
         ArrayList<Integer> ids = new ArrayList<>();
 
-        ResultSet data = db.executeQuery(
+        ResultSet data = DbConnection.executeQuery(
                 "SELECT id FROM bookings WHERE date = ? AND from_time = ? AND to_time = ?",
                 date,
                 fromTime,
@@ -66,7 +63,6 @@ public class BookingServiceHelpers {
 
     /**
      * Gets all available lounges from the selected beach for the specified date and time.
-     * @param db db connection
      * @param beachId beach id
      * @param date date
      * @param fromTime start time
@@ -74,14 +70,13 @@ public class BookingServiceHelpers {
      * @return Available Lounges
      */
     public static ArrayList<Lounge> getAvailableLounges(
-            DbConnection db,
             char beachId,
             LocalDate date,
             LocalTime fromTime,
             LocalTime toTime
     ) {
         ArrayList<Lounge> lounges = new ArrayList<>();
-        ResultSet data = db.executeQuery(
+        ResultSet data = DbConnection.executeQuery(
                 "SELECT * FROM lounges WHERE beach_id = ? AND id NOT IN (SELECT UNNEST(lounge_ids) FROM bookings WHERE date = ? AND from_time < ? AND to_time > ?)",
                 beachId,
                 date,

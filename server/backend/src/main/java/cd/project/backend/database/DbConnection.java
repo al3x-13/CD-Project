@@ -3,14 +3,22 @@ package cd.project.backend.database;
 import java.sql.*;
 
 public class DbConnection {
-    private Connection conn = null;
+    private static Connection conn;
 
-    /**
-     * Initializes postgresql database connection.
-     * @param dbUrl db path
-     */
-    public DbConnection(String dbUrl, String dbUsername, String dbPassword) throws SQLException, ClassNotFoundException {
-        this.conn = DriverManager.getConnection("jdbc:postgresql://" + dbUrl, dbUsername, dbPassword);
+    // Initializes DB connection
+    static {
+        try {
+            Class.forName("org.postgresql.Driver");
+            conn = DriverManager.getConnection(
+                    "jdbc:postgresql://" + System.getenv("DB_URL"),
+                    System.getenv("DB_USERNAME"),
+                    System.getenv("DB_PASSWORD")
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -19,9 +27,9 @@ public class DbConnection {
      * @param params query parameters
      * @return number of affected rows
      */
-    public int executeUpdate(String query, Object... params) {
+    public static int executeUpdate(String query, Object... params) {
         try {
-            PreparedStatement statement = this.conn.prepareStatement(query);
+            PreparedStatement statement = conn.prepareStatement(query);
             for (int i = 0; i < params.length; i++) {
                 statement.setObject(i + 1, params[i]);
             }
@@ -38,9 +46,9 @@ public class DbConnection {
      * @param params query parameters
      * @return ResultSet object
      */
-    public ResultSet executeQuery(String query, Object... params) {
+    public static ResultSet executeQuery(String query, Object... params) {
         try {
-            PreparedStatement statement = this.conn.prepareStatement(query);
+            PreparedStatement statement = conn.prepareStatement(query);
             for (int i = 0; i < params.length; i++) {
                 statement.setObject(i + 1, params[i]);
             }
@@ -55,26 +63,26 @@ public class DbConnection {
      * Sets auto-commit status for database connection.
      * @param value auto-commit value
      */
-    public void setAutoCommit(boolean value) throws SQLException {
-        this.conn.setAutoCommit(value);
+    public static void setAutoCommit(boolean value) throws SQLException {
+        conn.setAutoCommit(value);
     }
 
     /**
      * Executes all pending database queries.
      */
-    public void commit() throws SQLException {
-        this.conn.commit();
+    public static void commit() throws SQLException {
+        conn.commit();
     }
 
     /**
      * Closes the db connection.
      * @return whether connection was successfully closed
      */
-    public boolean close() {
+    public static boolean close() {
         try {
-            if (this.conn != null) {
-                this.conn.close();
-                this.conn = null;
+            if (conn != null) {
+                conn.close();
+                conn = null;
                 return true;
             }
             return false;

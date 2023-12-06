@@ -12,16 +12,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BookingService extends UnicastRemoteObject implements BookingServiceInterface {
-    private final DbConnection db;
-
-    public BookingService(DbConnection db) throws RemoteException {
-        this.db = db;
-    }
+    public BookingService() throws RemoteException {}
 
     @Override
     public String test(String data) throws RemoteException {
         ArrayList<Lounge> out = BookingServiceHelpers.getAvailableLounges(
-                this.db,
                 'A',
                 LocalDate.of(2023, 11, 29),
                 LocalTime.of(10, 00),

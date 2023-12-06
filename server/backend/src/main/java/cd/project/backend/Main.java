@@ -11,19 +11,15 @@ import java.rmi.server.UnicastRemoteObject;
 public class Main {
     public static void main(String[] args) {
         if (args.length != 4) {
-            System.err.println("Usage: java Main rmi_port db_url db_username db_password");
-            System.err.println("Example usage: java Main 1099 localhost:5432/db username password");
+            System.err.println("Usage: java Main");
             System.exit(1);
         }
 
         try {
             int port = Integer.parseInt(args[0]);
 
-            // Initializes DB connection
-            DbConnection db = new DbConnection(args[1], args[2], args[3]);
-
             // services
-            BookingServiceInterface reservationService = new BookingService(db);
+            BookingServiceInterface reservationService = new BookingService();
 
             // stubs
             UnicastRemoteObject.unexportObject((BookingServiceInterface) reservationService, true);
