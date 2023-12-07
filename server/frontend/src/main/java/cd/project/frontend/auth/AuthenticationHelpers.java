@@ -52,12 +52,10 @@ public class AuthenticationHelpers {
 
         // generating new session token and token expiration timestamp
         String newSessionToken = UUID.randomUUID().toString();
-        LocalDateTime tokenExpireTimestamp = LocalDateTime.now().plusMinutes(sessionExpireMinutes);
 
         return DbConnection.executeUpdate(
-                "UPDATE users SET session_token = ?, session_expires_at = ? WHERE username = ?",
+                "UPDATE users SET session_token = ? WHERE username = ?",
                 newSessionToken,
-                tokenExpireTimestamp,
                 username
         ) == 1 ? newSessionToken : null;
     }
@@ -70,7 +68,7 @@ public class AuthenticationHelpers {
     public static boolean invalidateSession(String sessionToken) {
         if (sessionToken == null) return false;
         return DbConnection.executeUpdate(
-                "UPDATE users SET session_token = null, session_expires_at = null WHERE session_token = ?",
+                "UPDATE users SET session_token = null WHERE session_token = ?",
                 sessionToken
         ) == 1;
     }
