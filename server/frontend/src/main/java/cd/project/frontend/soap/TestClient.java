@@ -52,8 +52,6 @@ public class TestClient {
                 System.out.println("HEADERS: " + requestCtx.get(MessageContext.HTTP_REQUEST_HEADERS));
 
                 return "SUCCESS";
-            case "logout":
-                return service.invalidateSession() ? "SUCCESS" : "FAILURE";
             default:
                 return "U dumb?!";
         }

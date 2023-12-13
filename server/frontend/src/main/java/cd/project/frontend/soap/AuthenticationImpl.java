@@ -19,12 +19,6 @@ public class AuthenticationImpl implements Authentication {
     }
 
     @Override
-    public boolean invalidateSession() {
-        String sessionToken = AuthenticationHelpers.getSessionTokenFromMessageContext(webServiceContext.getMessageContext());
-        return AuthenticationHelpers.invalidateSession(sessionToken);
-    }
-
-    @Override
     public boolean register() {
         return false;
     }
