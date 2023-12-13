@@ -1,13 +1,18 @@
 package cd.project.frontend.rest.entities;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = "UserCredentials")
+@XmlType(name = "UserCredentials")
 public class UserCredentials {
     private String username;
     private String password;
 
     public UserCredentials() {}
+
+    public UserCredentials(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     public String getUsername() {
         return this.username;
