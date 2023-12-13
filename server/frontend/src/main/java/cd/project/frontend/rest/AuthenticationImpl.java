@@ -20,6 +20,22 @@ public class AuthenticationImpl implements Authentication {
     }
 
     @POST
+    @Path("/register")
+    public Response register(UserCredentials credentials) {
+        String username = credentials.getUsername();
+        String password = credentials.getPassword();
+
+        if (!AuthenticationHelpers.usernameIsAvailable(username)) {
+            return Response.status(409).entity("Username already exists").build();
+        }
+
+        if (!AuthenticationHelpers.register(username, password)) {
+            return Response.status(500).entity("Failed to create user account").build();
+        }
+        return Response.ok("Account created successfully").build();
+    }
+
+    @POST
     @Path("/authenticate")
     public Response authenticate(UserCredentials credentials) {
         String username = credentials.getUsername();

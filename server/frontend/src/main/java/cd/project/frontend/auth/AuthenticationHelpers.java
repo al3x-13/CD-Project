@@ -40,12 +40,11 @@ public class AuthenticationHelpers {
     public static String authenticate(String username, String password) {
         ResultSet data = DbConnection.executeQuery("SELECT id, password_hash FROM users WHERE username = ?", username);
         boolean validPassword = false;
-        int userId;
+        int userId = -1;
 
         try {
             if (!data.next()) return null;
             validPassword = BCrypt.checkpw(password, data.getString("password_hash"));
-            userId = data.getInt("id");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -71,13 +70,12 @@ public class AuthenticationHelpers {
      * @return Whether username is available
      */
     public static boolean usernameIsAvailable(String username) {
-        ResultSet data = DbConnection.executeQuery("SELECT * FROM users WHERE username = ?", username);
+        ResultSet data = DbConnection.executeQuery("SELECT COUNT(*) as count FROM users WHERE username = ?", username);
         if (data == null) return false;
 
         try {
             data.next();
-            System.out.println("ROW COUNT: " + data.getInt(1));
-            return data.getInt(1) == 0;
+            return data.getInt("count") == 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

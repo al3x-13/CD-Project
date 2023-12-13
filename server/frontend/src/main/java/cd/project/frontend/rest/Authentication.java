@@ -7,5 +7,6 @@ import jakarta.ws.rs.core.Response;
 
 public interface Authentication {
     String test();
+    Response register(UserCredentials credentials);
     Response authenticate(UserCredentials credentials);
 }
