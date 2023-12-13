@@ -20,29 +20,8 @@ public class AuthenticationImpl implements Authentication {
     }
 
     @POST
-    @Path("/test2")
-    public Response test2(String test) {
-        System.out.println("TESTING2 - " + test);
-        return Response.ok("TESTING2 - " + test).build();
-    }
-
-    @GET
-    @Path("/test3")
-    public UserCredentials test3() {
-        UserCredentials credentials = new UserCredentials("test", "testing");
-        return credentials;
-    }
-
-    @POST
-    @Path("/test4")
-    public String test4(UserCredentials credentials) {
-        return "username: " + credentials.getUsername();
-    }
-
-    @POST
     @Path("/authenticate")
     public Response authenticate(UserCredentials credentials) {
-        System.out.println("CREDS: " + credentials);
         String username = credentials.getUsername();
         String password = credentials.getPassword();
 
@@ -58,20 +37,5 @@ public class AuthenticationImpl implements Authentication {
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
         return Response.ok(response).build();
-    }
-
-    @GET
-    @Path("/logout")
-    public Response invalidateSession(@HeaderParam("Authorization") String authHeader) {
-        String token = authHeader;
-        System.out.println("OUI: " + token);
-        if (token == null) {
-            return Response.status(401).entity("Missing 'Authorization' header").build();
-        }
-
-        if (!AuthenticationHelpers.invalidateSession(token)) {
-            return Response.status(401).entity("Failed to invalidate session").build();
-        }
-        return Response.ok("Session invalidated").build();
     }
 }

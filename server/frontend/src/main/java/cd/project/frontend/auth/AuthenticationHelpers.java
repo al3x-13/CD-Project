@@ -38,39 +38,22 @@ public class AuthenticationHelpers {
      * @return User session token or null
      */
     public static String authenticate(String username, String password) {
-        ResultSet data = DbConnection.executeQuery("SELECT password_hash FROM users WHERE username = ?", username);
+        ResultSet data = DbConnection.executeQuery("SELECT id, password_hash FROM users WHERE username = ?", username);
         boolean validPassword = false;
+        int userId;
 
         try {
             if (!data.next()) return null;
             validPassword = BCrypt.checkpw(password, data.getString("password_hash"));
+            userId = data.getInt("id");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         if (!validPassword) return null;
 
-        // generating new session token and token expiration timestamp
-        String newSessionToken = UUID.randomUUID().toString();
-
-        return DbConnection.executeUpdate(
-                "UPDATE users SET session_token = ? WHERE username = ?",
-                newSessionToken,
-                username
-        ) == 1 ? newSessionToken : null;
-    }
-
-    /**
-     * Invalidates a user session.
-     * @param sessionToken session token
-     * @return Whether user session was invalidated successfully
-     */
-    public static boolean invalidateSession(String sessionToken) {
-        if (sessionToken == null) return false;
-        return DbConnection.executeUpdate(
-                "UPDATE users SET session_token = null WHERE session_token = ?",
-                sessionToken
-        ) == 1;
+        // generate new jwt token
+        return JwtHelper.createToken(userId);
     }
 
     /**

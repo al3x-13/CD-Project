@@ -10,13 +10,13 @@ import java.util.Date;
 public class JwtHelper {
     private static Algorithm algorithm = Algorithm.HMAC256(System.getenv("JWT_SECRET"));
 
-    public static String createToken(String userId) {
+    public static String createToken(int userId) {
         Date nowTimestamp = new Date(System.currentTimeMillis());
         Date expireTimestamp = new Date(System.currentTimeMillis() + 6 * 60 * 60 * 1000);   // 6h expire time
         System.out.println("Expire timestamp: " + expireTimestamp);
 
         return JWT.create()
-                .withSubject(userId)
+                .withSubject(String.valueOf(userId))
                 .withIssuedAt(nowTimestamp)
                 .withExpiresAt(expireTimestamp)
                 .sign(algorithm);
