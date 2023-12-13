@@ -12,8 +12,6 @@
             http://cxf.apache.org/jaxrs
             http://cxf.apache.org/schemas/jaxrs.xsd"
 >
-    <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-
     <!-- SOAP beans -->
     <bean id="soapAuth" class="cd.project.frontend.soap.AuthenticationImpl" />
 
@@ -32,5 +30,9 @@
         <jaxrs:serviceBeans>
             <ref bean="restAuth" />
         </jaxrs:serviceBeans>
+
+        <jaxrs:providers>
+            <bean class="com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider"/>
+        </jaxrs:providers>
     </jaxrs:server>
 </beans>
