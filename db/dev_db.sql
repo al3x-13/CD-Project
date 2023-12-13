@@ -108,7 +108,7 @@ CREATE SEQUENCE public.users_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 2;
 
 
 ALTER TABLE public.users_id_seq OWNER TO admin;
