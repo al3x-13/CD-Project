@@ -5,7 +5,6 @@ import cd.project.frontend.rest.entities.UserCredentials;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +24,19 @@ public class AuthenticationImpl implements Authentication {
     public Response test2(String test) {
         System.out.println("TESTING2 - " + test);
         return Response.ok("TESTING2 - " + test).build();
+    }
+
+    @GET
+    @Path("/test3")
+    public UserCredentials test3() {
+        UserCredentials credentials = new UserCredentials("test", "testing");
+        return credentials;
+    }
+
+    @POST
+    @Path("/test4")
+    public String test4(UserCredentials credentials) {
+        return "username: " + credentials.getUsername();
     }
 
     @POST
