@@ -1,9 +1,9 @@
 package cd.project.frontend.auth;
 
 public enum UnprotectedEndpointsSOAP {
-    HOME("/soap"),
-    LOGIN("/soap/auth/login"),
-    REGISTER("/soap/auth/register");
+    HOME("/frontend/soap"),
+    LOGIN("/frontend/soap/auth/login"),
+    REGISTER("/frontend/soap/auth/register");
 
     private final String endpoint;
 

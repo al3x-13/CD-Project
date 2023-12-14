@@ -50,27 +50,8 @@ public class AuthenticationHelpers {
 
         if (!validPassword) return null;
 
-        // generating new session token and token expiration timestamp
-        String newSessionToken = UUID.randomUUID().toString();
-
-        return DbConnection.executeUpdate(
-                "UPDATE users SET session_token = ? WHERE username = ?",
-                newSessionToken,
-                username
-        ) == 1 ? newSessionToken : null;
-    }
-
-    /**
-     * Invalidates a user session.
-     * @param sessionToken session token
-     * @return Whether user session was invalidated successfully
-     */
-    public static boolean invalidateSession(String sessionToken) {
-        if (sessionToken == null) return false;
-        return DbConnection.executeUpdate(
-                "UPDATE users SET session_token = null WHERE session_token = ?",
-                sessionToken
-        ) == 1;
+        // generate new jwt token
+        return JwtHelper.createToken(username);
     }
 
     /**
@@ -88,13 +69,12 @@ public class AuthenticationHelpers {
      * @return Whether username is available
      */
     public static boolean usernameIsAvailable(String username) {
-        ResultSet data = DbConnection.executeQuery("SELECT * FROM users WHERE username = ?", username);
+        ResultSet data = DbConnection.executeQuery("SELECT COUNT(*) as count FROM users WHERE username = ?", username);
         if (data == null) return false;
 
         try {
             data.next();
-            System.out.println("ROW COUNT: " + data.getInt(1));
-            return data.getInt(1) == 0;
+            return data.getInt("count") == 0;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -107,7 +87,15 @@ public class AuthenticationHelpers {
      */
     public static boolean endpointIsProtected(String endpoint) {
         boolean protectedEndpoint = true;
+        // Protected SOAP endpoints
         for (UnprotectedEndpointsSOAP value : UnprotectedEndpointsSOAP.values()) {
+            if (value.getEndpoint().equals(endpoint)) {
+                protectedEndpoint = false;
+                break;
+            }
+        }
+        // Protected REST endopints
+        for (UnprotectedEndpointsREST value : UnprotectedEndpointsREST.values()) {
             if (value.getEndpoint().equals(endpoint)) {
                 protectedEndpoint = false;
                 break;

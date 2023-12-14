@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Path("/auth")
 public class AuthenticationImpl implements Authentication {
     @GET
     @Path("/test")
@@ -20,29 +21,24 @@ public class AuthenticationImpl implements Authentication {
     }
 
     @POST
-    @Path("/test2")
-    public Response test2(String test) {
-        System.out.println("TESTING2 - " + test);
-        return Response.ok("TESTING2 - " + test).build();
-    }
+    @Path("/register")
+    public Response register(UserCredentials credentials) {
+        String username = credentials.getUsername();
+        String password = credentials.getPassword();
 
-    @GET
-    @Path("/test3")
-    public UserCredentials test3() {
-        UserCredentials credentials = new UserCredentials("test", "testing");
-        return credentials;
-    }
+        if (!AuthenticationHelpers.usernameIsAvailable(username)) {
+            return Response.status(409).entity("Username already exists").build();
+        }
 
-    @POST
-    @Path("/test4")
-    public String test4(UserCredentials credentials) {
-        return "username: " + credentials.getUsername();
+        if (!AuthenticationHelpers.register(username, password)) {
+            return Response.status(500).entity("Failed to create user account").build();
+        }
+        return Response.ok("Account created successfully").build();
     }
 
     @POST
     @Path("/authenticate")
     public Response authenticate(UserCredentials credentials) {
-        System.out.println("CREDS: " + credentials);
         String username = credentials.getUsername();
         String password = credentials.getPassword();
 
@@ -58,20 +54,5 @@ public class AuthenticationImpl implements Authentication {
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
         return Response.ok(response).build();
-    }
-
-    @GET
-    @Path("/logout")
-    public Response invalidateSession(@HeaderParam("Authorization") String authHeader) {
-        String token = authHeader;
-        System.out.println("OUI: " + token);
-        if (token == null) {
-            return Response.status(401).entity("Missing 'Authorization' header").build();
-        }
-
-        if (!AuthenticationHelpers.invalidateSession(token)) {
-            return Response.status(401).entity("Failed to invalidate session").build();
-        }
-        return Response.ok("Session invalidated").build();
     }
 }

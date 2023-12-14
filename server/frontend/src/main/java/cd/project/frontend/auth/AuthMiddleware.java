@@ -1,38 +1,43 @@
 package cd.project.frontend.auth;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-public class AuthMiddleware implements Filter {
-
+public class AuthMiddleware extends OncePerRequestFilter {
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        Filter.super.init(filterConfig);
-    }
-
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException
-    {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-
-        System.out.println(request.getMethod() + " at " + request.getServletPath());
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // TODO: remove this
+        System.out.println(request.getMethod() + " at " + request.getRequestURI());
         System.out.println("Auth header: " + request.getHeader("Authorization"));
+        String uri = request.getRequestURI();
 
-        // TODO: auth validation
-        if (AuthenticationHelpers.endpointIsProtected(request.getServletPath())) {
+        if (AuthenticationHelpers.endpointIsProtected(uri) && !uri.equals("/frontend/")) {
             System.out.println("PROTECTED ENDPOINT");
+
+            String authHeader = request.getHeader("Authorization");
+            if (authHeader == null) {
+                response.sendError(401, "Missing 'Authorization' header");
+                return;
+            }
+
+            if (!authHeader.startsWith("Bearer ")) {
+                response.sendError(401, "Invalid 'Authorization' header. Must use Bearer scheme");
+                return;
+            }
+
+            String token = authHeader.split(" ")[1];
+            DecodedJWT jwt = JwtHelper.verifyToken(token);
+            if (jwt == null) {
+                response.sendError(401, "JWT is not valid");
+                return;
+            }
+            System.out.println("REQUEST by '" + jwt.getSubject() + "'");
         }
-
         filterChain.doFilter(request, response);
-    }
-
-    @Override
-    public void destroy() {
-        Filter.super.destroy();
     }
 }

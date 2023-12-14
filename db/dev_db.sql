@@ -92,9 +92,7 @@ ALTER TABLE public.lounges OWNER TO admin;
 CREATE TABLE public.users (
     id integer NOT NULL,
     username character varying(50) NOT NULL,
-    password_hash text NOT NULL,
-    session_token text,
-	session_expires_at timestamp with time zone
+    password_hash text NOT NULL
 );
 
 
@@ -110,7 +108,7 @@ CREATE SEQUENCE public.users_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 2;
 
 
 ALTER TABLE public.users_id_seq OWNER TO admin;
