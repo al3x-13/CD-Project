@@ -88,7 +88,15 @@ public class AuthenticationHelpers {
      */
     public static boolean endpointIsProtected(String endpoint) {
         boolean protectedEndpoint = true;
+        // Protected SOAP endpoints
         for (UnprotectedEndpointsSOAP value : UnprotectedEndpointsSOAP.values()) {
+            if (value.getEndpoint().equals(endpoint)) {
+                protectedEndpoint = false;
+                break;
+            }
+        }
+        // Protected REST endopints
+        for (UnprotectedEndpointsREST value : UnprotectedEndpointsREST.values()) {
             if (value.getEndpoint().equals(endpoint)) {
                 protectedEndpoint = false;
                 break;
