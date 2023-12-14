@@ -1,9 +1,9 @@
 package cd.project.frontend.auth;
 
 public enum UnprotectedEndpointsREST {
-    HOME("/rest"),
-    LOGIN("/rest/auth/login"),
-    REGISTER("/rest/auth/register");
+    HOME("/frontend/rest"),
+    LOGIN("/frontend/rest/auth/authenticate"),
+    REGISTER("/frontend/rest/auth/register");
 
     private final String endpoint;
 
