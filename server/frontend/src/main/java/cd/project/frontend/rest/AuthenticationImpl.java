@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Path("/auth")
 public class AuthenticationImpl implements Authentication {
     @GET
     @Path("/test")
