@@ -16,7 +16,7 @@ public class AuthMiddleware extends OncePerRequestFilter {
         System.out.println("Auth header: " + request.getHeader("Authorization"));
         String uri = request.getRequestURI();
 
-        if (AuthenticationHelpers.endpointIsProtected(uri) && !uri.equals("/frontend/")) {
+        if (AuthenticationHelpers.endpointIsProtected(uri)) {
             System.out.println("PROTECTED ENDPOINT");
 
             String authHeader = request.getHeader("Authorization");
