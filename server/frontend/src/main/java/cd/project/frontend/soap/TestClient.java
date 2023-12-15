@@ -32,7 +32,7 @@ public class TestClient {
                     return;
                 }
 
-                System.out.println(execute(service, requestCtx, input));
+                System.out.println(execute(scanner, service, requestCtx, input));
             }
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -41,17 +41,33 @@ public class TestClient {
         }
     }
 
-    private static String execute(Authentication service, Map<String, Object> requestCtx, String command) {
+    private static String execute(Scanner scanner, Authentication service, Map<String, Object> requestCtx, String command) {
+        String username, password;
+
         switch (command) {
             case "login":
-                String sessionToken = service.authenticate("john", "john");
+                System.out.println("--- User Authentication ---");
+                System.out.print("Enter username: ");
+                username = scanner.nextLine();
+                System.out.print("Enter password: ");
+                password = scanner.nextLine();
+                String sessionToken = service.authenticate(username, password);
                 if (sessionToken == null) return "FAILURE";
                 setAuthHeader(requestCtx, sessionToken);
 
                 // TODO: debug
                 System.out.println("HEADERS: " + requestCtx.get(MessageContext.HTTP_REQUEST_HEADERS));
-
                 return "SUCCESS";
+            case "register":
+                System.out.println("--- User Registration ---");
+                System.out.print("Enter username: ");
+                username = scanner.nextLine();
+                System.out.print("Enter password: ");
+                password = scanner.nextLine();
+                boolean success = service.register(username, password);
+                return success ? "SUCCESS" : "FAILURE";
+            case "test":
+                return service.test();
             default:
                 return "U dumb?!";
         }

@@ -7,7 +7,8 @@ import jakarta.jws.WebService;
 public interface Authentication {
     @WebMethod
     String authenticate(String username, String password);
-
     @WebMethod
-    boolean register();
+    boolean register(String username, String password);
+    @WebMethod
+    String test();
 }

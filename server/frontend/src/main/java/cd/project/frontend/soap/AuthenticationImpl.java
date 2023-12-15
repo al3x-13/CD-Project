@@ -5,21 +5,26 @@ import jakarta.annotation.Resource;
 import jakarta.jws.WebService;
 import jakarta.xml.ws.WebServiceContext;
 
-@WebService(endpointInterface = "cd.project.frontend.soap.Authentication")
+@WebService(endpointInterface = "cd.project.frontend.soap.Authentication", serviceName = "Authentication")
 public class AuthenticationImpl implements Authentication {
     @Resource
     private WebServiceContext webServiceContext;
 
     @Override
     public String authenticate(String username, String password) {
-        // TODO: remove this
-        System.out.println("Username input: " + username);
-        System.out.println("Password input: " + password);
         return AuthenticationHelpers.authenticate(username, password);
     }
 
     @Override
-    public boolean register() {
-        return false;
+    public boolean register(String username, String password) {
+        if (!AuthenticationHelpers.usernameIsAvailable(username)) {
+            return false;
+        }
+        return AuthenticationHelpers.register(username, password);
+    }
+
+    @Override
+    public String test() {
+        return "DEEZ NUTZ";
     }
 }
