@@ -16,7 +16,7 @@
     <bean id="soapAuth" class="cd.project.frontend.soap.AuthenticationImpl" />
 
     <!-- SOAP Endpoints -->
-    <jaxws:server id="soap" address="/soap">
+    <jaxws:server id="soap" address="/soap/auth">
         <jaxws:serviceBean>
             <ref bean="soapAuth" />
         </jaxws:serviceBean>
