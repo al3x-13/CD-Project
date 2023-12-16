@@ -1,6 +1,7 @@
 package cd.project.backend.database;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DbConnection {
     private static Connection conn;
@@ -89,6 +90,20 @@ public class DbConnection {
         } catch (SQLException e) {
             System.err.println("Failed to close db connection: " + e.getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Creates a sql VARCHAR array from a string list.
+     * @param data string list
+     * @return SQL VARCHAR array
+     */
+    public static Array stringListToVarcharArray(ArrayList<String> data) {
+        String[] dataArray = data.toArray(new String[0]);
+        try {
+            return conn.createArrayOf("varchar", dataArray);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
