@@ -48,7 +48,7 @@ public class BookingServiceHelpers {
      * @param date date
      * @param fromTime start time
      * @param toTime end time
-     * @return Available Lounges
+     * @return Available Lounges or null if none
      */
     public static ArrayList<Lounge> getAvailableLounges(
             char beachId,
