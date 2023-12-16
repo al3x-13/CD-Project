@@ -12,27 +12,7 @@ import java.util.ArrayList;
 
 public class BookingServiceHelpers {
     /**
-     * Gets Ids from Bookings for the specified date.
-     * @param date date input
-     * @return Booking IDs
-     */
-    public static ArrayList<Integer> getBookingIdsForDate(LocalDate date) {
-        ArrayList<Integer> ids = new ArrayList<>();
-
-        ResultSet data = DbConnection.executeQuery("SELECT id FROM bookings WHERE date = ?", date);
-        while (true) {
-            try {
-                if (!data.next()) break;
-                ids.add(data.getInt("id"));
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return ids.isEmpty() ? null : ids;
-    }
-
-    /**
-     * Gets Ids from Bookings for the specified date and time interval.
+     * Gets Ids from Bookings for the specified date and in the specified time interval.
      * @param date date input
      * @param fromTime time interval start
      * @param toTime time interval end
