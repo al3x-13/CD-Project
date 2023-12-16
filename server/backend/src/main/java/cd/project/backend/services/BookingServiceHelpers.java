@@ -180,11 +180,6 @@ public class BookingServiceHelpers {
             }
         }
 
-        // TODO: debugging
-        for (Lounge bookingLounge : bookingLounges) {
-            System.out.println(bookingLounge);
-        }
-
         Booking newBooking = new Booking(
                 beachId,
                 date,
