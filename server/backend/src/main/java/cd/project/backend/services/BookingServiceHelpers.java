@@ -16,7 +16,7 @@ public class BookingServiceHelpers {
      * @param date date input
      * @param fromTime time interval start
      * @param toTime time interval end
-     * @return Booking IDs
+     * @return Booking IDs or null if none
      */
     public static ArrayList<Integer> getBookingIdsForDateAndTime(
             LocalDate date,
