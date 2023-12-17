@@ -179,4 +179,16 @@ public class BookingServiceHelpers {
         }
         return false;
     }
+
+    /**
+     * Cancels a booking by id.
+     * @param bookingId booking id
+     * @return SUCCESS
+     */
+    public static boolean cancelBooking(int bookingId) {
+        return DbConnection.executeUpdate(
+                "DELETE FROM bookings WHERE id = ?",
+                bookingId
+        ) == 1;
+    }
 }

@@ -51,6 +51,6 @@ public class BookingService extends UnicastRemoteObject implements BookingServic
 
     @Override
     public boolean cancelBooking(int bookingId) throws RemoteException {
-        return false;
+        return BookingServiceHelpers.cancelBooking(bookingId);
     }
 }
