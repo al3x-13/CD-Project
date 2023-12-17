@@ -1,5 +1,6 @@
 package cd.project.backend.services;
 
+import cd.project.backend.database.DbConnection;
 import cd.project.backend.domain.Lounge;
 import org.junit.jupiter.api.Test;
 
@@ -111,38 +112,43 @@ class BookingServiceHelpersTest {
 
     @Test
     void createBooking_ValidBookings() {
-        assertNotEquals(
-                -1,
-                BookingServiceHelpers.createBooking(
+        int booking1 = BookingServiceHelpers.createBooking(
                 'A',
                 LocalDate.of(2024, 6, 18),
                 LocalTime.of(10, 0),
                 LocalTime.of(11, 0),
                 5,
                 1
-        ));
+        );
+        assertNotEquals(-1, booking1);
 
-        assertNotEquals(
-                -1,
-                BookingServiceHelpers.createBooking(
+        int booking2 = BookingServiceHelpers.createBooking(
                 'B',
                 LocalDate.of(2024, 6, 19),
                 LocalTime.of(10, 0),
                 LocalTime.of(11, 0),
                 8,
                 1
-        ));
+        );
+        assertNotEquals(-1, booking2);
 
-        assertNotEquals(
-                -1,
-                BookingServiceHelpers.createBooking(
-                'A',
+        int booking3 = BookingServiceHelpers.createBooking(
+            'A',
                 LocalDate.of(2024, 6, 18),
                 LocalTime.of(14, 0),
                 LocalTime.of(18,0),
                 14,
                 1
-        ));
+        );
+        assertNotEquals(-1, booking3);
+
+        // cleanup
+        DbConnection.executeUpdate(
+                "DELETE FROM bookings WHERE id IN (?, ?, ?)",
+                booking1,
+                booking2,
+                booking3
+        );
     }
 
     @Test
