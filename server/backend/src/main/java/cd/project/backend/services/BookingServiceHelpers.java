@@ -79,35 +79,6 @@ public class BookingServiceHelpers {
     }
 
     /**
-     * Gets remaining lounge seats based on the provided input.
-     * @param beachId beach id
-     * @param date date
-     * @param fromTime from time
-     * @param toTime to time
-     * @return Remaining lounge seats
-     */
-    public static int getRemainingLoungeSeats(
-            char beachId,
-            LocalDate date,
-            LocalTime fromTime,
-            LocalTime toTime
-    ) {
-        ArrayList<Lounge> remainingLounges = getAvailableLounges(
-                beachId,
-                date,
-                fromTime,
-                toTime
-        );
-        if (remainingLounges == null) return 0;
-
-        int totalRemainingSeats = 0;
-        for (Lounge lounge : remainingLounges) {
-            totalRemainingSeats += lounge.getMaxCapacity();
-        }
-        return totalRemainingSeats;
-    }
-
-    /**
      * Gets total number of lounge seats from lounge list.
      * @param lounges lounges list
      * @return Total lounge seats
