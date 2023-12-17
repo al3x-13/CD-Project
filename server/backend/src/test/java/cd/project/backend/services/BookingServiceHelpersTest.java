@@ -111,7 +111,9 @@ class BookingServiceHelpersTest {
 
     @Test
     void createBooking_ValidBookings() {
-        assertTrue(BookingServiceHelpers.createBooking(
+        assertNotEquals(
+                -1,
+                BookingServiceHelpers.createBooking(
                 'A',
                 LocalDate.of(2024, 6, 18),
                 LocalTime.of(10, 0),
@@ -120,7 +122,9 @@ class BookingServiceHelpersTest {
                 1
         ));
 
-        assertTrue(BookingServiceHelpers.createBooking(
+        assertNotEquals(
+                -1,
+                BookingServiceHelpers.createBooking(
                 'B',
                 LocalDate.of(2024, 6, 19),
                 LocalTime.of(10, 0),
@@ -129,7 +133,9 @@ class BookingServiceHelpersTest {
                 1
         ));
 
-        assertTrue(BookingServiceHelpers.createBooking(
+        assertNotEquals(
+                -1,
+                BookingServiceHelpers.createBooking(
                 'A',
                 LocalDate.of(2024, 6, 18),
                 LocalTime.of(14, 0),
@@ -141,7 +147,9 @@ class BookingServiceHelpersTest {
 
     @Test
     void createBooking_InvalidBookings() {
-        assertFalse(BookingServiceHelpers.createBooking(
+        assertEquals(
+                -1,
+                BookingServiceHelpers.createBooking(
                 'A',
                 LocalDate.of(2024, 6, 12),
                 LocalTime.of(10, 0),
@@ -150,7 +158,9 @@ class BookingServiceHelpersTest {
                 1
         ));
 
-        assertFalse(BookingServiceHelpers.createBooking(
+        assertEquals(
+                -1,
+                BookingServiceHelpers.createBooking(
                 'C',
                 LocalDate.of(2024, 6, 14),
                 LocalTime.of(11, 0),
@@ -159,7 +169,9 @@ class BookingServiceHelpersTest {
                 1
         ));
 
-        assertFalse(BookingServiceHelpers.createBooking(
+        assertEquals(
+                -1,
+                BookingServiceHelpers.createBooking(
                 'C',
                 LocalDate.of(2024, 6, 14),
                 LocalTime.of(11, 0),
