@@ -103,10 +103,14 @@ public class Booking {
         return ids;
     }
 
-    public boolean saveToDB() throws SQLException {
+    /**
+     * Saves the booking to the database.
+     * @return Booking ID or -1 on failure
+     */
+    public int saveToDB() throws SQLException {
         // checks if a database record already exists
         ResultSet data = DbConnection.executeQuery("SELECT id FROM bookings WHERE id = ?", this.id);
-        if (data.next()) return false;
+        if (data.next()) return -1;
 
         DbConnection.setAutoCommit(false);
 
@@ -127,6 +131,13 @@ public class Booking {
 
         DbConnection.commit();
         DbConnection.setAutoCommit(true);
-        return bookingsUpdatedSuccess;
+        if (!bookingsUpdatedSuccess) return -1;
+
+        // id of new booking
+        ResultSet bookingData = DbConnection.executeQuery(
+                "SELECT id FROM bookings ORDER BY id DESC"
+        );
+        if (bookingData == null || !bookingData.next()) return -1;
+        return bookingData.getInt("id");
     }
 }

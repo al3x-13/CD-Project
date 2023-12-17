@@ -100,7 +100,7 @@ public class BookingServiceHelpers {
      * @param individuals amount of people
      * @return Whether booking was created successfully
      */
-    public static boolean createBooking(
+    public static int createBooking(
             char beachId,
             LocalDate date,
             LocalTime fromTime,
@@ -110,12 +110,12 @@ public class BookingServiceHelpers {
     ) {
         ArrayList<Lounge> availableLounges = getAvailableLounges(beachId, date, fromTime, toTime);
         ArrayList<Lounge> bookingLounges = new ArrayList<>();
-        if (availableLounges == null) return false;
+        if (availableLounges == null) return -1;
         int totalSeats = getTotalLoungeSeats(availableLounges);
         int remainingSeats = individuals;
 
         if (totalSeats < individuals) {
-            return false;
+            return -1;
         }
 
         while (remainingSeats > 0) {

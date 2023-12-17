@@ -34,9 +34,9 @@ public interface BookingServiceInterface extends Remote {
      * @param fromTime from time
      * @param toTime to time
      * @param individuals amount of people
-     * @return Whether booking was created successfully
+     * @return Booking ID or -1 on failure
      */
-   boolean createBooking(
+   int createBooking(
            char beachId,
            LocalDate date,
            LocalTime fromTime,

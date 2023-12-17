@@ -37,7 +37,7 @@ public class BookingService extends UnicastRemoteObject implements BookingServic
     }
 
     @Override
-    public boolean createBooking(
+    public int createBooking(
             char beachId,
             LocalDate date,
             LocalTime fromTime,
