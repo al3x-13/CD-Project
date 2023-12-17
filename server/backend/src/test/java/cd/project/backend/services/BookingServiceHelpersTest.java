@@ -4,6 +4,7 @@ import cd.project.backend.database.DbConnection;
 import cd.project.backend.domain.Lounge;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -185,5 +186,62 @@ class BookingServiceHelpersTest {
                 1,
                 1
         ));
+    }
+
+    @Test
+    void cancelBooking_ValidBookings() {
+        ArrayList<String> bookingLounges = new ArrayList<>(Arrays.asList(
+                "A8", "A16"
+        ));
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (id, beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                323,
+                'A',
+                LocalDate.of(2024, 7, 18),
+                LocalTime.of(13, 0),
+                LocalTime.of(17, 0),
+                1,
+                DbConnection.stringListToVarcharArray(bookingLounges)
+        );
+
+        bookingLounges = new ArrayList<>(Arrays.asList( "B3", "B10", "B11" ));
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (id, beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                324,
+                'B',
+                LocalDate.of(2024, 7, 19),
+                LocalTime.of(8, 0),
+                LocalTime.of(18, 0),
+                1,
+                DbConnection.stringListToVarcharArray(bookingLounges)
+
+        );
+
+        bookingLounges = new ArrayList<>(Arrays.asList( "C3", "C4", "C5", "C9" ));
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (id, beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                325,
+                'C',
+                LocalDate.of(2024, 7, 20),
+                LocalTime.of(9, 0),
+                LocalTime.of(16, 0),
+                1,
+                DbConnection.stringListToVarcharArray(bookingLounges)
+
+        );
+
+        assertTrue(BookingServiceHelpers.cancelBooking(323));
+        assertTrue(BookingServiceHelpers.cancelBooking(324));
+        assertTrue(BookingServiceHelpers.cancelBooking(325));
+    }
+
+    @Test
+    void cancelBooking_InvalidBookings() {
+        assertFalse(BookingServiceHelpers.cancelBooking(878));
+        assertFalse(BookingServiceHelpers.cancelBooking(5235));
+        assertFalse(BookingServiceHelpers.cancelBooking(2349));
     }
 }
