@@ -54,4 +54,4 @@ jobs:
           PGPASSWORD: ${{ env.POSTGRES_PASSWORD }}
             
       - name: Maven tests
-        run: mvn -B test
+        run: mvn -B test --file server/pom.xml
