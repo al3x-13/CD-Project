@@ -60,7 +60,7 @@ CREATE SEQUENCE public.bookings_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 14;
 
 
 ALTER TABLE public.bookings_id_seq OWNER TO admin;
@@ -220,8 +220,8 @@ C10	C	2
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public.users (id, username, password_hash, session_token) FROM stdin;
-1	john	$2a$10$LOsnM1XyJ8nUKTA0hQuxN.N6Dw9mDIzZvPA3xb3bfFUOlvnpbxj2e	\N
+COPY public.users (id, username, password_hash) FROM stdin;
+1	john	$2a$10$LOsnM1XyJ8nUKTA0hQuxN.N6Dw9mDIzZvPA3xb3bfFUOlvnpbxj2e
 \.
 
 
@@ -229,7 +229,7 @@ COPY public.users (id, username, password_hash, session_token) FROM stdin;
 -- Name: bookings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.bookings_id_seq', 1, false);
+SELECT pg_catalog.setval('public.bookings_id_seq', 14, true);
 
 
 --
@@ -270,14 +270,6 @@ ALTER TABLE ONLY public.lounges
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-
-
---
--- Name: users users_session_token_key; Type: CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_session_token_key UNIQUE (session_token);
 
 
 --
