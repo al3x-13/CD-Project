@@ -1,6 +1,7 @@
 package cd.project.backend.database;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DbConnection {
     private static Connection conn;
@@ -60,6 +61,25 @@ public class DbConnection {
     }
 
     /**
+     * Executes a data query that takes an ArrayList as the query parameters.
+     * @param query sql query
+     * @param params query parameters as arraylist
+     * @return ResultSet object
+     */
+    public static ResultSet executeQueryWithArraylist(String query, ArrayList<String> params) {
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            System.err.println("Failed to execute db query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Sets auto-commit status for database connection.
      * @param value auto-commit value
      */
@@ -89,6 +109,20 @@ public class DbConnection {
         } catch (SQLException e) {
             System.err.println("Failed to close db connection: " + e.getMessage());
             return false;
+        }
+    }
+
+    /**
+     * Creates a sql VARCHAR array from a string list.
+     * @param data string list
+     * @return SQL VARCHAR array
+     */
+    public static Array stringListToVarcharArray(ArrayList<String> data) {
+        String[] dataArray = data.toArray(new String[0]);
+        try {
+            return conn.createArrayOf("varchar", dataArray);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

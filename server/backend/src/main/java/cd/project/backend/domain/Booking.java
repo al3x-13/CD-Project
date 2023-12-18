@@ -2,6 +2,7 @@ package cd.project.backend.domain;
 
 import cd.project.backend.database.DbConnection;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -20,33 +21,64 @@ public class Booking {
     private ArrayList<Lounge> lounges;
 
     /**
-     * Creates a new lounge booking and saves it to the database.
-     * @param db database connection
+     * Creates a new lounge booking.
      * @param beachID beach identifier
      * @param date booking date
      * @param fromTime start time
      * @param toTime end time
      * @param userID user identifier
      */
-    public Booking(DbConnection db, char beachID, LocalDate date, LocalTime fromTime, LocalTime toTime, int userID, ArrayList<Lounge> lounges) throws SQLException {
+    public Booking(
+            char beachID,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime,
+            int userID,
+            ArrayList<Lounge> lounges
+    ){
         this.beachID = beachID;
         this.date = date;
         this.fromTime = fromTime;
         this.toTime = toTime;
         this.userID = userID;
         this.lounges = lounges;
-        this.saveToDB(db);
+    }
+
+    /**
+     * Creates a new lounge booking with id.
+     * @param id booking id
+     * @param beachID beach identifier
+     * @param date booking date
+     * @param fromTime start time
+     * @param toTime end time
+     * @param userID user identifier
+     */
+    public Booking(
+            int id,
+            char beachID,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime,
+            int userID,
+            ArrayList<Lounge> lounges
+    ){
+        this.id = id;
+        this.beachID = beachID;
+        this.date = date;
+        this.fromTime = fromTime;
+        this.toTime = toTime;
+        this.userID = userID;
+        this.lounges = lounges;
     }
 
     /**
      * Creates a new lounge booking object from an existing database booking.
-     * @param db database connection
      * @param bookingID booking identifier
      */
-    public Booking(DbConnection db, int bookingID) throws Exception {
+    public Booking(int bookingID) throws Exception {
         this.id = bookingID;
 
-        ResultSet data = db.executeQuery("SELECT * FROM bookings WHERE id = ?", bookingID);
+        ResultSet data = DbConnection.executeQuery("SELECT * FROM bookings WHERE id = ?", bookingID);
         if (!data.next()) throw new Exception("Failed to instantiate object: booking id not found");
 
         this.id = data.getInt("id");
@@ -90,29 +122,49 @@ public class Booking {
         return this.lounges;
     }
 
-    private boolean saveToDB(DbConnection db) throws SQLException {
-        // checks if a database record already exists
-        ResultSet data = db.executeQuery("SELECT id FROM bookings WHERE id = ?", this.id);
-        if (data.next()) return false;
+    private ArrayList<String> getLoungeIds() {
+        ArrayList<String> ids = new ArrayList<>();
+        for (Lounge lounge : this.lounges) {
+            ids.add(lounge.getId());
+        }
+        return ids;
+    }
 
-        db.setAutoCommit(false);
+    /**
+     * Saves the booking to the database.
+     * @return Booking ID or -1 on failure
+     */
+    public int saveToDB() throws SQLException {
+        // checks if a database record already exists
+        ResultSet data = DbConnection.executeQuery("SELECT id FROM bookings WHERE id = ?", this.id);
+        if (data.next()) return -1;
+
+        DbConnection.setAutoCommit(false);
+
+        // lounge ids to db query format
+        Array queryLoungeIdsData = DbConnection.stringListToVarcharArray(this.getLoungeIds());
 
         // saves booking to db
-        boolean bookingsUpdated = db.executeUpdate(
-                "UPDATE bookings SET beach_id = ?, date = ?, from_time = ?, to_time = ?",
+        boolean bookingsUpdatedSuccess = DbConnection.executeUpdate(
+                "INSERT INTO bookings (beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)",
                 this.beachID,
                 this.date,
                 this.fromTime,
-                this.toTime
+                this.toTime,
+                this.userID,
+                queryLoungeIdsData
         ) == 1;
 
-        // TODO: finish this when data about lounges has been added
-        boolean bookingLoungesUpdated = db.executeUpdate(
-                ""
-        ) == 1;
+        DbConnection.commit();
+        DbConnection.setAutoCommit(true);
+        if (!bookingsUpdatedSuccess) return -1;
 
-        db.commit();
-        db.setAutoCommit(true);
-        return bookingsUpdated && bookingLoungesUpdated;
+        // id of new booking
+        ResultSet bookingData = DbConnection.executeQuery(
+                "SELECT id FROM bookings ORDER BY id DESC"
+        );
+        if (bookingData == null || !bookingData.next()) return -1;
+        return bookingData.getInt("id");
     }
 }

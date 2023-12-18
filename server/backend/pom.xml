@@ -25,5 +25,28 @@
             <artifactId>postgresql</artifactId>
             <version>42.6.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <environmentVariables>
+                        <DB_URL>localhost:5432/dev-db</DB_URL>
+                        <DB_USERNAME>admin</DB_USERNAME>
+                        <DB_PASSWORD>admin</DB_PASSWORD>
+                    </environmentVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

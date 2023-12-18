@@ -60,7 +60,7 @@ CREATE SEQUENCE public.bookings_id_seq
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
-    CACHE 1;
+    CACHE 14;
 
 
 ALTER TABLE public.bookings_id_seq OWNER TO admin;
@@ -150,6 +150,20 @@ C
 --
 
 COPY public.bookings (id, beach_id, date, from_time, to_time, created_at, user_id, lounge_ids) FROM stdin;
+1	A	2024-06-12	10:00:00	11:00:00	2023-12-17 01:38:30.625406	1	{A16}
+2	A	2024-06-12	10:00:00	11:00:00	2023-12-17 01:39:00.472586	1	{A17,A18,A1}
+3	A	2024-06-12	10:00:00	11:00:00	2023-12-17 01:39:38.040579	1	{A11,A12}
+4	A	2024-06-12	10:00:00	11:00:00	2023-12-17 01:39:41.558063	1	{A13}
+5	A	2024-06-12	10:00:00	11:00:00	2023-12-17 01:39:52.465283	1	{A2}
+6	A	2024-06-12	10:00:00	11:00:00	2023-12-17 01:39:54.662278	1	{A3}
+7	A	2024-06-12	10:00:00	11:00:00	2023-12-17 01:40:01.261202	1	{A4,A5}
+8	B	2024-06-13	10:00:00	11:00:00	2023-12-17 01:46:11.243954	1	{B1}
+9	B	2024-06-13	10:00:00	11:00:00	2023-12-17 01:46:46.783754	1	{B11,B6}
+10	B	2024-06-13	10:00:00	11:00:00	2023-12-17 01:47:17.200241	1	{B2,B3}
+11	B	2024-06-13	10:00:00	11:00:00	2023-12-17 01:47:37.1703	1	{B7,B8}
+12	C	2024-06-14	11:00:00	14:00:00	2023-12-17 01:48:36.13475	1	{C1,C2,C3}
+13	C	2024-06-14	11:00:00	14:00:00	2023-12-17 01:48:43.980997	1	{C4,C5,C6,C7,C8}
+14	C	2024-06-14	11:00:00	14:00:00	2023-12-17 01:48:48.504974	1	{C9,C10}
 \.
 
 
@@ -215,7 +229,7 @@ COPY public.users (id, username, password_hash) FROM stdin;
 -- Name: bookings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.bookings_id_seq', 1, false);
+SELECT pg_catalog.setval('public.bookings_id_seq', 14, true);
 
 
 --
@@ -256,7 +270,6 @@ ALTER TABLE ONLY public.lounges
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-
 
 
 --

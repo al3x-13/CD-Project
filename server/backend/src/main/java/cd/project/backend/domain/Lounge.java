@@ -42,14 +42,27 @@ public class Lounge {
 
     /**
      * Gets lounges from database by id.
-     * @param db db connection
      * @param loungeIds lounge ids
      * @return Lounges
      */
-    public static ArrayList<Lounge> getLoungesByID(DbConnection db, ArrayList<Integer> loungeIds) {
+    public static ArrayList<Lounge> getLoungesByID(ArrayList<String> loungeIds) {
         ArrayList<Lounge> lounges = new ArrayList<>();
 
-        ResultSet data = db.executeQuery("SELECT * FROM ?", loungeIds);
+        // generate list of id values for query
+        StringBuilder queryPlaceholders = new StringBuilder();
+
+        for (int i = 0; i < loungeIds.size(); i++) {
+            queryPlaceholders.append("?");
+            if (i != loungeIds.size() - 1) {
+                queryPlaceholders.append(",");
+            }
+        }
+
+        ResultSet data = DbConnection.executeQueryWithArraylist(
+                "SELECT * FROM lounges WHERE id in (" + queryPlaceholders + ")",
+                loungeIds
+        );
+
         while (true) {
             try {
                 if (!data.next()) break;
@@ -61,6 +74,6 @@ public class Lounge {
                 throw new RuntimeException(e);
             }
         }
-        return lounges.isEmpty() ? null : lounges;
+        return lounges;
     }
 }
