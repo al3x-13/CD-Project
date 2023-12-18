@@ -16,13 +16,7 @@ public class BookingService extends UnicastRemoteObject implements BookingServic
 
     @Override
     public String test(String data) throws RemoteException {
-        ArrayList<Lounge> out = BookingServiceHelpers.getAvailableLounges(
-                'A',
-                LocalDate.of(2023, 11, 29),
-                LocalTime.of(10, 00),
-                LocalTime.of(11, 00)
-        );
-        return "TESTING: " + Arrays.toString(new ArrayList[]{out});
+        return "TESTING: " + data;
     }
 
     @Override
