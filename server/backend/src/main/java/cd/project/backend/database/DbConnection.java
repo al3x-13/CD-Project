@@ -61,6 +61,25 @@ public class DbConnection {
     }
 
     /**
+     * Executes a data query that takes an ArrayList as the query parameters.
+     * @param query sql query
+     * @param params query parameters as arraylist
+     * @return ResultSet object
+     */
+    public static ResultSet executeQueryWithArraylist(String query, ArrayList<String> params) {
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            System.err.println("Failed to execute db query: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Sets auto-commit status for database connection.
      * @param value auto-commit value
      */
