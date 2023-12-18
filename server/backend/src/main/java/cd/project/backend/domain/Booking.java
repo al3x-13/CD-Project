@@ -21,7 +21,7 @@ public class Booking {
     private ArrayList<Lounge> lounges;
 
     /**
-     * Creates a new lounge booking and saves it to the database.
+     * Creates a new lounge booking.
      * @param beachID beach identifier
      * @param date booking date
      * @param fromTime start time
@@ -36,6 +36,33 @@ public class Booking {
             int userID,
             ArrayList<Lounge> lounges
     ){
+        this.beachID = beachID;
+        this.date = date;
+        this.fromTime = fromTime;
+        this.toTime = toTime;
+        this.userID = userID;
+        this.lounges = lounges;
+    }
+
+    /**
+     * Creates a new lounge booking with id.
+     * @param id booking id
+     * @param beachID beach identifier
+     * @param date booking date
+     * @param fromTime start time
+     * @param toTime end time
+     * @param userID user identifier
+     */
+    public Booking(
+            int id,
+            char beachID,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime,
+            int userID,
+            ArrayList<Lounge> lounges
+    ){
+        this.id = id;
         this.beachID = beachID;
         this.date = date;
         this.fromTime = fromTime;
