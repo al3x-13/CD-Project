@@ -7,9 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -243,5 +241,161 @@ class BookingServiceHelpersTest {
         assertFalse(BookingServiceHelpers.cancelBooking(878));
         assertFalse(BookingServiceHelpers.cancelBooking(5235));
         assertFalse(BookingServiceHelpers.cancelBooking(2349));
+    }
+
+    @Test
+    void getUserBookings_ValidUserIds() {
+        // user 1
+        DbConnection.executeUpdate(
+                "INSERT INTO users (id, username, password_hash) VALUES (?, ?, ?)",
+                32,
+                "mark",
+                "test"
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)",
+                'A',
+                LocalDate.of(2024, 8, 12),
+                LocalTime.of(9, 0),
+                LocalTime.of(12, 0),
+                32,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(
+                        List.of( "A3", "A13" )
+                ))
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)",
+                'B',
+                LocalDate.of(2024, 8, 12),
+                LocalTime.of(14, 0),
+                LocalTime.of(18, 0),
+                32,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(
+                        List.of( "B9" )
+                ))
+        );
+
+        // user 2
+        DbConnection.executeUpdate(
+                "INSERT INTO users (id, username, password_hash) VALUES (?, ?, ?)",
+                33,
+                "chris",
+                "test"
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)",
+                'B',
+                LocalDate.of(2024, 8, 12),
+                LocalTime.of(8, 0),
+                LocalTime.of(14, 0),
+                33,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(
+                        List.of( "B8", "B9", "B11" )
+                ))
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)",
+                'B',
+                LocalDate.of(2024, 8, 13),
+                LocalTime.of(8, 0),
+                LocalTime.of(14, 0),
+                33,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(
+                        List.of( "B3", "B6" )
+                ))
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)",
+                'C',
+                LocalDate.of(2024, 8, 14),
+                LocalTime.of(8, 0),
+                LocalTime.of(14, 0),
+                33,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(
+                        List.of( "C4", "C5", "C6", "C7" )
+                ))
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)",
+                'C',
+                LocalDate.of(2024, 8, 15),
+                LocalTime.of(8, 0),
+                LocalTime.of(14, 0),
+                33,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(
+                        List.of( "C6", "C7", "C8", "C9" )
+                ))
+        );
+
+
+        // user 3
+        DbConnection.executeUpdate(
+                "INSERT INTO users (id, username, password_hash) VALUES (?, ?, ?)",
+                34,
+                "martin",
+                "test"
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)",
+                'A',
+                LocalDate.of(2024, 8, 15),
+                LocalTime.of(15, 0),
+                LocalTime.of(18, 0),
+                34,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(
+                        List.of( "A6", "A7", "A8", "A18" )
+                ))
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)",
+                'A',
+                LocalDate.of(2024, 8, 16),
+                LocalTime.of(14, 0),
+                LocalTime.of(20, 0),
+                34,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(
+                        List.of( "A6" )
+                ))
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?)",
+                'B',
+                LocalDate.of(2024, 8, 16),
+                LocalTime.of(15, 0),
+                LocalTime.of(18, 0),
+                34,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(
+                        List.of( "B1" )
+                ))
+        );
+
+        int userBookings = Objects.requireNonNull(BookingServiceHelpers.getUserBookings(1)).size();
+        int user1Bookings = Objects.requireNonNull(BookingServiceHelpers.getUserBookings(32)).size();
+        int user2Bookings = Objects.requireNonNull(BookingServiceHelpers.getUserBookings(33)).size();
+        int user3Bookings = Objects.requireNonNull(BookingServiceHelpers.getUserBookings(34)).size();
+
+        assertTrue(userBookings >= 14);
+        assertEquals(2, user1Bookings);
+        assertEquals(4, user2Bookings);
+        assertEquals(3, user3Bookings);
+
+        // cleanup
+        DbConnection.executeUpdate(
+                "DELETE FROM bookings WHERE user_id IN (?, ?, ?)",
+                32, 33, 34
+        );
+        DbConnection.executeUpdate(
+                "DELETE FROM users WHERE id IN (?, ?, ?)",
+                32, 33, 34
+        );
     }
 }
