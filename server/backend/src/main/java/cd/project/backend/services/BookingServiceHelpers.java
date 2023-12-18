@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BookingServiceHelpers {
     /**
@@ -190,5 +191,50 @@ public class BookingServiceHelpers {
                 "DELETE FROM bookings WHERE id = ?",
                 bookingId
         ) == 1;
+    }
+
+    /**
+     * Gets all the bookings for the specified user id.
+     * @param userId user id
+     * @return Bookings List
+     */
+    public static ArrayList<Booking> getUserBookings(int userId) {
+        ArrayList<Booking> userBookings = new ArrayList<>();
+
+        ResultSet bookingsData = DbConnection.executeQuery(
+                "SELECT id, beach_id, date, from_time, to_time, lounge_ids " +
+                        "FROM bookings WHERE user_id = ?",
+                userId
+        );
+
+        while (true) {
+            try {
+                if (!bookingsData.next()) break;
+                int id = bookingsData.getInt("id");
+                char beachId = bookingsData.getString("beach_id").charAt(0);
+                LocalDate date = bookingsData.getDate("date").toLocalDate();
+                LocalTime fromTime = bookingsData.getTime("from_time").toLocalTime();
+                LocalTime toTime = bookingsData.getTime("to_time").toLocalTime();
+                ArrayList<String> loungeIds = new ArrayList<>(
+                        List.of((String[]) bookingsData
+                        .getArray("lounge_ids")
+                        .getArray())
+                );
+                userBookings.add(
+                        new Booking(
+                                id,
+                                beachId,
+                                date,
+                                fromTime,
+                                toTime,
+                                userId,
+                                Lounge.getLoungesByID(loungeIds)
+                        )
+                );
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return userBookings;
     }
 }

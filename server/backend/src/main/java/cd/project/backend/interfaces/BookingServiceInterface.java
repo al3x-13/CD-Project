@@ -1,5 +1,6 @@
 package cd.project.backend.interfaces;
 
+import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 
 import java.rmi.Remote;
@@ -51,4 +52,11 @@ public interface BookingServiceInterface extends Remote {
      * @return Whether the booking was successfully canceled
      */
    boolean cancelBooking(int bookingId) throws RemoteException;
+
+    /**
+     * Gets all the booking for the specified user.
+     * @param userId user id
+     * @return Bookings List
+     */
+   ArrayList<Booking> getUserBookings(int userId) throws RemoteException;
 }

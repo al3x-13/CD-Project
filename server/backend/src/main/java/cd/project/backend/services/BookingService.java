@@ -1,6 +1,6 @@
 package cd.project.backend.services;
 
-import cd.project.backend.database.DbConnection;
+import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 import cd.project.backend.interfaces.BookingServiceInterface;
 
@@ -52,5 +52,10 @@ public class BookingService extends UnicastRemoteObject implements BookingServic
     @Override
     public boolean cancelBooking(int bookingId) throws RemoteException {
         return BookingServiceHelpers.cancelBooking(bookingId);
+    }
+
+    @Override
+    public ArrayList<Booking> getUserBookings(int userId) throws RemoteException {
+       return BookingServiceHelpers.getUserBookings(userId);
     }
 }
