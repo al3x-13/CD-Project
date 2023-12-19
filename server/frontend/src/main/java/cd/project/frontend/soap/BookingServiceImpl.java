@@ -11,9 +11,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-@WebService(endpointInterface = "cd.frontend.soap.BookingService", name = "BookingService")
+@WebService(endpointInterface = "cd.project.frontend.soap.BookingService", name = "BookingService")
 public class BookingServiceImpl implements BookingService {
-    private final BookingServiceInterface bookingService = (BookingServiceInterface) new BookingServiceClient();
+    private final BookingServiceInterface bookingService = new BookingServiceClient().getBookingService();
 
     @Override
     public ArrayList<Lounge> getAvailableLounges(char beachId, LocalDate date, LocalTime fromTime, LocalTime toTime) {
