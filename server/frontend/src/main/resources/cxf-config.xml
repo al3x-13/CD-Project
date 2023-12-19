@@ -13,14 +13,12 @@
             http://cxf.apache.org/schemas/jaxrs.xsd"
 >
     <!-- SOAP beans -->
-    <bean id="soapAuth" class="cd.project.frontend.soap.AuthenticationImpl" />
+    <bean id="soapAuthService" class="cd.project.frontend.soap.AuthenticationImpl" />
+    <bean id="soapBookingService" class="cd.project.frontend.soap.BookingServiceImpl" />
 
     <!-- SOAP Endpoints -->
-    <jaxws:server id="soap" address="/soap/auth">
-        <jaxws:serviceBean>
-            <ref bean="soapAuth" />
-        </jaxws:serviceBean>
-    </jaxws:server>
+    <jaxws:endpoint id="soapAuth" implementor="#soapAuthService" address="/soap/auth" />
+    <jaxws:endpoint id="soapBooking" implementor="#soapBookingService" address="/soap/booking" />
 
     <!-- REST Beans -->
     <bean id="restAuth" class="cd.project.frontend.rest.AuthenticationImpl" />
