@@ -1,6 +1,7 @@
 package cd.project.backend.domain;
 
 import cd.project.backend.database.DbConnection;
+import jakarta.xml.bind.annotation.XmlType;
 
 import java.sql.Array;
 import java.sql.ResultSet;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+@XmlType(name = "Booking")
 public class Booking {
     private int id;
     private char beachID;
@@ -19,6 +21,8 @@ public class Booking {
     private LocalDateTime createdAt;
     private int userID;
     private ArrayList<Lounge> lounges;
+
+    public Booking() {}
 
     /**
      * Creates a new lounge booking.
@@ -120,6 +124,38 @@ public class Booking {
 
     public ArrayList<Lounge> getLounges() {
         return this.lounges;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setBeachID(char beachID) {
+        this.beachID = beachID;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setFromTime(LocalTime fromTime) {
+        this.fromTime = fromTime;
+    }
+
+    public void setToTime(LocalTime toTime) {
+        this.toTime = toTime;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setLounges(ArrayList<Lounge> lounges) {
+        this.lounges = lounges;
     }
 
     private ArrayList<String> getLoungeIds() {

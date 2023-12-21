@@ -1,15 +1,19 @@
 package cd.project.backend.domain;
 
 import cd.project.backend.database.DbConnection;
+import jakarta.xml.bind.annotation.XmlType;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+@XmlType(name = "Lounge")
 public class Lounge {
-    private final String id;
-    private final char beachId;
-    private final int maxCapacity;
+    private String id;
+    private char beachId;
+    private int maxCapacity;
+
+    public Lounge() {}
 
     /**
      * Creates a new lounge object.
@@ -33,6 +37,18 @@ public class Lounge {
 
     public int getMaxCapacity() {
         return this.maxCapacity;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setBeachId(char beachId) {
+        this.beachId = beachId;
+    }
+
+    public void setMaxCapacity(int maxCapacity) {
+        this.maxCapacity = maxCapacity;
     }
 
     @Override
