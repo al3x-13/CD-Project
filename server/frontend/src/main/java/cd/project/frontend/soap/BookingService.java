@@ -12,7 +12,7 @@ import java.util.ArrayList;
 @WebService
 public interface BookingService {
     @WebMethod
-    ArrayList<Lounge> getAvailableLounges(char beachId, LocalDate date, LocalTime fromTime, LocalTime toTime);
+    ArrayList<Lounge> getAvailableLounges(char beachId, String date, String fromTime, String toTime);
 
     @WebMethod
     int createBooking(
@@ -29,4 +29,7 @@ public interface BookingService {
 
     @WebMethod
     ArrayList<Booking> getUserBookings(int userId);
+
+    @WebMethod
+    String test();
 }
