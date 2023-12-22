@@ -2,8 +2,6 @@ package cd.project.frontend.soap;
 
 import jakarta.xml.ws.BindingProvider;
 import jakarta.xml.ws.handler.MessageContext;
-import org.apache.cxf.endpoint.Client;
-import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
 import java.time.LocalDate;
@@ -24,11 +22,7 @@ public class TestClient {
         bookingFactory.setAddress("http://localhost:8080/frontend/soap/booking");
         bookingFactory.setServiceClass(BookingService.class);
         BookingService bookingService = (BookingService) bookingFactory.create();
-        Map<String, Object> bookingRequestCtx = ((BindingProvider) authService).getRequestContext();
-
-        ArrayList<Map<String, Object>> requestCtx = new ArrayList<>(
-                List.of(authRequestCtx, bookingRequestCtx)
-        );
+        Map<String, Object> bookingRequestCtx = ((BindingProvider) bookingService).getRequestContext();
 
         try {
             Scanner scanner = new Scanner(System.in);
@@ -41,7 +35,7 @@ public class TestClient {
                     return;
                 }
 
-                System.out.println(execute(scanner, authService, bookingService, requestCtx, input));
+                System.out.println(execute(scanner, authService, bookingService, authRequestCtx, bookingRequestCtx, input));
             }
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -50,7 +44,14 @@ public class TestClient {
         }
     }
 
-    private static String execute(Scanner scanner, Authentication authService, BookingService bookingService, ArrayList<Map<String, Object>> requestCtx, String command) {
+    private static String execute(
+            Scanner scanner,
+            Authentication authService,
+            BookingService bookingService,
+            Map<String, Object> requestCtxAuth,
+            Map<String, Object> requestCtxBook,
+            String command
+    ) {
         String username, password;
 
         switch (command) {
@@ -62,10 +63,7 @@ public class TestClient {
                 password = scanner.nextLine();
                 String sessionToken = authService.authenticate(username, password);
                 if (sessionToken == null) return "FAILURE";
-                setAuthHeader(requestCtx, sessionToken);
-
-                // TODO: debug
-                System.out.println("HEADERS: " + requestCtx.getFirst().get(MessageContext.HTTP_REQUEST_HEADERS));
+                setAuthHeader(requestCtxAuth, requestCtxBook, sessionToken);
                 return "SUCCESS";
             case "register":
                 System.out.println("--- User Registration ---");
@@ -78,20 +76,19 @@ public class TestClient {
             case "test":
                 return bookingService.getAvailableLounges(
                         'A',
-                        LocalDate.of(2024, 6, 12),
-                        LocalTime.of(10, 0),
-                        LocalTime.of(11, 0)
+                        LocalDate.of(2024, 6, 12).toString(),
+                        LocalTime.of(10, 0).toString(),
+                        LocalTime.of(11, 0).toString()
                 ).get(0).toString();
             default:
                 return "U dumb?!";
         }
     }
 
-    private static void setAuthHeader(ArrayList<Map<String, Object>> requestCtx, String sessionToken) {
-        for (Map<String, Object> ctx : requestCtx) {
-            Map<String, List<String>> headers = new HashMap<>();
-            headers.put("Authorization", Collections.singletonList("Bearer " + sessionToken));
-            ctx.put(MessageContext.HTTP_REQUEST_HEADERS, headers);
-        }
+    private static void setAuthHeader(Map<String, Object> requestCtxAuth, Map<String, Object> requestCtxBook, String sessionToken) {
+        Map<String, List<String>> headers = new HashMap<>();
+        headers.put("Authorization", Collections.singletonList("Bearer " + sessionToken));
+        requestCtxAuth.put(MessageContext.HTTP_REQUEST_HEADERS, headers);
+        requestCtxBook.put(MessageContext.HTTP_REQUEST_HEADERS, headers);
     }
 }
