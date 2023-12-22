@@ -4,26 +4,16 @@ import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 import cd.project.backend.interfaces.BookingServiceInterface;
 import cd.project.frontend.soap.client.rmi.BookingServiceClient;
-import jakarta.annotation.Resource;
 import jakarta.jws.WebService;
-import jakarta.xml.ws.WebServiceContext;
-import jakarta.xml.ws.handler.MessageContext;
 
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
 
 @WebService(endpointInterface = "cd.project.frontend.soap.BookingService", serviceName = "BookingService")
 public class BookingServiceImpl implements BookingService {
     private final BookingServiceInterface bookingService = new BookingServiceClient().getBookingService();
-
-    // TODO: debugging
-    @Resource
-    private WebServiceContext webServiceContext;
 
     @Override
     public ArrayList<Lounge> getAvailableLounges(char beachId, String date, String fromTime, String toTime) {
