@@ -37,6 +37,11 @@ public class TestClient {
             throw new RuntimeException(e);
         }
 
+        if (response.statusCode() != 200) {
+            System.out.println("Unsuccessful status code: " + response.statusCode());
+            System.exit(0);
+        }
+
         String token = rootNode.path("token").asText();
         System.out.println("Token: " + token);
     }
