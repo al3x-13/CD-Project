@@ -9,6 +9,11 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class Main {
+    // --- KNOWN PROBLEM (low severity) ---
+    // The server shuts down after some time. No exceptions are thrown nor logs.
+    // It can be caused by GC due to objects not being strongly referenced in the code.
+    // A possible solution to this would be to store the objects in a list or
+    // call some objects periodically to make sure they don't get GCed.
     public static void main(String[] args) {
         checkEnvironmentVariables();
         int port = Integer.parseInt(System.getenv("SERVER_PORT"));
