@@ -9,15 +9,16 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class Main {
+    // --- KNOWN PROBLEM (low severity) ---
+    // The server shuts down after some time. No exceptions are thrown nor logs.
+    // It can be caused by GC due to objects not being strongly referenced in the code.
+    // A possible solution to this would be to store the objects in a list or
+    // call some objects periodically to make sure they don't get GCed.
     public static void main(String[] args) {
-        if (args.length != 4) {
-            System.err.println("Usage: java Main");
-            System.exit(1);
-        }
+        checkEnvironmentVariables();
+        int port = Integer.parseInt(System.getenv("SERVER_PORT"));
 
         try {
-            int port = Integer.parseInt(args[0]);
-
             // services
             BookingServiceInterface reservationService = new BookingService();
 
@@ -30,10 +31,30 @@ public class Main {
             Registry registry = LocateRegistry.createRegistry(port);
             registry.bind("ReservationService", reservationServiceStub);
 
-            System.out.println("RMI server is running");
+            System.out.println("RMI server is running on port " + port);
         } catch (Exception e) {
             System.err.println("RMI Server failed: " + e.getMessage());
             System.exit(1);
+        }
+    }
+
+    private static void checkEnvironmentVariables() {
+        if (System.getenv("SERVER_PORT") == null) {
+            throw new RuntimeException("'SERVER_PORT' env variable does not exist");
+        }
+        try {
+            Integer.parseInt(System.getenv("SERVER_PORT"));
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("'SERVER_PORT' env variable must be a number");
+        }
+        if (System.getenv("DB_URL") == null) {
+            throw new RuntimeException("'DB_URL' env variable does not exist");
+        }
+        if (System.getenv("DB_USERNAME") == null) {
+            throw new RuntimeException("'DB_USERNAME' env variable does not exist");
+        }
+        if (System.getenv("DB_PASSWORD") == null) {
+            throw new RuntimeException("'DB_PASSWORD' env variable does not exist");
         }
     }
 }
