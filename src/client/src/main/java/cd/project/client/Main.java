@@ -21,6 +21,8 @@ public class Main extends Application {
 
     // User session
     private static final UserSession session = new UserSession();
+    public static String serverAddress;
+    public static int serverPort;
     public static CommunicationProtocol clientProtocol;
 
     @Override
@@ -38,30 +40,10 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("Missing arguments: please specify the communication protocol");
-            System.out.println("Available communication protocols: 'soap' | 'rest'");
-            System.out.println("Example usage: java Main.java <communication_protocol>");
-            System.exit(1);
-        }
-
-        if (!Objects.equals(args[1].toLowerCase(), "soap") || !Objects.equals(args[1].toLowerCase(), "rest")) {
-            System.out.println("Invalid communication protocol provided.");
-            System.out.println("Available communication protocols: 'soap' | 'rest'");
-            System.out.println("Example usage: java Main.java <communication_protocol>");
-            System.exit(1);
-        }
-
-        if (Objects.equals(args[1].toLowerCase(), "soap")) {
-            clientProtocol = CommunicationProtocol.SOAP;
-        } else {
-            clientProtocol = CommunicationProtocol.REST;
-        }
+        parseApplicationArguments(args);
 
         // TODO: present the client protocol being used somewhere on the app.
         // This helps the user know what protocol the client is currently using.
-
-        // TODO: frontend server (tomcat) connection details should provided using arguments
 
         launch();
     }
@@ -72,5 +54,41 @@ public class Main extends Application {
 
     public static UserSession getUserSession() {
         return session;
+    }
+
+    private static void parseApplicationArguments(String[] args) {
+        if (args.length < 3) {
+            System.out.println("Missing arguments");
+            System.out.println("Example usage: java Main.java <server_address> <server_port> <communication_protocol>");
+            System.exit(1);
+        }
+
+        // args
+        serverAddress = args[0];
+        String port = args[1];
+        String communicationProtocol = args[2].toLowerCase();
+
+        // server port validation
+        try {
+            serverPort = Integer.parseInt(port);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid server port provided. Must be an integer");
+            System.out.println("Example usage: java Main.java <server_address> <server_port> <communication_protocol>");
+            System.exit(1);
+        }
+
+        // comm protocol validation
+        if (!Objects.equals(communicationProtocol, "soap") && !Objects.equals(communicationProtocol, "rest")) {
+            System.out.println("Invalid communication protocol provided.");
+            System.out.println("Available communication protocols: 'soap' | 'rest'");
+            System.out.println("Example usage: java Main.java <server_address> <server_port> <communication_protocol>");
+            System.exit(1);
+        }
+
+        if (Objects.equals(communicationProtocol, "soap")) {
+            clientProtocol = CommunicationProtocol.SOAP;
+        } else {
+            clientProtocol = CommunicationProtocol.REST;
+        }
     }
 }
