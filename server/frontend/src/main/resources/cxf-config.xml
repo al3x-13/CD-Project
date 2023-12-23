@@ -21,12 +21,14 @@
     <jaxws:endpoint id="soapBooking" implementor="#soapBookingService" address="/soap/booking" />
 
     <!-- REST Beans -->
-    <bean id="restAuth" class="cd.project.frontend.rest.AuthenticationImpl" />
+    <bean id="restAuthService" class="cd.project.frontend.rest.AuthenticationImpl" />
+    <bean id="restBookingService" class="cd.project.frontend.rest.BookingServiceImpl" />
 
     <!-- REST Config/Endpoints -->
     <jaxrs:server id="rest" address="/rest">
         <jaxrs:serviceBeans>
-            <ref bean="restAuth" />
+            <ref bean="restAuthService" />
+            <ref bean="restBookingService" />
         </jaxrs:serviceBeans>
 
         <jaxrs:providers>
