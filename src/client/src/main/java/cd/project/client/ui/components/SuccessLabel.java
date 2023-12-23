@@ -1,4 +1,4 @@
-package cd.project.client.components;
+package cd.project.client.ui.components;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;

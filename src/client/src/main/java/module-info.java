@@ -9,6 +9,8 @@ module cd.project.frontend {
 
     opens cd.project.client to javafx.fxml;
     exports cd.project.client;
-    exports cd.project.client.controllers;
-    opens cd.project.client.controllers to javafx.fxml;
+    exports cd.project.client.ui.controllers;
+    opens cd.project.client.ui.controllers to javafx.fxml;
+    exports cd.project.client.core;
+    opens cd.project.client.core to javafx.fxml;
 }

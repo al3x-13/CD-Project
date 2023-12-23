@@ -1,9 +1,9 @@
-package cd.project.client.controllers;
+package cd.project.client.ui.controllers;
 
 import cd.project.client.Main;
 import cd.project.client.Router;
-import cd.project.client.components.AppMenu;
-import cd.project.client.components.SuccessLabel;
+import cd.project.client.ui.components.AppMenu;
+import cd.project.client.ui.components.SuccessLabel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -11,8 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ResourceBundle;

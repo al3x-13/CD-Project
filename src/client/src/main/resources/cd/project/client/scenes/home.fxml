@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="container" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="400.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #25282a;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cd.project.client.controllers.HomeController">
+<VBox fx:id="container" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="400.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #25282a;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cd.project.client.ui.controllers.HomeController">
    <children>
       <Label text="OceanView Seats" textAlignment="CENTER" textFill="#377dff">
          <font>

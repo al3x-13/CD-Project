@@ -1,4 +1,4 @@
-package cd.project.client.components;
+package cd.project.client.ui.components;
 
 import cd.project.client.Main;
 import javafx.beans.binding.Bindings;

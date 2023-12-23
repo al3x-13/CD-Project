@@ -1,7 +1,7 @@
-package cd.project.client.controllers;
+package cd.project.client.ui.controllers;
 
 import cd.project.client.Router;
-import cd.project.client.components.AppMenu;
+import cd.project.client.ui.components.AppMenu;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.VBox;

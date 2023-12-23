@@ -1,5 +1,6 @@
 package cd.project.client;
 
+import cd.project.client.core.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

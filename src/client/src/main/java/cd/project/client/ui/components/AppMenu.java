@@ -1,8 +1,7 @@
-package cd.project.client.components;
+package cd.project.client.ui.components;
 
 import cd.project.client.Router;
-import cd.project.client.UserSession;
-import javafx.fxml.FXML;
+import cd.project.client.core.UserSession;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;

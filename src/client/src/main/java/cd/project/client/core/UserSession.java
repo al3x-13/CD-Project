@@ -1,4 +1,4 @@
-package cd.project.client;
+package cd.project.client.core;
 
 import org.mindrot.jbcrypt.BCrypt;
 
