@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class DashboardController implements Initializable {
+public class MyBookingsController implements Initializable {
     @FXML
     private VBox container;
     @FXML

@@ -15,73 +15,27 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
-public class DashboardLayout extends HBox {
-    @FXML
-    private VBox drawer;
+public class MyBookingsLayout extends HBox {
     @FXML
     private VBox content;
 
-    public DashboardLayout() {
+    public MyBookingsLayout() {
         HBox.setHgrow(this, Priority.ALWAYS);
         this.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + ";");
-        constructDrawer();
         constructContent();
-        getChildren().addAll(drawer, content);
-    }
-
-    private void constructDrawer() {
-        // component properties
-        drawer = new VBox();
-        drawer.setId("drawer");
-        drawer.setAlignment(Pos.TOP_CENTER);
-        drawer.minHeightProperty().bind(Bindings.selectDouble(Main.getRootStage().heightProperty()));
-        drawer.setMinWidth(150);
-        drawer.setPrefWidth(200);
-        drawer.maxHeightProperty().bind(Bindings.selectDouble(Main.getRootStage().widthProperty()).multiply(0.25));
-        VBox.setVgrow(drawer, Priority.ALWAYS);
-        drawer.setFillWidth(true);
-
-        // component styles
-        drawer.setStyle(
-            "-fx-background-color: " + Main.DRAWER_BACKGROUND_COLOR + ";"
-        );
-
-        // layout
-        Label appTitle = new Label("OceanView Seats");
-        appTitle.setPadding(new Insets(25, 0, 30, 0));  // t r b l
-        appTitle.setFont(Font.font(appTitle.getFont().getName(), FontWeight.BOLD, 24));
-        appTitle.setTextAlignment(TextAlignment.CENTER);
-        appTitle.setWrapText(true);
-        appTitle.setTextFill(Color.valueOf(Main.TITLE_COLOR_PRIMARY));
-
-        Hyperlink myReservations = new Hyperlink("My Reservations");
-        myReservations.setPadding(new Insets(10));
-        myReservations.setFont(Font.font(myReservations.getFont().getName(), FontWeight.BOLD, 16));
-        myReservations.setTextFill(Color.valueOf(Main.DRAWER_TEXT_COLOR));
-        myReservations.setOnMouseEntered(mouseEvent -> {
-            myReservations.setStyle("-fx-underline: false; -fx-focus-color: transparent;");
-            myReservations.setTextFill(Color.valueOf(Main.TITLE_COLOR_PRIMARY));
-        });
-        myReservations.setOnMouseExited(mouseEvent -> {
-            myReservations.setTextFill(Color.valueOf(Main.DRAWER_TEXT_COLOR));
-        });
-        myReservations.setOnAction(actionEvent -> System.out.println("TODO"));
-
-        // adds elements
-        drawer.getChildren().addAll(appTitle, myReservations);
+        getChildren().addAll(content);
     }
 
     private void constructContent() {
         content = new VBox();
         content.setId("content");
-        content.setPadding(new Insets(30));
+        content.setPadding(new Insets(40));
 
-        Label title = new Label("Dashboard");
+        Label title = new Label("My Bookings");
         title.setFont(Font.font(title.getFont().getName(), FontWeight.BOLD, 30));
         title.setTextFill(Color.valueOf(Main.TITLE_COLOR_PRIMARY));
 
-        Label reservationLink = new Label("My Reservations");
-        reservationLink.setPadding(new Insets(30, 0, 0, 0));
+        Label reservationLink = new Label("Some Title");
         reservationLink.setFont(Font.font(title.getFont().getName(), FontWeight.BOLD, 20));
         reservationLink.setTextFill(Color.valueOf(Main.TEXT_COLOR_PRIMARY));
 
