@@ -1,39 +1,140 @@
 package cd.project.client.ui.components;
 
+import cd.project.client.Main;
 import cd.project.client.Router;
 import cd.project.client.core.UserSession;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
-public class AppMenu extends MenuBar {
-    private final String backgroundColor = "#50565A";
-
+public class AppMenu extends HBox {
     public AppMenu() {
         // Components properties
-        HBox.setHgrow(this, Priority.ALWAYS);
-        this.setStyle("-fx-background-color: " + backgroundColor + ";");
+        setMinHeight(45);
+        setHgrow(this, Priority.ALWAYS);
+        setAlignment(Pos.CENTER_LEFT);
+        setPadding(new Insets(10, 20, 10, 20));
+        this.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; " +
+                "-fx-border-width: 0 0 2px 0; -fx-border-color: #262839;");
 
-        // Menu items
-        Menu application = new Menu("Application");
-        MenuItem home = new MenuItem("Home");
+        // Navigation Menu Items
+        VBox logo = this.logo();
+
+        HBox buttons = new HBox();
+        buttons.setPadding(new Insets(0, 0, 0, 30));
+        buttons.setAlignment(Pos.CENTER_LEFT);
+        buttons.setSpacing(10);
+
+        // home
+        Hyperlink home = new Hyperlink("Home");
+        home.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; " +
+                "-fx-focus-color: transparent;");
         home.setOnAction(actionEvent -> Router.navigateToHome());
-        MenuItem about = new MenuItem("About");
+
+        // my bookings
+        Hyperlink myBookings = new Hyperlink("My Bookings");
+        myBookings.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; " +
+                "-fx-focus-color: transparent;");
+        myBookings.setOnAction(actionEvent -> Router.navigateToMyBookings());
+
+        // about
+        Hyperlink about = new Hyperlink("About");
+        about.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; " +
+                "-fx-focus-color: transparent;");
         about.setOnAction(actionEvent -> Router.navigateToAbout());
 
-        // Adds unprotected menu items
-        application.getItems().addAll(home, about);
+        // new booking
+        Button newBooking = new Button("Book");
+        newBooking.setPrefWidth(65);
+        newBooking.setPrefHeight(30);
+        newBooking.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #CCCCCC; -fx-border-radius: 6px; " +
+                "-fx-background-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-cursor: hand;");
+        // TODO: implement this
+        newBooking.setOnAction(actionEvent -> System.out.println("TODO"));
 
-        // Protected (auth required) buttons
+
+        HBox whitespace = this.whitespace();
+        HBox userDetails = this.userDetails();
+
+
+        // TODO: implement navigation items availability based on user being authenticated
+
         if (UserSession.isAuthenticated()) {
-            MenuItem dashboard = new MenuItem("Dashboard");
-            dashboard.setOnAction(actionEvent -> Router.navigateToDashboard());
-
-            // Adds protected menu items
-            application.getItems().add(dashboard);
+            buttons.getChildren().addAll(myBookings, about, newBooking);
+            this.getChildren().addAll(logo, buttons, whitespace, userDetails);
+        } else {
+            buttons.getChildren().addAll(home, about);
+            this.getChildren().addAll(logo, buttons, whitespace);
         }
-        getMenus().add(application);
+    }
+
+    private VBox logo() {
+        VBox logoContainer = new VBox();
+        logoContainer.setAlignment(Pos.CENTER);
+        Label topText = new Label("OceanView");
+        Label botText = new Label("Seats");
+        String logoColor = "#31344C";
+        topText.setStyle("-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: " + logoColor + ";");
+        botText.setStyle("-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: " + logoColor + ";");
+        logoContainer.getChildren().addAll(topText, botText);
+        return logoContainer;
+    }
+
+    private HBox whitespace() {
+        HBox whitespace = new HBox();
+        HBox.setHgrow(whitespace, Priority.ALWAYS);
+        return whitespace;
+    }
+
+    private HBox userDetails() {
+        // assets path prefix varies by OS
+        boolean isWindowsSystem = System.getProperty("os.name").toLowerCase().contains("windows");
+        String pathPrefix = isWindowsSystem ? "file:/" : "file://";
+
+        HBox userDetails = new HBox();
+        HBox.setHgrow(userDetails, Priority.ALWAYS);
+        userDetails.setAlignment(Pos.CENTER_RIGHT);
+        userDetails.setSpacing(15);
+        Label username = new Label("test");
+        username.setStyle("-fx-font-size: 16px; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + " ;");
+        Image userImage = new Image(pathPrefix + System.getProperty("user.dir") + "/client/src/main/resources/cd/project/client/assets/user_icon.png");
+        ImageView userIcon = new ImageView(userImage);
+        userIcon.setPreserveRatio(true);
+        userIcon.setFitWidth(35);
+        userIcon.setFitHeight(35);
+
+        // logout icon
+        Image logoutImageGrey = new Image(
+                pathPrefix + System.getProperty("user.dir") +
+                "/client/src/main/resources/cd/project/client/assets/logout_icon_grey.png"
+        );
+        Image logoutImageBlue = new Image(
+                pathPrefix + System.getProperty("user.dir") +
+                "/client/src/main/resources/cd/project/client/assets/logout_icon_blue.png"
+        );
+        ImageView logoutIcon = new ImageView(logoutImageGrey);
+        logoutIcon.setPreserveRatio(true);
+        logoutIcon.setFitWidth(25);
+        logoutIcon.setFitHeight(25);
+        StackPane imageContainer = new StackPane(logoutIcon);
+        imageContainer.setStyle("-fx-cursor: hand;");
+
+        imageContainer.setOnMouseEntered(e -> logoutIcon.setImage(logoutImageBlue));
+        imageContainer.setOnMouseExited(e -> logoutIcon.setImage(logoutImageGrey));
+
+        // TODO: implement logout on click
+        imageContainer.setOnMouseClicked(mouseEvent -> {
+            System.out.println("TODO");
+        });
+
+        userDetails.getChildren().addAll(username, userIcon, imageContainer);
+        return userDetails;
     }
 }

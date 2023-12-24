@@ -56,7 +56,7 @@ public class LoginController implements Initializable {
 
         if (Main.getUserSession().authenticate(username.getText(), password.getText())) {
             new SuccessLabel(label, "Loggin successful", true);
-            Router.navigateToDashboard();
+            Router.navigateToMyBookings();
         } else {
             new SuccessLabel(this.label, "Invalid credentials", false);
         }

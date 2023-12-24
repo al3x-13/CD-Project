@@ -70,11 +70,11 @@ public class RegisterController implements Initializable {
                 String originalInputStyle = username.getStyle();
 
                 if (newValue.length() >= 4 && newValue.length() <= 15) {
-                    username.setStyle(originalInputStyle + "-fx-border-radius: 2; -fx-border-color: green;");
+                    username.setStyle(originalInputStyle + "-fx-border-radius: 6; -fx-border-color: green;");
                     usernameConstraint.setFill(Color.GREEN);
                     validUsername.set(true);
                 } else {
-                    username.setStyle(originalInputStyle + "-fx-border-radius: 2; -fx-border-color: red;");
+                    username.setStyle(originalInputStyle + "-fx-border-radius: 6; -fx-border-color: red;");
                     usernameConstraint.setFill(Color.RED);
                     validUsername.set(false);
                 }

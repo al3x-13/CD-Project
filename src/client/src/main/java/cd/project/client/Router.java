@@ -26,7 +26,7 @@ public class Router {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("scenes/" + fxmlFileToLoad));
             Parent page = loader.load();
             Stage stage = new Stage();
-            Scene scene = new Scene(page, 800, 600);
+            Scene scene = new Scene(page, 850, 650);
             stage.setScene(scene);
             Stage rootStage = Main.getRootStage();
             rootStage.setScene(scene);
@@ -65,7 +65,7 @@ public class Router {
     }
 
     @FXML
-    public static void navigateToDashboard() {
-        loadAndSetScene("dashboard.fxml");
+    public static void navigateToMyBookings() {
+        loadAndSetScene("mybookings.fxml");
     }
 }
