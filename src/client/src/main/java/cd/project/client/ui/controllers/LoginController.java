@@ -1,9 +1,10 @@
 package cd.project.client.ui.controllers;
 
-import cd.project.client.Main;
 import cd.project.client.Router;
+import cd.project.client.core.UserSession;
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.SuccessLabel;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -14,7 +15,6 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
 public class LoginController implements Initializable {
     @FXML
     private VBox container;
@@ -34,6 +34,9 @@ public class LoginController implements Initializable {
         AppMenu menu = new AppMenu();
         container.getChildren().addFirst(menu);
 
+        // autofocus username input
+        Platform.runLater(() -> username.requestFocus());
+
         username.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 handleSubmit();
@@ -52,9 +55,10 @@ public class LoginController implements Initializable {
     }
 
     private void handleSubmit() {
+        // TODO: remove this
         System.out.println("user: " + username.getText() + ", pw: " + password.getText());
 
-        if (Main.getUserSession().authenticate(username.getText(), password.getText())) {
+        if (UserSession.authenticate(username.getText(), password.getText())) {
             new SuccessLabel(label, "Loggin successful", true);
             Router.navigateToMyBookings();
         } else {

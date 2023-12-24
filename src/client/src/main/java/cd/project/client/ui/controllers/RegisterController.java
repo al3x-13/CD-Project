@@ -2,6 +2,7 @@ package cd.project.client.ui.controllers;
 
 import cd.project.client.Router;
 import cd.project.client.ui.components.AppMenu;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -42,6 +43,8 @@ public class RegisterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         container.getChildren().addFirst(new AppMenu());
+
+        Platform.runLater(() -> username.requestFocus());
 
         username.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER) {
