@@ -13,11 +13,11 @@ import java.util.Objects;
 
 public class Main extends Application {
     private static Stage rootStage;
-    public static String BACKGROUND_COLOR = "#25282a";
+    public static String BACKGROUND_COLOR = "#181920";
     public static String DRAWER_BACKGROUND_COLOR = "#35383a";
     public static String DRAWER_TEXT_COLOR = "#b8baba";
-    public static String TITLE_COLOR_PRIMARY = "#377DFF";
-    public static String TEXT_COLOR_PRIMARY = "#666D72";
+    public static String TITLE_COLOR_PRIMARY = "#2988c9";
+    public static String TEXT_COLOR_PRIMARY = "#5e6d88";
 
     // User session
     private static final UserSession session = new UserSession();
@@ -27,13 +27,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        stage.setMinWidth(800);
+        stage.setMinHeight(600);
         rootStage = stage;
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("scenes/home.fxml"));
         Parent root = fxmlLoader.load();
 
         // Initial scene setup
-        Scene home = new Scene(root, 800, 600);
+        Scene home = new Scene(root, 850, 650);
         stage.setTitle("CD");
         stage.setScene(home);
         stage.show();
