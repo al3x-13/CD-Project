@@ -102,7 +102,7 @@ public class AppMenu extends HBox {
         HBox.setHgrow(userDetails, Priority.ALWAYS);
         userDetails.setAlignment(Pos.CENTER_RIGHT);
         userDetails.setSpacing(15);
-        Label username = new Label("test");
+        Label username = new Label(UserSession.getUsername());
         username.setStyle("-fx-font-size: 16px; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + " ;");
         Image userImage = new Image(pathPrefix + System.getProperty("user.dir") + "/client/src/main/resources/cd/project/client/assets/user_icon.png");
         ImageView userIcon = new ImageView(userImage);
@@ -129,9 +129,9 @@ public class AppMenu extends HBox {
         imageContainer.setOnMouseEntered(e -> logoutIcon.setImage(logoutImageBlue));
         imageContainer.setOnMouseExited(e -> logoutIcon.setImage(logoutImageGrey));
 
-        // TODO: implement logout on click
         imageContainer.setOnMouseClicked(mouseEvent -> {
-            System.out.println("TODO");
+            UserSession.invalidateSession();
+            Router.navigateToHome();
         });
 
         userDetails.getChildren().addAll(username, userIcon, imageContainer);

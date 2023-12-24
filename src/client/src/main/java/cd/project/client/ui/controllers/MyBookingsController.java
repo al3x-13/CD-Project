@@ -1,7 +1,7 @@
 package cd.project.client.ui.controllers;
 
 import cd.project.client.ui.components.AppMenu;
-import cd.project.client.ui.components.DashboardLayout;
+import cd.project.client.ui.components.MyBookingsLayout;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.VBox;
@@ -18,7 +18,7 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         container.getChildren().addFirst(new AppMenu());
-        container.getChildren().add(new DashboardLayout());
+        container.getChildren().add(new MyBookingsLayout());
         // reservations.getChildren().add(new ReservationsTable());
     }
 }

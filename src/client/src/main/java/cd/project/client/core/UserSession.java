@@ -6,7 +6,7 @@ public class UserSession {
     private static String username;
     private static String passwordHash;
     private static String sessionToken = null;
-    private static final String testUsername = "test";
+    private static final String testUsername = "test1337";
     private static final String testPasswordHash = BCrypt.hashpw("testing", BCrypt.gensalt());
 
     public static String getUsername() {
@@ -21,12 +21,12 @@ public class UserSession {
         passwordHash = passwordHash;
     }
 
-    public static boolean authenticate(String username, String password) {
+    public static boolean authenticate(String usernameInput, String passwordInput) {
         // TODO
-        if (!username.equals(testUsername) || !BCrypt.checkpw(password, testPasswordHash)) {
+        if (!usernameInput.equals(testUsername) || !BCrypt.checkpw(passwordInput, testPasswordHash)) {
             return false;
         }
-        username = username;
+        username = usernameInput;
         passwordHash = passwordHash;
         sessionToken = "test";
         return true;
@@ -42,5 +42,9 @@ public class UserSession {
 
     public static boolean isAuthenticated() {
         return sessionToken != null;
+    }
+
+    public static void invalidateSession() {
+        sessionToken = null;
     }
 }
