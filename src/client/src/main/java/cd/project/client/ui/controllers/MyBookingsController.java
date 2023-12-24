@@ -2,6 +2,7 @@ package cd.project.client.ui.controllers;
 
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.MyBookingsLayout;
+import cd.project.client.ui.components.ProtocolLabel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.VBox;
@@ -19,6 +20,7 @@ public class MyBookingsController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         container.getChildren().addFirst(new AppMenu());
         container.getChildren().add(new MyBookingsLayout());
+        container.getChildren().addLast(new ProtocolLabel());
         // reservations.getChildren().add(new ReservationsTable());
     }
 }

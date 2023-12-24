@@ -3,6 +3,7 @@ package cd.project.client.ui.controllers;
 import cd.project.client.Router;
 import cd.project.client.core.UserSession;
 import cd.project.client.ui.components.AppMenu;
+import cd.project.client.ui.components.ProtocolLabel;
 import cd.project.client.ui.components.SuccessLabel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -33,6 +34,7 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         AppMenu menu = new AppMenu();
         container.getChildren().addFirst(menu);
+        container.getChildren().addLast(new ProtocolLabel());
 
         // autofocus username input
         Platform.runLater(() -> username.requestFocus());

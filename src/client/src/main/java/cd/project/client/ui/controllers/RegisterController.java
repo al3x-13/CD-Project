@@ -2,6 +2,7 @@ package cd.project.client.ui.controllers;
 
 import cd.project.client.Router;
 import cd.project.client.ui.components.AppMenu;
+import cd.project.client.ui.components.ProtocolLabel;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -43,6 +44,7 @@ public class RegisterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         container.getChildren().addFirst(new AppMenu());
+        container.getChildren().addLast(new ProtocolLabel());
 
         Platform.runLater(() -> username.requestFocus());
 
