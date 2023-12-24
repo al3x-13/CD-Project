@@ -6,9 +6,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="container" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="400.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #25282a;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cd.project.client.ui.controllers.AboutController">
+<VBox fx:id="container" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="400.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #181920;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cd.project.client.ui.controllers.AboutController">
    <children>
-      <Label alignment="CENTER" prefHeight="88.0" prefWidth="422.0" text="Distributed Computing Project" textAlignment="CENTER" textFill="#377dff" wrapText="true">
+      <Label alignment="CENTER" prefHeight="88.0" prefWidth="422.0" text="Distributed Computing Project" textAlignment="CENTER" textFill="#2988c9" wrapText="true">
          <font>
             <Font name="System Bold" size="30.0" />
          </font>
@@ -16,9 +16,17 @@
             <Insets top="120.0" />
          </VBox.margin>
       </Label>
-      <Label text="Made by" textFill="#474747">
+      <Label text="2023" textFill="#353a43">
+         <font>
+            <Font size="24.0" />
+         </font>
          <VBox.margin>
-            <Insets top="50.0" />
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Label>
+      <Label text="Made by" textFill="#5e6d88">
+         <VBox.margin>
+            <Insets top="30.0" />
          </VBox.margin>
          <font>
             <Font name="System Bold" size="20.0" />
@@ -26,14 +34,17 @@
       </Label>
       <VBox alignment="CENTER">
          <children>
-            <Text fill="#656565" strokeType="OUTSIDE" strokeWidth="0.0" text="Alexandre Marques - a22202130">
+            <Text fill="#a6aab5" strokeType="OUTSIDE" strokeWidth="0.0" text="Alexandre Marques - a22202130">
                <font>
-                  <Font size="17.0" />
+                  <Font size="20.0" />
                </font>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </Text>
-            <Text fill="#656565" strokeType="OUTSIDE" strokeWidth="0.0" text="Antonio Antunes - a22202276">
+            <Text fill="#a6aab5" strokeType="OUTSIDE" strokeWidth="0.0" text="António Antunes - a22202276">
                <font>
-                  <Font size="17.0" />
+                  <Font size="20.0" />
                </font>
                <VBox.margin>
                   <Insets top="10.0" />
@@ -41,7 +52,7 @@
             </Text>
          </children>
          <VBox.margin>
-            <Insets top="20.0" />
+            <Insets top="30.0" />
          </VBox.margin>
       </VBox>
    </children>

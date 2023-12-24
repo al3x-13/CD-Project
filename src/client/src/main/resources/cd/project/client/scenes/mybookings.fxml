@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="400.0" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #181920;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cd.project.client.ui.controllers.DashboardController">
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</VBox>
