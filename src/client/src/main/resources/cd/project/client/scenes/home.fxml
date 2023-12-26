@@ -16,7 +16,7 @@
             <Insets top="120.0" />
          </VBox.margin>
       </Label>
-      <Label alignment="TOP_LEFT" prefHeight="60.0" prefWidth="231.0" text="Beach Lounges &amp; Umbrellas" textAlignment="CENTER" textFill="#5e6d88" wrapText="true">
+      <Label alignment="TOP_LEFT" prefHeight="60.0" prefWidth="200.0" text="Beach Lounges &amp; Umbrellas" textAlignment="CENTER" textFill="#5e6d88" wrapText="true">
          <font>
             <Font name="System Bold" size="22.0" />
          </font>

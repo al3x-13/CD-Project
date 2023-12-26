@@ -12,11 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Router {
-    private static ArrayList<String> noAuthScenes = new ArrayList<>(Arrays.asList(
+    private static final ArrayList<String> noAuthScenes = new ArrayList<>(Arrays.asList(
             "home.fxml",
             "login.fxml",
             "register.fxml",
-            "about.fxml"
+            "about.fxml",
+            "newbooking.fxml" // TODO: remove this from here (DEBUGGING)
     ));
 
     private static void loadAndSetScene(String fxmlFile) {
@@ -67,5 +68,10 @@ public class Router {
     @FXML
     public static void navigateToMyBookings() {
         loadAndSetScene("mybookings.fxml");
+    }
+
+    @FXML
+    public static void navigateToNewBooking() {
+        loadAndSetScene("newbooking.fxml");
     }
 }

@@ -56,21 +56,18 @@ public class AppMenu extends HBox {
         newBooking.setPrefHeight(30);
         newBooking.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #CCCCCC; -fx-border-radius: 6px; " +
                 "-fx-background-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-cursor: hand;");
-        // TODO: implement this
-        newBooking.setOnAction(actionEvent -> System.out.println("TODO"));
-
+        newBooking.setOnAction(actionEvent -> Router.navigateToNewBooking());
 
         HBox whitespace = this.whitespace();
         HBox userDetails = this.userDetails();
 
-
         // TODO: implement navigation items availability based on user being authenticated
-
         if (UserSession.isAuthenticated()) {
             buttons.getChildren().addAll(myBookings, about, newBooking);
             this.getChildren().addAll(logo, buttons, whitespace, userDetails);
         } else {
-            buttons.getChildren().addAll(home, about);
+            // TODO: remove 'newBooking' button from here (DEBUG)
+            buttons.getChildren().addAll(home, about, newBooking);
             this.getChildren().addAll(logo, buttons, whitespace);
         }
     }

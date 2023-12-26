@@ -14,6 +14,7 @@ import java.util.Objects;
 public class Main extends Application {
     private static Stage rootStage;
     public static String BACKGROUND_COLOR = "#181920";
+    public static String BACKGROUND_COLOR_2 = "#31344C";
     public static String DRAWER_BACKGROUND_COLOR = "#35383a";
     public static String DRAWER_TEXT_COLOR = "#b8baba";
     public static String TITLE_COLOR_PRIMARY = "#2988c9";
