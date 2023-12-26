@@ -3,8 +3,11 @@ package cd.project.client.ui.controllers;
 import cd.project.client.Main;
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,6 +30,11 @@ public class NewBookingController implements Initializable {
 
     @FXML
     private VBox container;
+
+    // components data
+    private ObservableList<String[]> bookingsTableData = FXCollections.observableArrayList();
+    private BooleanProperty bookingButtonDisabled = new SimpleBooleanProperty(this.bookingsTableData.isEmpty());
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -83,6 +91,12 @@ public class NewBookingController implements Initializable {
         container.getChildren().addFirst(new AppMenu());
         container.getChildren().addAll(content);
         container.getChildren().addLast(new ProtocolLabel());
+
+
+        // global listeners
+        this.bookingsTableData.addListener((ListChangeListener<? super String[]>) change -> {
+            this.bookingButtonDisabled.setValue(this.bookingsTableData.isEmpty());
+        });
     }
 
     private String getStylesPath() {
@@ -223,6 +237,10 @@ public class NewBookingController implements Initializable {
                  Main.TITLE_COLOR_PRIMARY + "; -fx-font-size: 14px; -fx-padding: 6px 12px;");
         Label checkStatus = this.checkStatus();
 
+        checkAvailabilityButton.setOnAction(actionEvent -> {
+            this.bookingsTableData.add(new String[] { "oh", "yes", "daddy" });
+        });
+
         checkButtonContainer.getChildren().addAll(checkAvailabilityButton, checkStatus);
 
         availabilityCheckContainer.getChildren().addAll(checkAvailabilityLabel, checkButtonContainer);
@@ -244,7 +262,6 @@ public class NewBookingController implements Initializable {
         tableLabel.setStyle("-fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; -fx-font-size: 18px; -fx-font-weight: bold;");
 
         TableView<String[]> bookingTable = new TableView<>();
-        ObservableList<String[]> bookingTableData = FXCollections.observableArrayList();
         bookingTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         bookingTable.getStylesheets().add(this.STYLES_PATH);
         bookingTable.setMaxWidth(500);
@@ -268,13 +285,8 @@ public class NewBookingController implements Initializable {
         capacityCol.setPrefWidth(colWidth);
         capacityCol.setResizable(false);
         capacityCol.setSortable(false);
-
+        bookingTable.setItems(this.bookingsTableData);
         bookingTable.getColumns().addAll(loungeIdCol, beachCol, capacityCol);
-
-        // TODO: remove this
-        bookingTableData.add(new String[]{ "test1", "test2", "test3" });
-        bookingTableData.add(new String[]{ "test4", "test5", "test6" });
-        bookingTable.setItems(bookingTableData);
 
         bookingTableContainer.getChildren().addAll(tableLabel, bookingTable);
         return bookingTableContainer;
@@ -285,11 +297,15 @@ public class NewBookingController implements Initializable {
         submitBookingContainer.setSpacing(15);
         submitBookingContainer.setAlignment(Pos.CENTER_LEFT);
 
-        // TODO: only enabled if there are lounges in the table
         Button submitButton = new Button("Book");
-        submitButton.setDisable(true);
         submitButton.setStyle("-fx-background-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-font-size: 17px; " +
                 "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -background-radius: 6;");
+
+        // only enabled if there are lounges in the table
+        submitButton.disableProperty().bind(this.bookingButtonDisabled);
+
+        // TODO: implement this
+        submitButton.setOnAction(actionEvent -> System.out.println("TODO"));
 
         submitBookingContainer.getChildren().addAll(submitButton);
         return submitBookingContainer;
