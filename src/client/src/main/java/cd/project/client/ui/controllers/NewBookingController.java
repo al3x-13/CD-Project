@@ -3,9 +3,8 @@ package cd.project.client.ui.controllers;
 import cd.project.client.Main;
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -31,6 +30,8 @@ public class NewBookingController implements Initializable {
     private VBox container;
 
     // components data
+    private IntegerProperty fromTime = new SimpleIntegerProperty(-1);
+    private IntegerProperty toTime = new SimpleIntegerProperty(-1);
     private ObservableList<String[]> bookingsTableData = FXCollections.observableArrayList();
     private BooleanProperty bookingButtonDisabled = new SimpleBooleanProperty(this.bookingsTableData.isEmpty());
 
@@ -180,15 +181,23 @@ public class NewBookingController implements Initializable {
         fromTimeLabel.setStyle("-fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; -fx-font-size: 18px; -fx-font-weight: bold;");
 
         ChoiceBox<String> fromTimeInput = new ChoiceBox<>();
-        for (int i = 8; i <= 20; i++) {
+        for (int i = 8; i <= 19; i++) {
             String data = i < 10 ? "0" + i + ":00" : i + ":00";
             fromTimeInput.getItems().add(data);
         }
         fromTimeInput.setValue("08:00");
+        this.fromTime.setValue(8);
         fromTimeInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-border-color: " +
                 Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 14px; " +
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         fromTimeInput.getStylesheets().add(this.STYLES_PATH);
+
+        fromTimeInput.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                int value = Integer.parseInt(newValue.split(":")[0]);
+                this.fromTime.setValue(value);
+            }
+        });
 
         fromTimeInputContainer.getChildren().addAll(fromTimeLabel, fromTimeInput);
         return fromTimeInputContainer;
@@ -203,17 +212,44 @@ public class NewBookingController implements Initializable {
         toTimeLabel.setStyle("-fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; -fx-font-size: 18px; -fx-font-weight: bold;");
 
         ChoiceBox<String> toTimeInput = new ChoiceBox<>();
-        for (int i = 8; i <= 20; i++) {
+        for (int i = 9; i <= 20; i++) {
             String data = i < 10 ? "0" + i + ":00" : i + ":00";
             toTimeInput.getItems().add(data);
         }
-        toTimeInput.setValue("08:00");
+        toTimeInput.setValue("09:00");
+        this.toTime.setValue(9);
         toTimeInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-border-color: " +
                 Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 14px; " +
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         toTimeInput.getStylesheets().add(this.STYLES_PATH);
 
         // TODO: only allow for values starting after the from time
+        // updates values when 'fromTime' changes
+        this.fromTime.addListener((observable, oldValue, newValue) -> {
+            int newToTimeValue = this.toTime.getValue();
+            if (this.toTime.getValue() <= newValue.intValue()) {
+                newToTimeValue = newValue.intValue() + 1;
+            }
+
+            toTimeInput.getItems().clear();
+            for (int i = newValue.intValue() + 1; i <= 20; i++) {
+                String data = i < 10 ? "0" + i + ":00" : i + ":00";
+                toTimeInput.getItems().add(data);
+            }
+
+            toTimeInput.setValue(newToTimeValue < 10 ? "0" + newToTimeValue + ":00" : newToTimeValue + ":00");
+        });
+
+        // update 'toTime' value on change
+        toTimeInput.setOnAction(actionEvent -> {
+        });
+
+        toTimeInput.valueProperty().addListener(((observableValue, oldValue, newValue) -> {
+            if (newValue != null) {
+                int value = Integer.parseInt(newValue.split(":")[0]);
+                this.toTime.setValue(value);
+            }
+        }));
 
         toTimeInputContainer.getChildren().addAll(toTimeLabel, toTimeInput);
         return toTimeInputContainer;
@@ -234,26 +270,29 @@ public class NewBookingController implements Initializable {
         Button checkAvailabilityButton = new Button("Check availability");
         checkAvailabilityButton.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-text-fill: " +
                  Main.TITLE_COLOR_PRIMARY + "; -fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 6px 12px; " +
-                "-fx-border-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6;");
-        Label checkStatus = this.checkStatus();
+                "-fx-border-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-cursor: hand;");
 
         // hover styles
         checkAvailabilityButton.setOnMouseEntered(mouseEvent ->
                 checkAvailabilityButton.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR_2 + "; -fx-text-fill: " +
                         Main.TITLE_COLOR_PRIMARY + "; -fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 6px 12px; " +
-                        "-fx-border-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6;"
+                        "-fx-border-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-cursor: hand;"
                 )
         );
         checkAvailabilityButton.setOnMouseExited(mouseEvent ->
                 checkAvailabilityButton.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-text-fill: " +
                         Main.TITLE_COLOR_PRIMARY + "; -fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 6px 12px; " +
-                        "-fx-border-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6;"
+                        "-fx-border-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-cursor: hand;"
                 )
         );
+
+        checkAvailabilityButton.getStyleClass().add(this.STYLES_PATH);
 
         checkAvailabilityButton.setOnAction(actionEvent -> {
             this.bookingsTableData.add(new String[] { "oh", "yes", "daddy" });
         });
+
+        Label checkStatus = this.checkStatus();
 
         checkButtonContainer.getChildren().addAll(checkAvailabilityButton, checkStatus);
 
@@ -312,18 +351,22 @@ public class NewBookingController implements Initializable {
         submitBookingContainer.setAlignment(Pos.CENTER_LEFT);
 
         Button submitButton = new Button("Book");
+        submitButton.getStyleClass().add(this.STYLES_PATH);
         submitButton.setStyle("-fx-background-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-font-size: 17px; " +
-                "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -fx-background-radius: 6;");
+                "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -fx-background-radius: 6; " +
+                "-fx-cursor: hand;");
 
         // hover styles
         submitButton.setOnMouseEntered(mouseEvent ->
                 submitButton.setStyle("-fx-background-color: #1F72AB; -fx-font-size: 17px; " +
-                        "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -fx-background-radius: 6;"
+                        "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -fx-background-radius: 6; " +
+                        "-fx-cursor: hand;"
                 )
         );
         submitButton.setOnMouseExited(mouseEvent ->
                 submitButton.setStyle("-fx-background-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-font-size: 17px; " +
-                        "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -fx-background-radius: 6;"
+                        "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -fx-background-radius: 6; " +
+                        "-fx-cursor: hand;"
                 )
         );
 
