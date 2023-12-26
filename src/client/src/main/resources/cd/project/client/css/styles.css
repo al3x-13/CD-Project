@@ -17,15 +17,18 @@
 }
 
 .date-picker {
-    -fx-background-color: transparent;
-    -fx-border-color: #2988c9;
-    -fx-border-width: 2;
+    -fx-background-color: #2988c9;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
     -fx-border-radius: 6;
 }
 
 .date-picker .text-field {
     -fx-background-color: #31344C;
+    -fx-background-radius: 6;
     -fx-border-color: transparent;
+    -fx-border-width: 0;
     -fx-text-fill: #2988c9;
     -fx-font-size: 15px;
 }
@@ -57,8 +60,10 @@
 
 .date-picker .arrow-button {
     -fx-background-color: #2988c9;
+    -fx-background-radius: 0 6 6 0;
     -fx-border-color: #2988c9;
-    -fx-text-fill: #CCCCCC;
+    -fx-border-width: 2;
+    -fx-border-radius: 0 6 6 0;
 }
 
 .date-picker .arrow-button .arrow {

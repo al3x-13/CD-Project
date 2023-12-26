@@ -114,7 +114,7 @@ public class NewBookingController implements Initializable {
         beachInput.getItems().addAll('A', 'B', 'C');
         beachInput.setValue('A');
         beachInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR_2 + "; -fx-border-color: " +
-                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 2; -fx-font-size: 15px; " +
+                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 15px; " +
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         beachInput.getStylesheets().add(this.STYLES_PATH);
         beachInputContainer.getChildren().addAll(beachLabel, beachInput);
@@ -135,7 +135,7 @@ public class NewBookingController implements Initializable {
         }
         peopleInput.setValue(1);
         peopleInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR_2 + "; -fx-border-color: " +
-                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 2; -fx-font-size: 15px; " +
+                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 15px; " +
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         peopleInput.getStylesheets().add(this.STYLES_PATH);
         peopleInputContainer.getChildren().addAll(peopleLabel, peopleInput);
@@ -173,7 +173,7 @@ public class NewBookingController implements Initializable {
         }
         fromTimeInput.setValue("08:00");
         fromTimeInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR_2 + "; -fx-border-color: " +
-                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 2; -fx-font-size: 15px; " +
+                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 15px; " +
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         fromTimeInput.getStylesheets().add(this.STYLES_PATH);
 
@@ -196,7 +196,7 @@ public class NewBookingController implements Initializable {
         }
         toTimeInput.setValue("08:00");
         toTimeInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR_2 + "; -fx-border-color: " +
-                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 2; -fx-font-size: 15px; " +
+                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 15px; " +
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         toTimeInput.getStylesheets().add(this.STYLES_PATH);
 
@@ -220,7 +220,7 @@ public class NewBookingController implements Initializable {
 
         Button checkAvailabilityButton = new Button("Check availability");
         checkAvailabilityButton.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR_2 + "; -fx-text-fill: " +
-                 Main.TITLE_COLOR_PRIMARY + "; -fx-font-size: 16px;");
+                 Main.TITLE_COLOR_PRIMARY + "; -fx-font-size: 14px; -fx-padding: 6px 12px;");
         Label checkStatus = this.checkStatus();
 
         checkButtonContainer.getChildren().addAll(checkAvailabilityButton, checkStatus);
@@ -231,7 +231,7 @@ public class NewBookingController implements Initializable {
 
     private Label checkStatus() {
         Label checkStatus = new Label("Checking availability...");
-        checkStatus.setStyle("-fx-font-size: 16px; -fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + ";");
+        checkStatus.setStyle("-fx-font-size: 15px; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + ";");
         return checkStatus;
     }
 
