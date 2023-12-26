@@ -22,7 +22,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class NewBookingController implements Initializable {
@@ -127,8 +126,8 @@ public class NewBookingController implements Initializable {
         ChoiceBox<Character> beachInput = new ChoiceBox<>();
         beachInput.getItems().addAll('A', 'B', 'C');
         beachInput.setValue('A');
-        beachInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR_2 + "; -fx-border-color: " +
-                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 15px; " +
+        beachInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-border-color: " +
+                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 14px; " +
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         beachInput.getStylesheets().add(this.STYLES_PATH);
         beachInputContainer.getChildren().addAll(beachLabel, beachInput);
@@ -148,8 +147,8 @@ public class NewBookingController implements Initializable {
             peopleInput.getItems().add(i);
         }
         peopleInput.setValue(1);
-        peopleInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR_2 + "; -fx-border-color: " +
-                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 15px; " +
+        peopleInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-border-color: " +
+                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 14px; " +
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         peopleInput.getStylesheets().add(this.STYLES_PATH);
         peopleInputContainer.getChildren().addAll(peopleLabel, peopleInput);
@@ -186,8 +185,8 @@ public class NewBookingController implements Initializable {
             fromTimeInput.getItems().add(data);
         }
         fromTimeInput.setValue("08:00");
-        fromTimeInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR_2 + "; -fx-border-color: " +
-                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 15px; " +
+        fromTimeInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-border-color: " +
+                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 14px; " +
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         fromTimeInput.getStylesheets().add(this.STYLES_PATH);
 
@@ -209,8 +208,8 @@ public class NewBookingController implements Initializable {
             toTimeInput.getItems().add(data);
         }
         toTimeInput.setValue("08:00");
-        toTimeInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR_2 + "; -fx-border-color: " +
-                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 15px; " +
+        toTimeInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-border-color: " +
+                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 14px; " +
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         toTimeInput.getStylesheets().add(this.STYLES_PATH);
 
@@ -233,9 +232,24 @@ public class NewBookingController implements Initializable {
         checkButtonContainer.setAlignment(Pos.CENTER_LEFT);
 
         Button checkAvailabilityButton = new Button("Check availability");
-        checkAvailabilityButton.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR_2 + "; -fx-text-fill: " +
-                 Main.TITLE_COLOR_PRIMARY + "; -fx-font-size: 14px; -fx-padding: 6px 12px;");
+        checkAvailabilityButton.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-text-fill: " +
+                 Main.TITLE_COLOR_PRIMARY + "; -fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 6px 12px; " +
+                "-fx-border-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6;");
         Label checkStatus = this.checkStatus();
+
+        // hover styles
+        checkAvailabilityButton.setOnMouseEntered(mouseEvent ->
+                checkAvailabilityButton.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR_2 + "; -fx-text-fill: " +
+                        Main.TITLE_COLOR_PRIMARY + "; -fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 6px 12px; " +
+                        "-fx-border-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6;"
+                )
+        );
+        checkAvailabilityButton.setOnMouseExited(mouseEvent ->
+                checkAvailabilityButton.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-text-fill: " +
+                        Main.TITLE_COLOR_PRIMARY + "; -fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 6px 12px; " +
+                        "-fx-border-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6;"
+                )
+        );
 
         checkAvailabilityButton.setOnAction(actionEvent -> {
             this.bookingsTableData.add(new String[] { "oh", "yes", "daddy" });
@@ -299,7 +313,19 @@ public class NewBookingController implements Initializable {
 
         Button submitButton = new Button("Book");
         submitButton.setStyle("-fx-background-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-font-size: 17px; " +
-                "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -background-radius: 6;");
+                "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -fx-background-radius: 6;");
+
+        // hover styles
+        submitButton.setOnMouseEntered(mouseEvent ->
+                submitButton.setStyle("-fx-background-color: #1F72AB; -fx-font-size: 17px; " +
+                        "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -fx-background-radius: 6;"
+                )
+        );
+        submitButton.setOnMouseExited(mouseEvent ->
+                submitButton.setStyle("-fx-background-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-font-size: 17px; " +
+                        "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -fx-background-radius: 6;"
+                )
+        );
 
         // only enabled if there are lounges in the table
         submitButton.disableProperty().bind(this.bookingButtonDisabled);

@@ -2,8 +2,19 @@
     -fx-text-fill: #2988c9;
 }
 
+.choice-box:hover .label {
+    -fx-background-color: #31344C;
+    -fx-background-radius: 6;
+}
+
 .choice-box .context-menu {
     -fx-background-color: #31344C;
+}
+
+.choice-box .context-menu .menu-item:hover, .choice-box .context-menu .menu-item:focused,
+.choice-box .context-menu .menu-item:hover .label, .choice-box .context-menu .menu-item:focused .label {
+    -fx-background-color: #2988c9;
+    -fx-text-fill: #31344C;
 }
 
 .spinner {
@@ -25,16 +36,22 @@
 }
 
 .date-picker .text-field {
-    -fx-background-color: #31344C;
+    -fx-background-color: #181920;
     -fx-background-radius: 6;
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-text-fill: #2988c9;
-    -fx-font-size: 15px;
+    -fx-font-size: 14px;
+}
+
+.date-picker .text-field:hover {
+    -fx-background-color: #31344C;
+    -fx-background-radius: 6;
 }
 
 .date-picker-popup {
     -fx-background-color: #2988c9;
+    -fx-background-radius: 6;
     -fx-border-color: transparent;
 }
 
@@ -141,4 +158,17 @@
 .table-view .table-row-cell {
     -fx-border-color: #31344C;
     -fx-border-width: 0 0 2px 0;
+}
+
+.table-view .scroll-bar:vertical {
+    -fx-background-color: #181920;
+    -fx-border-width: 0 0 0 2;
+    -fx-border-color: #31344C;
+    -fx-padding: 4px 2px;
+}
+
+.table-view .scroll-bar:vertical .thumb {
+    -fx-pref-width: 3px;
+    -fx-background-color: #31344C;
+    -fx-background-radius: 8;
 }
