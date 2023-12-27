@@ -34,6 +34,7 @@ public class NewBookingController implements Initializable {
     private LocalDate date = null;
     private IntegerProperty fromTime = new SimpleIntegerProperty(-1);
     private IntegerProperty toTime = new SimpleIntegerProperty(-1);
+    private BooleanProperty checkAvailabilitySpinnerVisibility = new SimpleBooleanProperty(false);
     private ObservableList<String[]> bookingsTableData = FXCollections.observableArrayList();
     private BooleanProperty bookingButtonDisabled = new SimpleBooleanProperty(this.bookingsTableData.isEmpty());
 
@@ -242,7 +243,6 @@ public class NewBookingController implements Initializable {
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         toTimeInput.getStylesheets().add(this.STYLES_PATH);
 
-        // TODO: only allow for values starting after the from time
         // updates values when 'fromTime' changes
         this.fromTime.addListener((observable, oldValue, newValue) -> {
             int newToTimeValue = this.toTime.getValue();
@@ -309,11 +309,13 @@ public class NewBookingController implements Initializable {
 
         checkAvailabilityButton.setOnAction(actionEvent -> {
             this.bookingsTableData.add(new String[] { "oh", "yes", "daddy" });
+            this.checkAvailabilitySpinnerVisibility.setValue(true);
         });
 
         Label checkStatus = this.checkStatus();
+        ProgressIndicator checkLoadingSpinner = this.checkLoadingSpinner();
 
-        checkButtonContainer.getChildren().addAll(checkAvailabilityButton, checkStatus);
+        checkButtonContainer.getChildren().addAll(checkAvailabilityButton, checkStatus, checkLoadingSpinner);
 
         availabilityCheckContainer.getChildren().addAll(checkAvailabilityLabel, checkButtonContainer);
         return availabilityCheckContainer;
@@ -323,6 +325,15 @@ public class NewBookingController implements Initializable {
         Label checkStatus = new Label("Checking availability...");
         checkStatus.setStyle("-fx-font-size: 15px; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + ";");
         return checkStatus;
+    }
+
+    private ProgressIndicator checkLoadingSpinner() {
+        ProgressIndicator loadingSpinner = new ProgressIndicator();
+        loadingSpinner.setMaxWidth(25);
+        loadingSpinner.setMaxHeight(25);
+        loadingSpinner.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+        loadingSpinner.visibleProperty().bind(this.checkAvailabilitySpinnerVisibility);
+        return loadingSpinner;
     }
 
     private VBox bookingTableContainer() {
