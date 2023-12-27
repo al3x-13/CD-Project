@@ -1,4 +1,4 @@
-module cd.project.frontend {
+module cd.project.client {
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -6,6 +6,8 @@ module cd.project.frontend {
     requires com.dlsc.formsfx;
     requires org.kordamp.ikonli.javafx;
     requires jbcrypt;
+    requires org.apache.cxf.frontend.jaxws;
+    requires cd.project.frontend;
 
     opens cd.project.client to javafx.fxml;
     exports cd.project.client;
