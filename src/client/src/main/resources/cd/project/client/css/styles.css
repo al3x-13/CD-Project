@@ -7,8 +7,16 @@
     -fx-background-radius: 6;
 }
 
+.choice-box:hover {
+    -fx-cursor: hand;
+}
+
 .choice-box .context-menu {
     -fx-background-color: #31344C;
+}
+
+.choice-box .context-menu:hover {
+    -fx-cursor: hand;
 }
 
 .choice-box .context-menu .menu-item:hover, .choice-box .context-menu .menu-item:focused,
@@ -35,6 +43,10 @@
     -fx-border-radius: 6;
 }
 
+.date-picker:hover {
+    -fx-cursor: hand;
+}
+
 .date-picker .text-field {
     -fx-background-color: #181920;
     -fx-background-radius: 6;
@@ -44,15 +56,14 @@
     -fx-font-size: 14px;
 }
 
-.date-picker .text-field:hover {
-    -fx-background-color: #31344C;
-    -fx-background-radius: 6;
-}
-
 .date-picker-popup {
     -fx-background-color: #2988c9;
     -fx-background-radius: 6;
     -fx-border-color: transparent;
+}
+
+.date-picker-popup:hover {
+    -fx-cursor: hand;
 }
 
 .date-picker-popup .month-year-pane {

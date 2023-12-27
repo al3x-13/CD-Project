@@ -4,7 +4,6 @@ import cd.project.client.Main;
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -30,6 +29,9 @@ public class NewBookingController implements Initializable {
     private VBox container;
 
     // components data
+    private StringProperty beachId = new SimpleStringProperty("");
+    private IntegerProperty amountOfPeople = new SimpleIntegerProperty(-1);
+    private LocalDate date = null;
     private IntegerProperty fromTime = new SimpleIntegerProperty(-1);
     private IntegerProperty toTime = new SimpleIntegerProperty(-1);
     private ObservableList<String[]> bookingsTableData = FXCollections.observableArrayList();
@@ -45,7 +47,6 @@ public class NewBookingController implements Initializable {
         HBox titleContainer = this.titleContainer();
 
         // TODO: add handlers for when the values in the inputs change
-        // TODO: store them in class variables (??)
         HBox row1 = new HBox();
         HBox.setHgrow(row1, Priority.ALWAYS);
         row1.setAlignment(Pos.CENTER_LEFT);
@@ -122,8 +123,10 @@ public class NewBookingController implements Initializable {
         HBox beachInputContainer = new HBox();
         beachInputContainer.setSpacing(15);
         beachInputContainer.setAlignment(Pos.CENTER_LEFT);
+
         Label beachLabel = new Label("Beach");
         beachLabel.setStyle("-fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; -fx-font-size: 18px; -fx-font-weight: bold;");
+
         ChoiceBox<Character> beachInput = new ChoiceBox<>();
         beachInput.getItems().addAll('A', 'B', 'C');
         beachInput.setValue('A');
@@ -131,6 +134,12 @@ public class NewBookingController implements Initializable {
                 Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 14px; " +
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         beachInput.getStylesheets().add(this.STYLES_PATH);
+        this.beachId.setValue("A");
+
+        beachInput.valueProperty().addListener((observable, oldValue, newValue) -> {
+            this.beachId.setValue(newValue.toString());
+        });
+
         beachInputContainer.getChildren().addAll(beachLabel, beachInput);
         return beachInputContainer;
     }
@@ -152,6 +161,12 @@ public class NewBookingController implements Initializable {
                 Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 14px; " +
                 "-fx-text-fill: white; -fx-background-radius: 8;");
         peopleInput.getStylesheets().add(this.STYLES_PATH);
+        this.amountOfPeople.setValue(1);
+
+        peopleInput.valueProperty().addListener((observable, oldValue, newValue) -> {
+            this.amountOfPeople.setValue(newValue);
+        });
+
         peopleInputContainer.getChildren().addAll(peopleLabel, peopleInput);
         return peopleInputContainer;
     }
@@ -165,8 +180,12 @@ public class NewBookingController implements Initializable {
         dateLabel.setStyle("-fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; -fx-font-size: 18px; -fx-font-weight: bold;");
 
         DatePicker dateInput = new DatePicker(LocalDate.now());
-        // TODO: handle input change
         dateInput.getStylesheets().add(this.STYLES_PATH);
+        this.date = LocalDate.now();
+
+        dateInput.valueProperty().addListener((observable, oldValue, newValue) -> {
+            this.date = newValue;
+        });
 
         dateInputContainer.getChildren().addAll(dateLabel, dateInput);
         return dateInputContainer;
