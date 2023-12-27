@@ -7,6 +7,7 @@ module cd.project.client {
     requires org.kordamp.ikonli.javafx;
     requires jbcrypt;
     requires org.apache.cxf.frontend.jaxws;
+    requires jakarta.xml.ws;
     requires cd.project.frontend;
 
     opens cd.project.client to javafx.fxml;
