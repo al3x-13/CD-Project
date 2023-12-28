@@ -66,8 +66,7 @@ public class AppMenu extends HBox {
             buttons.getChildren().addAll(myBookings, about, newBooking);
             this.getChildren().addAll(logo, buttons, whitespace, userDetails);
         } else {
-            // TODO: remove 'newBooking' button from here (DEBUG)
-            buttons.getChildren().addAll(home, about, newBooking);
+            buttons.getChildren().addAll(home, about);
             this.getChildren().addAll(logo, buttons, whitespace);
         }
     }

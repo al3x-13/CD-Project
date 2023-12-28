@@ -1,5 +1,7 @@
 package cd.project.client.core;
 
+import cd.project.client.CommunicationProtocol;
+import cd.project.client.Main;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class UserSession {
@@ -21,23 +23,28 @@ public class UserSession {
         passwordHash = passwordHash;
     }
 
+    // TODO: handle 401s (particularly when session token expires)
+
     public static boolean authenticate(String usernameInput, String passwordInput) {
-        // TODO
-        if (!usernameInput.equals(testUsername) || !BCrypt.checkpw(passwordInput, testPasswordHash)) {
-            return false;
+        if (Main.clientProtocol == CommunicationProtocol.SOAP) {
+            String token = UserSessionSoapHelpers.authenticate(usernameInput, passwordInput);
+            if (token == null) {
+                return false;
+            }
+            UserSessionSoapHelpers.setAuthHeader(token);
+            username = usernameInput;
+            sessionToken = token;
+            return true;
         }
-        username = usernameInput;
-        passwordHash = passwordHash;
-        sessionToken = "test";
-        return true;
+        return false;
     }
 
     public static String getSessionToken() {
         return sessionToken;
     }
 
-    public static void setSessionToken(String sessionToken) {
-        sessionToken = sessionToken;
+    public static void setSessionToken(String token) {
+        sessionToken = token;
     }
 
     public static boolean isAuthenticated() {
@@ -45,6 +52,11 @@ public class UserSession {
     }
 
     public static void invalidateSession() {
+        if (Main.clientProtocol == CommunicationProtocol.SOAP) {
+            UserSessionSoapHelpers.resetAuthHeader();
+        } else {
+            // TODO
+        }
         sessionToken = null;
     }
 }
