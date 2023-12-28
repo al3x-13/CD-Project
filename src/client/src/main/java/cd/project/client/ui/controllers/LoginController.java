@@ -1,9 +1,11 @@
 package cd.project.client.ui.controllers;
 
+import cd.project.client.Main;
 import cd.project.client.Router;
 import cd.project.client.core.UserSession;
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
+import cd.project.client.ui.components.SessionExpireLabel;
 import cd.project.client.ui.components.SuccessLabel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -53,15 +55,17 @@ public class LoginController implements Initializable {
 
         submit.setOnAction(actionEvent -> handleSubmit());
 
+        if (Main.sessionExpiredNotification) {
+            new SessionExpireLabel(this.label);
+            Main.sessionExpiredNotification = false;
+        }
+
         home.setOnAction(actionEvent -> Router.navigateToHome());
     }
 
     private void handleSubmit() {
-        // TODO: remove this
-        System.out.println("user: " + username.getText() + ", pw: " + password.getText());
-
         if (UserSession.authenticate(username.getText(), password.getText())) {
-            new SuccessLabel(label, "Loggin successful", true);
+            new SuccessLabel(this.label, "Loggin successful", true);
             Router.navigateToMyBookings();
         } else {
             new SuccessLabel(this.label, "Invalid credentials", false);

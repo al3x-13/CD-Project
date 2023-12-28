@@ -1,10 +1,16 @@
 package cd.project.client.ui.components;
 
 import cd.project.client.Main;
+import cd.project.client.Router;
+import cd.project.client.core.BookingServiceSoap;
+import cd.project.client.core.UnauthorizedException;
+import cd.project.frontend.soap.BookingService;
+import jakarta.xml.ws.WebServiceException;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -30,6 +36,7 @@ public class MyBookingsLayout extends HBox {
         content = new VBox();
         content.setId("content");
         content.setPadding(new Insets(40));
+        content.setSpacing(20);
 
         Label title = new Label("My Bookings");
         title.setFont(Font.font(title.getFont().getName(), FontWeight.BOLD, 30));
@@ -39,6 +46,16 @@ public class MyBookingsLayout extends HBox {
         reservationLink.setFont(Font.font(title.getFont().getName(), FontWeight.BOLD, 20));
         reservationLink.setTextFill(Color.valueOf(Main.TEXT_COLOR_PRIMARY));
 
-        content.getChildren().addAll(title, reservationLink);
+        Button testing = new Button("TEST ME, DADDY!");
+        testing.setOnAction(actionEvent -> {
+            try {
+                BookingServiceSoap.test();
+            } catch (UnauthorizedException e) {
+                Main.sessionExpiredNotification = true;
+                Router.navigateToLogin();
+            }
+        });
+
+        content.getChildren().addAll(title, reservationLink, testing);
     }
 }

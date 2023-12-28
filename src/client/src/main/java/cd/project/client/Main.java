@@ -25,6 +25,7 @@ public class Main extends Application {
     public static String serverAddress;
     public static int serverPort;
     public static CommunicationProtocol clientProtocol;
+    public static boolean sessionExpiredNotification = false;
 
     @Override
     public void start(Stage stage) throws IOException {

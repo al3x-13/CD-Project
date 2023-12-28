@@ -23,15 +23,14 @@ public class UserSession {
         passwordHash = passwordHash;
     }
 
-    // TODO: handle 401s (particularly when session token expires)
-
     public static boolean authenticate(String usernameInput, String passwordInput) {
         if (Main.clientProtocol == CommunicationProtocol.SOAP) {
-            String token = UserSessionSoapHelpers.authenticate(usernameInput, passwordInput);
+            String token = AuthenticationServiceSoap.authenticate(usernameInput, passwordInput);
             if (token == null) {
                 return false;
             }
-            UserSessionSoapHelpers.setAuthHeader(token);
+            AuthenticationServiceSoap.setAuthHeader(token);
+            BookingServiceSoap.setAuthHeader(token);
             username = usernameInput;
             sessionToken = token;
             return true;
@@ -53,7 +52,7 @@ public class UserSession {
 
     public static void invalidateSession() {
         if (Main.clientProtocol == CommunicationProtocol.SOAP) {
-            UserSessionSoapHelpers.resetAuthHeader();
+            AuthenticationServiceSoap.resetAuthHeader();
         } else {
             // TODO
         }

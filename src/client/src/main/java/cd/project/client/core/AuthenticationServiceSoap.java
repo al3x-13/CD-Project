@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserSessionSoapHelpers {
+public class AuthenticationServiceSoap {
     // SOAP setup
     private static Authentication authService = instantiateAuthService();
     private static Map<String, Object> authServiceCtx;
