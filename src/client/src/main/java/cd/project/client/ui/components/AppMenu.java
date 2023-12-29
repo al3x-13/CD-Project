@@ -63,11 +63,10 @@ public class AppMenu extends HBox {
 
         // TODO: implement navigation items availability based on user being authenticated
         if (UserSession.isAuthenticated()) {
-            buttons.getChildren().addAll(myBookings, about, newBooking);
+            buttons.getChildren().addAll(myBookings, availableLouges, about, newBooking);
             this.getChildren().addAll(logo, buttons, whitespace, userDetails);
         } else {
-            // TODO: update this
-            buttons.getChildren().addAll(home, about, availableLouges);
+            buttons.getChildren().addAll(home, about);
             this.getChildren().addAll(logo, buttons, whitespace);
         }
     }

@@ -3,6 +3,7 @@ package cd.project.client.ui.components;
 import cd.project.client.Main;
 import cd.project.client.Router;
 import cd.project.client.core.BookingServiceSoap;
+import cd.project.client.core.SoapUtilities;
 import cd.project.client.core.UnauthorizedException;
 import cd.project.frontend.soap.BookingService;
 import jakarta.xml.ws.WebServiceException;
@@ -51,8 +52,7 @@ public class MyBookingsLayout extends HBox {
             try {
                 BookingServiceSoap.test();
             } catch (UnauthorizedException e) {
-                Main.sessionExpiredNotification = true;
-                Router.navigateToLogin();
+                SoapUtilities.handleExpiredSession();
             }
         });
 

@@ -16,9 +16,7 @@ public class Router {
             "home.fxml",
             "login.fxml",
             "register.fxml",
-            "about.fxml",
-            "newbooking.fxml",
-            "availablelounges.fxml" // TODO: remove this from here (DEBUGGING)
+            "about.fxml"
     ));
 
     private static void loadAndSetScene(String fxmlFile) {

@@ -1,6 +1,10 @@
 package cd.project.client.ui.controllers;
 
+import cd.project.backend.domain.Lounge;
 import cd.project.client.Main;
+import cd.project.client.core.BookingServiceSoap;
+import cd.project.client.core.SoapUtilities;
+import cd.project.client.core.UnauthorizedException;
 import cd.project.client.ui.Styles;
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
@@ -19,16 +23,18 @@ import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class ListLoungesController implements Initializable {
+public class AvailableLoungesController implements Initializable {
     private final String STYLES_PATH = Styles.getPath();
 
     @FXML
     private VBox container;
 
     // components data
-    private StringProperty beachId = new SimpleStringProperty("");
+    private StringProperty beachId = new SimpleStringProperty("A");
     private LocalDate date = null;
     private IntegerProperty fromTime = new SimpleIntegerProperty(-1);
     private IntegerProperty toTime = new SimpleIntegerProperty(-1);
@@ -76,15 +82,8 @@ public class ListLoungesController implements Initializable {
         VBox bookingTable = this.bookingTableContainer();
         row4.getChildren().addAll(bookingTable);
 
-        HBox row5 = new HBox();
-        HBox.setHgrow(row5, Priority.ALWAYS);
-        row5.setAlignment(Pos.CENTER_LEFT);
-        row5.setSpacing(40);
-        HBox submitBookingContainer = this.submitBookingContainer();
-        row5.getChildren().addAll(submitBookingContainer);
-
         // add content items
-        content.getChildren().addAll(titleContainer, row1, row2, row3, row4, row5);
+        content.getChildren().addAll(titleContainer, row1, row2, row3, row4);
 
         // add layout items
         container.getChildren().addFirst(new AppMenu());
@@ -266,13 +265,44 @@ public class ListLoungesController implements Initializable {
 
         checkAvailabilityButton.getStyleClass().add(this.STYLES_PATH);
 
-        checkAvailabilityButton.setOnAction(actionEvent -> {
-            this.bookingsTableData.add(new String[] { "oh", "yes", "daddy" });
-            this.checkAvailabilitySpinnerVisibility.setValue(true);
-        });
-
         Label checkStatus = this.checkStatus();
         ProgressIndicator checkLoadingSpinner = this.checkLoadingSpinner();
+
+        checkAvailabilityButton.setOnMouseClicked(actionEvent -> {
+            this.bookingsTableData.clear();
+            checkStatus.setText("Getting available lounges...");
+            this.checkAvailabilitySpinnerVisibility.setValue(true);
+            ArrayList<Lounge> availableLounges = null;
+
+            try {
+                availableLounges = BookingServiceSoap.getAvailableLounges(
+                        this.beachId.getValue().charAt(0),
+                        this.date,
+                        LocalTime.of(this.fromTime.intValue(), 0),
+                        LocalTime.of(this.toTime.intValue(), 0)
+                );
+
+                if (availableLounges != null) {
+                    for (Lounge availableLounge : availableLounges) {
+                        this.bookingsTableData.add(new String[] {
+                                availableLounge.getId(),
+                                String.valueOf(availableLounge.getBeachId()),
+                                String.valueOf(availableLounge.getMaxCapacity())
+                        });
+                    }
+                }
+            } catch (UnauthorizedException e) {
+                SoapUtilities.handleExpiredSession();
+            }
+
+            this.checkAvailabilitySpinnerVisibility.setValue(false);
+            if (availableLounges == null) {
+                checkStatus.setText("No lounges available");
+            } else {
+                checkStatus.setText("");
+            }
+        });
+
 
         checkButtonContainer.getChildren().addAll(checkAvailabilityButton, checkStatus, checkLoadingSpinner);
 
@@ -281,7 +311,7 @@ public class ListLoungesController implements Initializable {
     }
 
     private Label checkStatus() {
-        Label checkStatus = new Label("Getting available lounges...");
+        Label checkStatus = new Label();
         checkStatus.setStyle("-fx-font-size: 15px; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + ";");
         return checkStatus;
     }
@@ -307,7 +337,7 @@ public class ListLoungesController implements Initializable {
         bookingTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         bookingTable.getStylesheets().add(this.STYLES_PATH);
         bookingTable.setMaxWidth(500);
-        bookingTable.setMaxHeight(180);
+        bookingTable.setMaxHeight(250);
         bookingTable.setEditable(false);
         int colWidth = 150;
 
@@ -332,40 +362,5 @@ public class ListLoungesController implements Initializable {
 
         bookingTableContainer.getChildren().addAll(tableLabel, bookingTable);
         return bookingTableContainer;
-    }
-
-    private HBox submitBookingContainer() {
-        HBox submitBookingContainer = new HBox();
-        submitBookingContainer.setSpacing(15);
-        submitBookingContainer.setAlignment(Pos.CENTER_LEFT);
-
-        Button submitButton = new Button("Book");
-        submitButton.getStyleClass().add(this.STYLES_PATH);
-        submitButton.setStyle("-fx-background-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-font-size: 17px; " +
-                "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -fx-background-radius: 6; " +
-                "-fx-cursor: hand;");
-
-        // hover styles
-        submitButton.setOnMouseEntered(mouseEvent ->
-                submitButton.setStyle("-fx-background-color: #1F72AB; -fx-font-size: 17px; " +
-                        "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -fx-background-radius: 6; " +
-                        "-fx-cursor: hand;"
-                )
-        );
-        submitButton.setOnMouseExited(mouseEvent ->
-                submitButton.setStyle("-fx-background-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-font-size: 17px; " +
-                        "-fx-text-fill: " + Main.BACKGROUND_COLOR_2 + "; -fx-font-weight: bold; -fx-background-radius: 6; " +
-                        "-fx-cursor: hand;"
-                )
-        );
-
-        // only enabled if there are lounges in the table
-        submitButton.disableProperty().bind(this.bookingButtonDisabled);
-
-        // TODO: implement this
-        submitButton.setOnAction(actionEvent -> System.out.println("TODO"));
-
-        submitBookingContainer.getChildren().addAll(submitButton);
-        return submitBookingContainer;
     }
 }
