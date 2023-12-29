@@ -37,7 +37,7 @@ public class Main extends Application {
         Parent root = fxmlLoader.load();
 
         // Initial scene setup
-        Scene home = new Scene(root, 850, 650);
+        Scene home = new Scene(root, 1000, 750);
         stage.setTitle("CD");
         stage.setScene(home);
         stage.show();
