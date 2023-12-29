@@ -7,6 +7,7 @@ import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
 import cd.project.client.ui.components.SessionExpireLabel;
 import cd.project.client.ui.components.SuccessLabel;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -66,7 +68,9 @@ public class LoginController implements Initializable {
     private void handleSubmit() {
         if (UserSession.authenticate(username.getText(), password.getText())) {
             new SuccessLabel(this.label, "Loggin successful", true);
-            Router.navigateToMyBookings();
+            PauseTransition delay = new PauseTransition(Duration.seconds(1));
+            delay.setOnFinished(actionEvent -> Router.navigateToMyBookings());
+            delay.play();
         } else {
             new SuccessLabel(this.label, "Invalid credentials", false);
         }
