@@ -1,3 +1,30 @@
+.hyperlink {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5e6d88;
+    -fx-underline: false;
+    -fx-focus-color: transparent;
+}
+
+.hyperlink:hover {
+    -fx-underline: false;
+    -fx-text-fill: #2988c9;
+}
+
+.book-button {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #B8B8B8;
+    -fx-background-radius: 4;
+    -fx-background-color: #2988c9;
+    -fx-cursor: hand;
+    -fx-padding: 6px 10px;
+}
+
+.book-button:hover {
+    -fx-background-color: #2274AC;
+}
+
 .choice-box .label {
     -fx-text-fill: #2988c9;
 }

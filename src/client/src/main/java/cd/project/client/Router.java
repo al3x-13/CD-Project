@@ -27,7 +27,7 @@ public class Router {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("scenes/" + fxmlFileToLoad));
             Parent page = loader.load();
             Stage stage = new Stage();
-            Scene scene = new Scene(page, 850, 650);
+            Scene scene = new Scene(page, 1000, 750);
             stage.setScene(scene);
             Stage rootStage = Main.getRootStage();
             rootStage.setScene(scene);

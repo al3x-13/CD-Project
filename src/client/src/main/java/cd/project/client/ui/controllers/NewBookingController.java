@@ -1,6 +1,7 @@
 package cd.project.client.ui.controllers;
 
 import cd.project.client.Main;
+import cd.project.client.ui.Styles;
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
 import javafx.beans.property.*;
@@ -23,7 +24,7 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class NewBookingController implements Initializable {
-    private final String STYLES_PATH = this.getStylesPath();
+    private final String STYLES_PATH = Styles.getPath();
 
     @FXML
     private VBox container;
@@ -99,17 +100,6 @@ public class NewBookingController implements Initializable {
         this.bookingsTableData.addListener((ListChangeListener<? super String[]>) change -> {
             this.bookingButtonDisabled.setValue(this.bookingsTableData.isEmpty());
         });
-    }
-
-    private String getStylesPath() {
-        String projectDir = System.getProperty("user.dir");
-        String cssFilePath = projectDir + "/client/src/main/resources/cd/project/client/css/styles.css";
-        File cssFile = new File(cssFilePath);
-        try {
-            return cssFile.toURI().toURL().toString();
-        } catch (MalformedURLException e) {
-            return null;
-        }
     }
 
     private HBox titleContainer() {

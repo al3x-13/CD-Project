@@ -3,6 +3,7 @@ package cd.project.client.ui.components;
 import cd.project.client.Main;
 import cd.project.client.Router;
 import cd.project.client.core.UserSession;
+import cd.project.client.ui.Styles;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -34,28 +35,23 @@ public class AppMenu extends HBox {
 
         // home
         Hyperlink home = new Hyperlink("Home");
-        home.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; " +
-                "-fx-focus-color: transparent;");
+        home.getStylesheets().add(Styles.getPath());
         home.setOnAction(actionEvent -> Router.navigateToHome());
 
         // my bookings
         Hyperlink myBookings = new Hyperlink("My Bookings");
-        myBookings.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; " +
-                "-fx-focus-color: transparent;");
+        myBookings.getStylesheets().add(Styles.getPath());
         myBookings.setOnAction(actionEvent -> Router.navigateToMyBookings());
 
         // about
         Hyperlink about = new Hyperlink("About");
-        about.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; " +
-                "-fx-focus-color: transparent;");
+        about.getStylesheets().add(Styles.getPath());
         about.setOnAction(actionEvent -> Router.navigateToAbout());
 
         // new booking
         Button newBooking = new Button("Book");
-        newBooking.setPrefWidth(65);
-        newBooking.setPrefHeight(30);
-        newBooking.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #CCCCCC; -fx-border-radius: 6px; " +
-                "-fx-background-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-cursor: hand;");
+        newBooking.getStylesheets().add(Styles.getPath());
+        newBooking.getStyleClass().add("book-button");
         newBooking.setOnAction(actionEvent -> Router.navigateToNewBooking());
 
         HBox whitespace = this.whitespace();
@@ -99,12 +95,12 @@ public class AppMenu extends HBox {
         userDetails.setAlignment(Pos.CENTER_RIGHT);
         userDetails.setSpacing(15);
         Label username = new Label(UserSession.getUsername());
-        username.setStyle("-fx-font-size: 16px; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + " ;");
+        username.setStyle("-fx-font-size: 15px; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + " ;");
         Image userImage = new Image(pathPrefix + System.getProperty("user.dir") + "/client/src/main/resources/cd/project/client/assets/user_icon.png");
         ImageView userIcon = new ImageView(userImage);
         userIcon.setPreserveRatio(true);
-        userIcon.setFitWidth(35);
-        userIcon.setFitHeight(35);
+        userIcon.setFitWidth(32);
+        userIcon.setFitHeight(32);
 
         // logout icon
         Image logoutImageGrey = new Image(
