@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
 public class AppMenu extends HBox {
     public AppMenu() {
         // Components properties
-        setMinHeight(45);
+        setMinHeight(65);
         setHgrow(this, Priority.ALWAYS);
         setAlignment(Pos.CENTER_LEFT);
         setPadding(new Insets(10, 20, 10, 20));
