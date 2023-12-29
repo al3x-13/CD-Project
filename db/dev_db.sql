@@ -236,7 +236,7 @@ SELECT pg_catalog.setval('public.bookings_id_seq', 14, true);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 1, false);
+SELECT pg_catalog.setval('public.users_id_seq', 2, false);
 
 
 --
