@@ -29,6 +29,10 @@ public class AuthenticationServiceSoap {
         return authService.authenticate(username, password);
     }
 
+    public static boolean register(String username, String password) {
+        return authService.register(username, password);
+    }
+
     public static void setAuthHeader(String token) {
         Map<String, List<String>> headers = new HashMap<>();
         headers.put("Authorization", Collections.singletonList("Bearer " + token));

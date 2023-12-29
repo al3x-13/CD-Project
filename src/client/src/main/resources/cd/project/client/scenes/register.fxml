@@ -82,12 +82,20 @@
             <Insets top="3.0" />
          </VBox.margin>
       </Text>
+      <Label fx:id="successLabel">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
       <Button fx:id="home" mnemonicParsing="false" style="-fx-background-color: #323339; -fx-background-radius: 6; -fx-cursor: hand;" text="Return to Home" textAlignment="CENTER" textFill="#9f9f9f">
          <padding>
             <Insets bottom="6.0" left="8.0" right="8.0" top="6.0" />
          </padding>
          <VBox.margin>
-            <Insets top="40.0" />
+            <Insets top="25.0" />
          </VBox.margin>
       </Button>
    </children>

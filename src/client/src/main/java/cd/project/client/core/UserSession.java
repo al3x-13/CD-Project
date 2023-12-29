@@ -35,6 +35,16 @@ public class UserSession {
             sessionToken = token;
             return true;
         }
+        // TODO: implement REST
+        return false;
+    }
+
+    public static boolean register(String username, String password) {
+        if (Main.clientProtocol == CommunicationProtocol.SOAP) {
+            return AuthenticationServiceSoap.register(username, password);
+        }
+
+        // TODO: implement REST
         return false;
     }
 

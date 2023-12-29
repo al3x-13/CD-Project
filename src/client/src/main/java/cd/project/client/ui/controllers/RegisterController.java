@@ -1,8 +1,14 @@
 package cd.project.client.ui.controllers;
 
+import cd.project.client.CommunicationProtocol;
+import cd.project.client.Main;
 import cd.project.client.Router;
+import cd.project.client.core.AuthenticationServiceSoap;
+import cd.project.client.core.UserSession;
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
+import cd.project.client.ui.components.SuccessLabel;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -11,12 +17,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,6 +45,8 @@ public class RegisterController implements Initializable {
     private Text usernameConstraint;
     @FXML
     private Text passwordConstraint;
+    @FXML
+    private Label successLabel;
     private final BooleanProperty validUsername = new SimpleBooleanProperty(false);
     private final BooleanProperty validPassword = new SimpleBooleanProperty(false);
     private final BooleanProperty validCredentials = new SimpleBooleanProperty(true);
@@ -119,6 +129,15 @@ public class RegisterController implements Initializable {
     }
 
     private void handleSubmit() {
-        System.out.println("user: " + username.getText() + ", pw: " + password.getText());
+        boolean registerSuccess = UserSession.register(username.getText(), password.getText());
+
+        if (!registerSuccess) {
+            new SuccessLabel(this.successLabel, "Username already exists", false);
+        } else {
+            new SuccessLabel(this.successLabel, "Account created successfully", true);
+            PauseTransition delay = new PauseTransition(Duration.seconds(2));
+            delay.setOnFinished(actionEvent -> Router.navigateToLogin());
+            delay.play();
+        }
     }
 }
