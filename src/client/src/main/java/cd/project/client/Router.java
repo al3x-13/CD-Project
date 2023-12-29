@@ -17,7 +17,8 @@ public class Router {
             "login.fxml",
             "register.fxml",
             "about.fxml",
-            "newbooking.fxml" // TODO: remove this from here (DEBUGGING)
+            "newbooking.fxml",
+            "availablelounges.fxml" // TODO: remove this from here (DEBUGGING)
     ));
 
     private static void loadAndSetScene(String fxmlFile) {
@@ -73,5 +74,10 @@ public class Router {
     @FXML
     public static void navigateToNewBooking() {
         loadAndSetScene("newbooking.fxml");
+    }
+
+    @FXML
+    public static void navigateToListLounges() {
+        loadAndSetScene("availablelounges.fxml");
     }
 }

@@ -43,6 +43,10 @@ public class AppMenu extends HBox {
         myBookings.getStylesheets().add(Styles.getPath());
         myBookings.setOnAction(actionEvent -> Router.navigateToMyBookings());
 
+        Hyperlink availableLouges = new Hyperlink("Available Lounges");
+        availableLouges.getStylesheets().add(Styles.getPath());
+        availableLouges.setOnAction(actionEvent -> Router.navigateToListLounges());
+
         // about
         Hyperlink about = new Hyperlink("About");
         about.getStylesheets().add(Styles.getPath());
@@ -62,7 +66,8 @@ public class AppMenu extends HBox {
             buttons.getChildren().addAll(myBookings, about, newBooking);
             this.getChildren().addAll(logo, buttons, whitespace, userDetails);
         } else {
-            buttons.getChildren().addAll(home, about);
+            // TODO: update this
+            buttons.getChildren().addAll(home, about, availableLouges);
             this.getChildren().addAll(logo, buttons, whitespace);
         }
     }
