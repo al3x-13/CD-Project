@@ -5,6 +5,7 @@ import cd.project.backend.domain.Lounge;
 import cd.project.backend.interfaces.BookingServiceInterface;
 import cd.project.frontend.auth.JwtHelper;
 import cd.project.frontend.soap.client.rmi.BookingServiceClient;
+import cd.project.frontend.soap.entities.BookingSoap;
 import jakarta.annotation.Resource;
 import jakarta.jws.WebService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,7 +56,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public ArrayList<Booking> getUserBookings() {
+    public ArrayList<BookingSoap> getUserBookings() {
         MessageContext mc = webServiceContext.getMessageContext();
         HttpServletRequest request = (HttpServletRequest) mc.get("HTTP.REQUEST");
         String authHeader = request.getHeader("Authorization");
@@ -63,10 +64,29 @@ public class BookingServiceImpl implements BookingService {
         int userId = JwtHelper.getUserId(token);
 
         try {
-            return bookingService.getUserBookings(userId);
+            ArrayList<Booking> bookings = bookingService.getUserBookings(userId);
+            return parseBookingsToSoapBookings(bookings);
         } catch (RemoteException e) {
             throw new RuntimeException("Failed to execute remote method: " + e);
         }
+    }
+
+    private static ArrayList<BookingSoap> parseBookingsToSoapBookings(ArrayList<Booking> bookings) {
+        ArrayList<BookingSoap> soapBookings = new ArrayList<>();
+        for (Booking booking : bookings) {
+            BookingSoap soapBooking = new BookingSoap(
+                    booking.getId(),
+                    booking.getBeachID(),
+                    booking.getDate().toString(),
+                    booking.getFromTime().toString(),
+                    booking.getToTime().toString(),
+                    booking.getCreatedAt().toString(),
+                    booking.getUserID(),
+                    booking.getLounges()
+            );
+            soapBookings.add(soapBooking);
+        }
+        return soapBookings;
     }
 
     public String test() {

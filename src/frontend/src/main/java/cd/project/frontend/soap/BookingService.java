@@ -2,6 +2,7 @@ package cd.project.frontend.soap;
 
 import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
+import cd.project.frontend.soap.entities.BookingSoap;
 import jakarta.jws.WebMethod;
 import jakarta.jws.WebService;
 
@@ -28,7 +29,7 @@ public interface BookingService {
     boolean cancelBooking(int bookingId);
 
     @WebMethod
-    ArrayList<Booking> getUserBookings();
+    ArrayList<BookingSoap> getUserBookings();
 
     @WebMethod
     String test();
