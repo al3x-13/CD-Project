@@ -7,6 +7,7 @@ import cd.project.backend.domain.Lounge;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -202,7 +203,7 @@ public class BookingServiceHelpers {
         ArrayList<Booking> userBookings = new ArrayList<>();
 
         ResultSet bookingsData = DbConnection.executeQuery(
-                "SELECT id, beach_id, date, from_time, to_time, lounge_ids " +
+                "SELECT id, beach_id, date, from_time, to_time, created_at, lounge_ids " +
                         "FROM bookings WHERE user_id = ?",
                 userId
         );
@@ -215,6 +216,7 @@ public class BookingServiceHelpers {
                 LocalDate date = bookingsData.getDate("date").toLocalDate();
                 LocalTime fromTime = bookingsData.getTime("from_time").toLocalTime();
                 LocalTime toTime = bookingsData.getTime("to_time").toLocalTime();
+                LocalDateTime createdAt = bookingsData.getObject("created_at", LocalDateTime.class);
                 ArrayList<String> loungeIds = new ArrayList<>(
                         List.of((String[]) bookingsData
                         .getArray("lounge_ids")
@@ -227,6 +229,7 @@ public class BookingServiceHelpers {
                                 date,
                                 fromTime,
                                 toTime,
+                                createdAt,
                                 userId,
                                 Lounge.getLoungesByID(loungeIds)
                         )
