@@ -27,12 +27,15 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class MyBookingsController implements Initializable {
     @FXML
     private VBox container;
+
+    private ArrayList<BookingSoap> userBookings = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -49,10 +52,26 @@ public class MyBookingsController implements Initializable {
         VBox myBookingsContainer = new VBox();
         myBookingsContainer.setAlignment(Pos.CENTER);
         myBookingsContainer.setSpacing(30);
-        VBox testBooking = this.bookingContainer(234, LocalDate.now(), LocalTime.of(10,0), LocalTime.of(11, 0), 13, LocalDateTime.of(2023, 11, 18, 16, 0), null);
-        VBox testBooking2 = this.bookingContainer(234, LocalDate.now(), LocalTime.of(10,0), LocalTime.of(11, 0), 13, LocalDateTime.of(2023, 11, 18, 16, 0), null);
-        VBox testBooking3 = this.bookingContainer(234, LocalDate.now(), LocalTime.of(10,0), LocalTime.of(11, 0), 13, LocalDateTime.of(2023, 11, 18, 16, 0), null);
-        myBookingsContainer.getChildren().addAll(testBooking, testBooking2, testBooking3);
+
+        // TODO: get user bookings and display them
+        try {
+            userBookings = BookingServiceSoap.getUserBookings();
+        } catch (UnauthorizedException e) {
+            SoapUtilities.handleExpiredSession();
+        }
+
+        for (BookingSoap userBooking : userBookings) {
+            VBox bookingContainer = this.bookingContainer(
+                    userBooking.getId(),
+                    LocalDate.parse(userBooking.getDate()),
+                    LocalTime.parse(userBooking.getFromTime()),
+                    LocalTime.parse(userBooking.getToTime()),
+                    LocalDateTime.parse(userBooking.getCreatedAt()),
+                    userBooking.getLounges()
+            );
+            myBookingsContainer.getChildren().add(bookingContainer);
+        }
+
         bookingListing.setContent(myBookingsContainer);
 
         content.getChildren().addAll(title, bookingListing);
@@ -66,7 +85,7 @@ public class MyBookingsController implements Initializable {
             LocalDate date,
             LocalTime fromTime,
             LocalTime toTime,
-            int amoutOfPeople,
+            //int amoutOfPeople,
             LocalDateTime createdAt,
             ArrayList<Lounge> lounges
     ) {
@@ -139,7 +158,7 @@ public class MyBookingsController implements Initializable {
         toSection.getChildren().addAll(toLabel, toTimeLabel);
 
         // people section
-        HBox peopleSection = new HBox();
+        /*HBox peopleSection = new HBox();
         peopleSection.setAlignment(Pos.CENTER_LEFT);
         peopleSection.setSpacing(15);
         boolean isWindowsSystem = System.getProperty("os.name").toLowerCase().contains("windows");
@@ -151,9 +170,9 @@ public class MyBookingsController implements Initializable {
         usersIcon.setFitHeight(25);
         Label peopleAmount = new Label(String.valueOf(amoutOfPeople));
         peopleAmount.setStyle("-fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + "; -fx-font-weight: normal;");
-        peopleSection.getChildren().addAll(usersIcon, peopleAmount);
+        peopleSection.getChildren().addAll(usersIcon, peopleAmount);*/
 
-        detailsContainer.getChildren().addAll(dateSection, fromSection, toSection, peopleSection);
+        detailsContainer.getChildren().addAll(dateSection, fromSection, toSection);
 
         // lounges section
         VBox loungesSection = this.bookingTableContainer(lounges);
@@ -165,7 +184,9 @@ public class MyBookingsController implements Initializable {
         creationAtSection.setSpacing(10);
         Label createdAtLabel = new Label("Booked on");
         createdAtLabel.setStyle("-fx-font-weight: normal; -fx-font-size: 14px;");
-        Label creationTimestamp = new Label(createdAt.toString().replace("T", " at "));
+        DateTimeFormatter createAtFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String parsedCreatedAt = createdAt.format(createAtFormatter).replace(" ", " at ");
+        Label creationTimestamp = new Label(parsedCreatedAt);
         creationTimestamp.setStyle("-fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + "; -fx-font-weight: normal;" +
                 "-fx-font-size: 14px;");
         creationAtSection.getChildren().addAll(createdAtLabel, creationTimestamp);
@@ -184,7 +205,7 @@ public class MyBookingsController implements Initializable {
         bookingTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         bookingTable.getStylesheets().add(Styles.getPath());
         bookingTable.setMaxWidth(colWidth * 3);
-        bookingTable.setMaxHeight(250);
+        bookingTable.setMaxHeight(170);
         bookingTable.setEditable(false);
 
         TableColumn<String[], String> loungeIdCol = new TableColumn<>("Lounge ID");
@@ -221,5 +242,9 @@ public class MyBookingsController implements Initializable {
 
         bookingTableContainer.getChildren().addAll(bookingTable);
         return bookingTableContainer;
+    }
+
+    private ArrayList<BookingSoap> getUserBookings() {
+        return null;
     }
 }
