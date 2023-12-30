@@ -28,7 +28,7 @@ public interface BookingService {
     boolean cancelBooking(int bookingId);
 
     @WebMethod
-    ArrayList<Booking> getUserBookings(int userId);
+    ArrayList<Booking> getUserBookings();
 
     @WebMethod
     String test();
