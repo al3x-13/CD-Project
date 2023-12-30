@@ -8,6 +8,7 @@ import cd.project.client.core.UnauthorizedException;
 import cd.project.client.ui.Styles;
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
+import cd.project.frontend.soap.entities.BookingSoap;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,12 +22,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -44,30 +43,19 @@ public class MyBookingsController implements Initializable {
         Label title = new Label("My Bookings");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + ";");
 
-        Button testing = new Button("TEST ME, DADDY!");
-        testing.setOnAction(actionEvent -> {
-            try {
-                BookingServiceSoap.test();
-            } catch (UnauthorizedException e) {
-                SoapUtilities.handleExpiredSession();
-            }
-        });
-
-        // TODO: get user bookings and list them
-
         ScrollPane bookingListing = new ScrollPane();
         bookingListing.getStylesheets().add(Styles.getPath());
         bookingListing.setFitToWidth(true);
         VBox myBookingsContainer = new VBox();
         myBookingsContainer.setAlignment(Pos.CENTER);
         myBookingsContainer.setSpacing(30);
-        VBox testBooking = this.bookingContainer(234, LocalDate.now(), LocalTime.of(10,0), LocalTime.of(11, 0), 13, null);
-        VBox testBooking2 = this.bookingContainer(234, LocalDate.now(), LocalTime.of(10,0), LocalTime.of(11, 0), 13, null);
-        VBox testBooking3 = this.bookingContainer(234, LocalDate.now(), LocalTime.of(10,0), LocalTime.of(11, 0), 13, null);
+        VBox testBooking = this.bookingContainer(234, LocalDate.now(), LocalTime.of(10,0), LocalTime.of(11, 0), 13, LocalDateTime.of(2023, 11, 18, 16, 0), null);
+        VBox testBooking2 = this.bookingContainer(234, LocalDate.now(), LocalTime.of(10,0), LocalTime.of(11, 0), 13, LocalDateTime.of(2023, 11, 18, 16, 0), null);
+        VBox testBooking3 = this.bookingContainer(234, LocalDate.now(), LocalTime.of(10,0), LocalTime.of(11, 0), 13, LocalDateTime.of(2023, 11, 18, 16, 0), null);
         myBookingsContainer.getChildren().addAll(testBooking, testBooking2, testBooking3);
         bookingListing.setContent(myBookingsContainer);
 
-        content.getChildren().addAll(title, testing, bookingListing);
+        content.getChildren().addAll(title, bookingListing);
         container.getChildren().addFirst(new AppMenu());
         container.getChildren().add(content);
         container.getChildren().addLast(new ProtocolLabel());
@@ -79,6 +67,7 @@ public class MyBookingsController implements Initializable {
             LocalTime fromTime,
             LocalTime toTime,
             int amoutOfPeople,
+            LocalDateTime createdAt,
             ArrayList<Lounge> lounges
     ) {
         VBox container = new VBox();
@@ -103,7 +92,17 @@ public class MyBookingsController implements Initializable {
         cancelButton.getStyleClass().add("cancel-button");
 
         // TODO: implement this
-        cancelButton.setOnMouseClicked(mouseEvent -> System.out.println("TODO"));
+        cancelButton.setOnMouseClicked(mouseEvent -> {
+            try {
+                ArrayList<BookingSoap> temp = BookingServiceSoap.getUserBookings();
+                System.out.println("--- TEMP ---");
+                for (BookingSoap booking : temp) {
+                    System.out.println(booking.getId());
+                }
+            } catch (UnauthorizedException e) {
+                SoapUtilities.handleExpiredSession();
+            }
+        });
 
         Separator separator = new Separator();
         mainSection.getChildren().addAll(title, filler, cancelButton);
@@ -159,7 +158,19 @@ public class MyBookingsController implements Initializable {
         // lounges section
         VBox loungesSection = this.bookingTableContainer(lounges);
 
-        container.getChildren().addAll(header, detailsContainer, loungesSection);
+        // created at section
+        HBox creationAtSection = new HBox();
+        HBox.setHgrow(creationAtSection, Priority.ALWAYS);
+        creationAtSection.setAlignment(Pos.CENTER_LEFT);
+        creationAtSection.setSpacing(10);
+        Label createdAtLabel = new Label("Booked on");
+        createdAtLabel.setStyle("-fx-font-weight: normal; -fx-font-size: 14px;");
+        Label creationTimestamp = new Label(createdAt.toString().replace("T", " at "));
+        creationTimestamp.setStyle("-fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + "; -fx-font-weight: normal;" +
+                "-fx-font-size: 14px;");
+        creationAtSection.getChildren().addAll(createdAtLabel, creationTimestamp);
+
+        container.getChildren().addAll(header, detailsContainer, loungesSection, creationAtSection);
         return container;
     }
 
@@ -168,13 +179,13 @@ public class MyBookingsController implements Initializable {
         bookingTableContainer.setSpacing(15);
         bookingTableContainer.setAlignment(Pos.CENTER);
 
+        int colWidth = 175;
         TableView<String[]> bookingTable = new TableView<>();
         bookingTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         bookingTable.getStylesheets().add(Styles.getPath());
-        bookingTable.setMaxWidth(450);
+        bookingTable.setMaxWidth(colWidth * 3);
         bookingTable.setMaxHeight(250);
         bookingTable.setEditable(false);
-        int colWidth = 150;
 
         TableColumn<String[], String> loungeIdCol = new TableColumn<>("Lounge ID");
         loungeIdCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue()[0]));

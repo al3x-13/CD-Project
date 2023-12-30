@@ -3,6 +3,7 @@ package cd.project.client.core;
 import cd.project.backend.domain.Lounge;
 import cd.project.client.Main;
 import cd.project.frontend.soap.BookingService;
+import cd.project.frontend.soap.entities.BookingSoap;
 import jakarta.xml.ws.BindingProvider;
 import jakarta.xml.ws.handler.MessageContext;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -47,6 +48,15 @@ public class BookingServiceSoap {
 
         try {
             return bookingService.getAvailableLounges(beachId, parsedDate, parsedFromTime, parsedToTime);
+        } catch (Exception e) {
+            SoapUtilities.checkUnauthorizedStatus(e);
+            return null;
+        }
+    }
+
+    public static ArrayList<BookingSoap> getUserBookings() throws UnauthorizedException {
+        try {
+            return bookingService.getUserBookings();
         } catch (Exception e) {
             SoapUtilities.checkUnauthorizedStatus(e);
             return null;
