@@ -3,9 +3,17 @@ package cd.project.frontend.rest;
 import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 import cd.project.backend.interfaces.BookingServiceInterface;
+import cd.project.frontend.auth.JwtHelper;
 import cd.project.frontend.soap.client.rmi.BookingServiceClient;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.xml.ws.WebServiceContext;
+import jakarta.xml.ws.handler.MessageContext;
+import org.apache.cxf.transport.http.AbstractHTTPDestination;
 
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -17,6 +25,8 @@ import java.util.ArrayList;
 @Path("/booking")
 public class BookingServiceImpl implements BookingService {
     private final BookingServiceInterface bookingService = new BookingServiceClient().getBookingService();
+    @Context
+    private HttpHeaders headers;
 
     @Override
     @GET
@@ -59,7 +69,11 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @GET
     @Path("/getUserBookings")
-    public ArrayList<Booking> getUserBookings(int userId) {
+    public ArrayList<Booking> getUserBookings() {
+        String authHeader = headers.getRequestHeader("Authorization").getFirst();
+        String token = authHeader.split(" ")[1];
+        int userId = JwtHelper.getUserId(token);
+
         try {
             return bookingService.getUserBookings(userId);
         } catch (RemoteException e) {

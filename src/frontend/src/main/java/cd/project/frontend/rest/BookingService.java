@@ -2,6 +2,10 @@ package cd.project.frontend.rest;
 
 import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Context;
+import jakarta.xml.ws.WebServiceContext;
+import jakarta.xml.ws.handler.MessageContext;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,5 +25,5 @@ public interface BookingService {
 
     boolean cancelBooking(int bookingId);
 
-    ArrayList<Booking> getUserBookings(int userId);
+    ArrayList<Booking> getUserBookings();
 }
