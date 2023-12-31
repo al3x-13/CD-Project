@@ -63,6 +63,27 @@ public class BookingServiceSoap {
         }
     }
 
+    public static ArrayList<Lounge> checkBookingAvailability(
+            char beachId,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime,
+            int individuals
+    ) throws UnauthorizedException {
+        try {
+            return bookingService.checkBookingAvailability(
+                    beachId,
+                    date.toString(),
+                    fromTime.toString(),
+                    toTime.toString(),
+                    individuals
+            );
+        } catch (Exception e) {
+            SoapUtilities.checkUnauthorizedStatus(e);
+            return null;
+        }
+    }
+
     public static int createBooking(
             char beachId,
             LocalDate date,

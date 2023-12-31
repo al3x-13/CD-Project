@@ -43,6 +43,25 @@ public class BookingService {
         return null;
     }
 
+    public static ArrayList<Lounge> checkBookingAvailability(
+            char beachId,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime,
+            int individuals
+    ) {
+        if (proto == CommunicationProtocol.SOAP) {
+            try {
+                return BookingServiceSoap.checkBookingAvailability(beachId, date, fromTime, toTime, individuals);
+            } catch (UnauthorizedException e) {
+                SoapUtilities.handleExpiredSession();
+            }
+        } else {
+            // TODO
+        }
+        return null;
+    }
+
     public static int createBooking(
             char beachId,
             LocalDate date,
