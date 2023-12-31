@@ -29,6 +29,25 @@ public interface BookingServiceInterface extends Remote {
    ) throws RemoteException;
 
     /**
+     * Check booking availability for the provided details.
+     * @param beachId beach id
+     * @param date date
+     * @param fromTime from time
+     * @param toTime to time
+     * @param individuals amount of people
+     * @param userId user id
+     * @return Available lounges or null if no availability
+     */
+   ArrayList<Lounge> checkBookingAvailability(
+           char beachId,
+           LocalDate date,
+           LocalTime fromTime,
+           LocalTime toTime,
+           int individuals,
+           int userId
+   ) throws RemoteException;
+
+    /**
      * Creates a new lounge booking with the provided details.
      * @param beachId beach id
      * @param date date

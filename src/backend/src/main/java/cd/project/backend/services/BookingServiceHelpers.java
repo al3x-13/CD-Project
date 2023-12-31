@@ -94,6 +94,47 @@ public class BookingServiceHelpers {
     }
 
     /**
+     * Checks for booking availability for with the provided details.
+     * @param beachId beach id
+     * @param date date
+     * @param fromTime from time
+     * @param toTime to time
+     * @param individuals amount of people
+     * @return Available lounges or null if no availability
+     */
+    public static ArrayList<Lounge> checkBookingAvailability(
+            char beachId,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime,
+            int individuals
+    ) {
+        ArrayList<Lounge> availableLounges = getAvailableLounges(beachId, date, fromTime, toTime);
+        ArrayList<Lounge> bookingLounges = new ArrayList<>();
+        if (availableLounges == null) return null;
+        int totalSeats = getTotalLoungeSeats(availableLounges);
+        int remainingSeats = individuals;
+
+        if (totalSeats < individuals) {
+            return null;
+        }
+
+        while (remainingSeats > 0) {
+            if (remainingSeats >= 4 && verifySeatAvailability(availableLounges, 4)) {
+                remainingSeats -= 4;
+                moveLoungeFromAvailableToBooked(availableLounges, bookingLounges, 4);
+            } else if (remainingSeats >= 3 && verifySeatAvailability(availableLounges, 3)) {
+                remainingSeats -= 3;
+                moveLoungeFromAvailableToBooked(availableLounges, bookingLounges, 3);
+            } else {
+                remainingSeats -= 2;
+                moveLoungeFromAvailableToBooked(availableLounges, bookingLounges, 2);;
+            }
+        }
+        return bookingLounges;
+    }
+
+    /**
      * Creates a new booking from the provided details.
      * @param beachId beach id
      * @param date date
