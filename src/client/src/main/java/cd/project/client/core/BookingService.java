@@ -80,4 +80,17 @@ public class BookingService {
         }
         return -1;
     }
+
+    public static boolean cancelBooking(int bookingId) {
+        if (proto == CommunicationProtocol.SOAP) {
+            try {
+                return BookingServiceSoap.cancelBooking(bookingId);
+            } catch (UnauthorizedException e) {
+                SoapUtilities.handleExpiredSession();
+            }
+        } else {
+            // TODO
+        }
+        return false;
+    }
 }

@@ -105,6 +105,15 @@ public class BookingServiceSoap {
         }
     }
 
+    public static boolean cancelBooking(int bookingId) throws UnauthorizedException {
+        try {
+            return bookingService.cancelBooking(bookingId);
+        } catch (Exception e) {
+            SoapUtilities.checkUnauthorizedStatus(e);
+            return false;
+        }
+    }
+
     public static void setAuthHeader(String token) {
         Map<String, List<String>> headers = new HashMap<>();
         headers.put("Authorization", Collections.singletonList("Bearer " + token));
