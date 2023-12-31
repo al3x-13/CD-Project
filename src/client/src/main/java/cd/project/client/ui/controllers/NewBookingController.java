@@ -2,10 +2,12 @@ package cd.project.client.ui.controllers;
 
 import cd.project.backend.domain.Lounge;
 import cd.project.client.Main;
+import cd.project.client.Router;
 import cd.project.client.core.BookingService;
 import cd.project.client.ui.Styles;
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
+import javafx.animation.PauseTransition;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -18,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -34,15 +37,16 @@ public class NewBookingController implements Initializable {
     private VBox container;
 
     // components data
-    private StringProperty beachId = new SimpleStringProperty("");
-    private IntegerProperty amountOfPeople = new SimpleIntegerProperty(-1);
+    private final StringProperty beachId = new SimpleStringProperty("");
+    private final IntegerProperty amountOfPeople = new SimpleIntegerProperty(-1);
     private LocalDate date = null;
-    private IntegerProperty fromTime = new SimpleIntegerProperty(-1);
-    private IntegerProperty toTime = new SimpleIntegerProperty(-1);
-    private BooleanProperty checkAvailabilitySpinnerVisibility = new SimpleBooleanProperty(false);
-    private ObservableList<String[]> bookingsTableData = FXCollections.observableArrayList();
-    private BooleanProperty bookingButtonDisabled = new SimpleBooleanProperty(this.bookingsTableData.isEmpty());
+    private final IntegerProperty fromTime = new SimpleIntegerProperty(-1);
+    private final IntegerProperty toTime = new SimpleIntegerProperty(-1);
+    private final BooleanProperty checkAvailabilitySpinnerVisibility = new SimpleBooleanProperty(false);
+    private final ObservableList<String[]> bookingsTableData = FXCollections.observableArrayList();
+    private final BooleanProperty bookingButtonDisabled = new SimpleBooleanProperty(this.bookingsTableData.isEmpty());
     private final Label checkStatus = this.checkStatus();
+    private final Label bookingSuccessLabel = new Label();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -90,7 +94,7 @@ public class NewBookingController implements Initializable {
         HBox.setHgrow(row5, Priority.ALWAYS);
         row5.setAlignment(Pos.CENTER);
         row5.setSpacing(40);
-        HBox submitBookingContainer = this.submitBookingContainer();
+        VBox submitBookingContainer = this.submitBookingContainer();
         row5.getChildren().addAll(submitBookingContainer);
 
         // add content items
@@ -376,10 +380,10 @@ public class NewBookingController implements Initializable {
         return bookingTableContainer;
     }
 
-    private HBox submitBookingContainer() {
-        HBox submitBookingContainer = new HBox();
+    private VBox submitBookingContainer() {
+        VBox submitBookingContainer = new VBox();
         submitBookingContainer.setSpacing(15);
-        submitBookingContainer.setAlignment(Pos.CENTER_LEFT);
+        submitBookingContainer.setAlignment(Pos.CENTER);
 
         Button submitButton = new Button("Book");
         submitButton.getStyleClass().add(this.STYLES_PATH);
@@ -405,9 +409,29 @@ public class NewBookingController implements Initializable {
         submitButton.disableProperty().bind(this.bookingButtonDisabled);
 
         // TODO: implement this
-        submitButton.setOnAction(actionEvent -> System.out.println("TODO"));
+        submitButton.setOnAction(actionEvent -> {
+            int bookingId = BookingService.createBooking(
+                    this.beachId.get().charAt(0),
+                    this.date,
+                    LocalTime.of(this.fromTime.intValue(), 0),
+                    LocalTime.of(this.toTime.intValue(), 0),
+                    this.amountOfPeople.intValue()
+            );
 
-        submitBookingContainer.getChildren().addAll(submitButton);
+            if (bookingId != -1) {      // SUCCESS
+                this.bookingSuccessLabel.setText("Booked successfully");
+                this.bookingSuccessLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #0AB613;");
+
+                PauseTransition delay = new PauseTransition(Duration.seconds(2));
+                delay.setOnFinished(actionEvent1 -> Router.navigateToMyBookings());
+                delay.play();
+            } else {
+                this.bookingSuccessLabel.setText("Failed to book lounges");
+                this.bookingSuccessLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #BE1F1F;");
+            }
+        });
+
+        submitBookingContainer.getChildren().addAll(submitButton, this.bookingSuccessLabel);
         return submitBookingContainer;
     }
 
@@ -427,5 +451,6 @@ public class NewBookingController implements Initializable {
         this.bookingsTableData.clear();
         this.checkStatus.setText("");
         this.checkStatus.setStyle("-fx-font-size: 15px; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + ";");
+        this.bookingSuccessLabel.setText("");
     }
 }
