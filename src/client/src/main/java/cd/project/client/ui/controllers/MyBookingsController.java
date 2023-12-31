@@ -135,12 +135,18 @@ public class MyBookingsController implements Initializable {
         cancelButton.getStyleClass().add("cancel-button");
 
         cancelButton.setOnMouseClicked(mouseEvent -> {
-            BookingService.cancelBooking(bookingId);
-            cancelLabel.setText("Booking has been cancelled");
-            cancelButton.setDisable(true);
-            PauseTransition delay = new PauseTransition(Duration.seconds(2));
-            delay.setOnFinished(actionEvent -> Router.navigateToMyBookings());
-            delay.play();
+            boolean cancelSuccess = BookingService.cancelBooking(bookingId);
+
+            if (cancelSuccess) {
+                cancelLabel.setText("Booking has been cancelled");
+                cancelButton.setDisable(true);
+                PauseTransition delay = new PauseTransition(Duration.seconds(2));
+                delay.setOnFinished(actionEvent -> Router.navigateToMyBookings());
+                delay.play();
+            } else {
+                cancelLabel.setText("Failed to cancel booking");
+                cancelLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #BE1F1F; -fx-font-weight: normal;");
+            }
         });
 
         Separator separator = new Separator();
