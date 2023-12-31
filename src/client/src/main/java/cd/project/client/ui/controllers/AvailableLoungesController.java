@@ -53,31 +53,32 @@ public class AvailableLoungesController implements Initializable {
         HBox titleContainer = this.titleContainer();
 
         HBox row1 = new HBox();
+        row1.setPadding(new Insets(45, 0, 0, 0));
         HBox.setHgrow(row1, Priority.ALWAYS);
-        row1.setAlignment(Pos.CENTER_LEFT);
-        row1.setSpacing(60);
+        row1.setAlignment(Pos.CENTER);
+        row1.setSpacing(40);
         HBox beachInputContainer = this.beachInputContainer();
-        row1.getChildren().addAll(beachInputContainer);
+        HBox dateInputContainer = this.dateInputContainer();
+        row1.getChildren().addAll(beachInputContainer, dateInputContainer);
 
         HBox row2 = new HBox();
         HBox.setHgrow(row2, Priority.ALWAYS);
-        row2.setAlignment(Pos.CENTER_LEFT);
+        row2.setAlignment(Pos.CENTER);
         row2.setSpacing(40);
-        HBox dateInputContainer = this.dateInputContainer();
         HBox fromTimeInputContainer = this.fromTimeInputContainer();
         HBox toTimeInputContainer = this.toTimeInputContainer();
-        row2.getChildren().addAll(dateInputContainer, fromTimeInputContainer, toTimeInputContainer);
+        row2.getChildren().addAll(fromTimeInputContainer, toTimeInputContainer);
 
         HBox row3 = new HBox();
         HBox.setHgrow(row3, Priority.ALWAYS);
-        row3.setAlignment(Pos.CENTER_LEFT);
+        row3.setAlignment(Pos.CENTER);
         row3.setSpacing(40);
         VBox availabilityCheckContainer = this.availabilityCheckContainer();
         row3.getChildren().addAll(availabilityCheckContainer);
 
         HBox row4 = new HBox();
         HBox.setHgrow(row4, Priority.ALWAYS);
-        row4.setAlignment(Pos.CENTER_LEFT);
+        row4.setAlignment(Pos.CENTER);
         row4.setSpacing(40);
         VBox bookingTable = this.bookingTableContainer();
         row4.getChildren().addAll(bookingTable);
@@ -138,6 +139,14 @@ public class AvailableLoungesController implements Initializable {
         DatePicker dateInput = new DatePicker(LocalDate.now());
         dateInput.getStylesheets().add(this.STYLES_PATH);
         this.date = LocalDate.now();
+
+        dateInput.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.compareTo(LocalDate.now()) < 0);
+            }
+        });
 
         dateInput.valueProperty().addListener((observable, oldValue, newValue) -> {
             this.date = newValue;
@@ -225,15 +234,9 @@ public class AvailableLoungesController implements Initializable {
 
     private VBox availabilityCheckContainer() {
         VBox availabilityCheckContainer = new VBox();
+        availabilityCheckContainer.setPadding(new Insets(20, 0, 0, 0));
         availabilityCheckContainer.setSpacing(15);
-        availabilityCheckContainer.setAlignment(Pos.CENTER_LEFT);
-
-        Label checkAvailabilityLabel = new Label("Get available lounges");
-        checkAvailabilityLabel.setStyle("-fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; -fx-font-size: 18px; -fx-font-weight: bold;");
-
-        HBox checkButtonContainer = new HBox();
-        checkButtonContainer.setSpacing(15);
-        checkButtonContainer.setAlignment(Pos.CENTER_LEFT);
+        availabilityCheckContainer.setAlignment(Pos.CENTER);
 
         Button checkAvailabilityButton = new Button("Get lounges");
         checkAvailabilityButton.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-text-fill: " +
@@ -257,7 +260,6 @@ public class AvailableLoungesController implements Initializable {
         checkAvailabilityButton.getStyleClass().add(this.STYLES_PATH);
 
         Label checkStatus = this.checkStatus();
-        ProgressIndicator checkLoadingSpinner = this.checkLoadingSpinner();
 
         checkAvailabilityButton.setOnMouseClicked(actionEvent -> {
             this.bookingsTableData.clear();
@@ -284,16 +286,14 @@ public class AvailableLoungesController implements Initializable {
 
             this.checkAvailabilitySpinnerVisibility.setValue(false);
             if (availableLounges == null) {
+                checkStatus.setStyle("-fx-text-fill: #BE1F1F;");
                 checkStatus.setText("No lounges available");
             } else {
                 checkStatus.setText("");
             }
         });
 
-
-        checkButtonContainer.getChildren().addAll(checkAvailabilityButton, checkStatus, checkLoadingSpinner);
-
-        availabilityCheckContainer.getChildren().addAll(checkAvailabilityLabel, checkButtonContainer);
+        availabilityCheckContainer.getChildren().addAll(checkAvailabilityButton, checkStatus);
         return availabilityCheckContainer;
     }
 
@@ -301,15 +301,6 @@ public class AvailableLoungesController implements Initializable {
         Label checkStatus = new Label();
         checkStatus.setStyle("-fx-font-size: 15px; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + ";");
         return checkStatus;
-    }
-
-    private ProgressIndicator checkLoadingSpinner() {
-        ProgressIndicator loadingSpinner = new ProgressIndicator();
-        loadingSpinner.setMaxWidth(25);
-        loadingSpinner.setMaxHeight(25);
-        loadingSpinner.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-        loadingSpinner.visibleProperty().bind(this.checkAvailabilitySpinnerVisibility);
-        return loadingSpinner;
     }
 
     private VBox bookingTableContainer() {
@@ -320,13 +311,13 @@ public class AvailableLoungesController implements Initializable {
         Label tableLabel = new Label("Available lounges");
         tableLabel.setStyle("-fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; -fx-font-size: 18px; -fx-font-weight: bold;");
 
+        int colWidth = 175;
         TableView<String[]> bookingTable = new TableView<>();
         bookingTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         bookingTable.getStylesheets().add(this.STYLES_PATH);
-        bookingTable.setMaxWidth(500);
-        bookingTable.setMaxHeight(250);
+        bookingTable.setMaxWidth(colWidth * 3);
+        bookingTable.setMaxHeight(300);
         bookingTable.setEditable(false);
-        int colWidth = 150;
 
         TableColumn<String[], String> loungeIdCol = new TableColumn<>("Lounge ID");
         loungeIdCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue()[0]));
