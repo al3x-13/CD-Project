@@ -1,6 +1,8 @@
 package cd.project.client.ui.controllers;
 
+import cd.project.backend.domain.Lounge;
 import cd.project.client.Main;
+import cd.project.client.core.BookingService;
 import cd.project.client.ui.Styles;
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
@@ -21,6 +23,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class NewBookingController implements Initializable {
@@ -38,11 +42,14 @@ public class NewBookingController implements Initializable {
     private BooleanProperty checkAvailabilitySpinnerVisibility = new SimpleBooleanProperty(false);
     private ObservableList<String[]> bookingsTableData = FXCollections.observableArrayList();
     private BooleanProperty bookingButtonDisabled = new SimpleBooleanProperty(this.bookingsTableData.isEmpty());
-
+    private final Label checkStatus = this.checkStatus();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        container.setAlignment(Pos.CENTER);
+
         VBox content = new VBox();
+        content.setAlignment(Pos.CENTER);
         content.setPadding(new Insets(25));
         content.setSpacing(24);
 
@@ -50,7 +57,7 @@ public class NewBookingController implements Initializable {
 
         HBox row1 = new HBox();
         HBox.setHgrow(row1, Priority.ALWAYS);
-        row1.setAlignment(Pos.CENTER_LEFT);
+        row1.setAlignment(Pos.CENTER);
         row1.setSpacing(60);
         HBox beachInputContainer = this.beachInputContainer();
         HBox peopleInputContainer = this.peopleInputContainer();
@@ -58,7 +65,7 @@ public class NewBookingController implements Initializable {
 
         HBox row2 = new HBox();
         HBox.setHgrow(row2, Priority.ALWAYS);
-        row2.setAlignment(Pos.CENTER_LEFT);
+        row2.setAlignment(Pos.CENTER);
         row2.setSpacing(40);
         HBox dateInputContainer = this.dateInputContainer();
         HBox fromTimeInputContainer = this.fromTimeInputContainer();
@@ -67,21 +74,21 @@ public class NewBookingController implements Initializable {
 
         HBox row3 = new HBox();
         HBox.setHgrow(row3, Priority.ALWAYS);
-        row3.setAlignment(Pos.CENTER_LEFT);
+        row3.setAlignment(Pos.CENTER);
         row3.setSpacing(40);
         VBox availabilityCheckContainer = this.availabilityCheckContainer();
         row3.getChildren().addAll(availabilityCheckContainer);
 
         HBox row4 = new HBox();
         HBox.setHgrow(row4, Priority.ALWAYS);
-        row4.setAlignment(Pos.CENTER_LEFT);
+        row4.setAlignment(Pos.CENTER);
         row4.setSpacing(40);
         VBox bookingTable = this.bookingTableContainer();
         row4.getChildren().addAll(bookingTable);
 
         HBox row5 = new HBox();
         HBox.setHgrow(row5, Priority.ALWAYS);
-        row5.setAlignment(Pos.CENTER_LEFT);
+        row5.setAlignment(Pos.CENTER);
         row5.setSpacing(40);
         HBox submitBookingContainer = this.submitBookingContainer();
         row5.getChildren().addAll(submitBookingContainer);
@@ -125,6 +132,7 @@ public class NewBookingController implements Initializable {
 
         beachInput.valueProperty().addListener((observable, oldValue, newValue) -> {
             this.beachId.setValue(newValue.toString());
+            this.resetData();
         });
 
         beachInputContainer.getChildren().addAll(beachLabel, beachInput);
@@ -149,6 +157,7 @@ public class NewBookingController implements Initializable {
 
         peopleInput.valueProperty().addListener((observable, oldValue, newValue) -> {
             this.amountOfPeople.setValue(newValue);
+            this.resetData();
         });
 
         peopleInputContainer.getChildren().addAll(peopleLabel, peopleInput);
@@ -169,6 +178,7 @@ public class NewBookingController implements Initializable {
 
         dateInput.valueProperty().addListener((observable, oldValue, newValue) -> {
             this.date = newValue;
+            this.resetData();
         });
 
         dateInputContainer.getChildren().addAll(dateLabel, dateInput);
@@ -197,6 +207,7 @@ public class NewBookingController implements Initializable {
                 int value = Integer.parseInt(newValue.split(":")[0]);
                 this.fromTime.setValue(value);
             }
+            this.resetData();
         });
 
         fromTimeInputContainer.getChildren().addAll(fromTimeLabel, fromTimeInput);
@@ -208,7 +219,7 @@ public class NewBookingController implements Initializable {
         toTimeInputContainer.setSpacing(15);
         toTimeInputContainer.setAlignment(Pos.CENTER_LEFT);
 
-        Label toTimeLabel = new Label("From");
+        Label toTimeLabel = new Label("To");
         toTimeLabel.setStyle("-fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; -fx-font-size: 18px; -fx-font-weight: bold;");
 
         ChoiceBox<String> toTimeInput = new ChoiceBox<>();
@@ -234,6 +245,7 @@ public class NewBookingController implements Initializable {
             }
 
             toTimeInput.setValue(newToTimeValue < 10 ? "0" + newToTimeValue + ":00" : newToTimeValue + ":00");
+            this.resetData();
         });
 
         // update 'toTime' value on change
@@ -245,6 +257,7 @@ public class NewBookingController implements Initializable {
                 int value = Integer.parseInt(newValue.split(":")[0]);
                 this.toTime.setValue(value);
             }
+            this.resetData();
         }));
 
         toTimeInputContainer.getChildren().addAll(toTimeLabel, toTimeInput);
@@ -254,16 +267,15 @@ public class NewBookingController implements Initializable {
     private VBox availabilityCheckContainer() {
         VBox availabilityCheckContainer = new VBox();
         availabilityCheckContainer.setSpacing(15);
-        availabilityCheckContainer.setAlignment(Pos.CENTER_LEFT);
-
-        Label checkAvailabilityLabel = new Label("Check availability");
-        checkAvailabilityLabel.setStyle("-fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; -fx-font-size: 18px; -fx-font-weight: bold;");
+        availabilityCheckContainer.setAlignment(Pos.CENTER);
 
         HBox checkButtonContainer = new HBox();
+        checkButtonContainer.setPadding(new Insets(20, 0, 0, 0));
         checkButtonContainer.setSpacing(15);
-        checkButtonContainer.setAlignment(Pos.CENTER_LEFT);
+        checkButtonContainer.setAlignment(Pos.CENTER);
 
         Button checkAvailabilityButton = new Button("Check availability");
+        checkAvailabilityButton.getStyleClass().add(this.STYLES_PATH);
         checkAvailabilityButton.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-text-fill: " +
                  Main.TITLE_COLOR_PRIMARY + "; -fx-background-radius: 6; -fx-font-size: 14px; -fx-padding: 6px 12px; " +
                 "-fx-border-color: " + Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-cursor: hand;");
@@ -282,24 +294,36 @@ public class NewBookingController implements Initializable {
                 )
         );
 
-        checkAvailabilityButton.getStyleClass().add(this.STYLES_PATH);
-
         checkAvailabilityButton.setOnAction(actionEvent -> {
-            this.bookingsTableData.add(new String[] { "oh", "yes", "daddy" });
+            checkStatus.setText("Checking availability...");
             this.checkAvailabilitySpinnerVisibility.setValue(true);
+
+            // get available lounges
+            ArrayList<Lounge> availableLounges = BookingService.checkBookingAvailability(
+                    this.beachId.get().charAt(0),
+                    this.date,
+                    LocalTime.of(this.fromTime.intValue(), 0),
+                    LocalTime.of(this.toTime.intValue(), 0),
+                    this.amountOfPeople.intValue()
+            );
+            this.fillTable(availableLounges);
+
+            if (availableLounges == null) {
+                checkStatus.setText("No availability");
+                checkStatus.setStyle("-fx-font-size: 15px; -fx-text-fill: #BE1F1F;");
+            } else {
+                checkStatus.setText("Available");
+                checkStatus.setStyle("-fx-font-size: 15px; -fx-text-fill: #0AB613;");
+            }
         });
 
-        Label checkStatus = this.checkStatus();
-        ProgressIndicator checkLoadingSpinner = this.checkLoadingSpinner();
-
-        checkButtonContainer.getChildren().addAll(checkAvailabilityButton, checkStatus, checkLoadingSpinner);
-
-        availabilityCheckContainer.getChildren().addAll(checkAvailabilityLabel, checkButtonContainer);
+        checkButtonContainer.getChildren().addAll(checkAvailabilityButton);
+        availabilityCheckContainer.getChildren().addAll(checkButtonContainer, checkStatus);
         return availabilityCheckContainer;
     }
 
     private Label checkStatus() {
-        Label checkStatus = new Label("Checking availability...");
+        Label checkStatus = new Label();
         checkStatus.setStyle("-fx-font-size: 15px; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + ";");
         return checkStatus;
     }
@@ -321,13 +345,13 @@ public class NewBookingController implements Initializable {
         Label tableLabel = new Label("Booking lounges");
         tableLabel.setStyle("-fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + "; -fx-font-size: 18px; -fx-font-weight: bold;");
 
+        int colWidth = 175;
         TableView<String[]> bookingTable = new TableView<>();
         bookingTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         bookingTable.getStylesheets().add(this.STYLES_PATH);
-        bookingTable.setMaxWidth(500);
+        bookingTable.setMaxWidth(colWidth * 3);
         bookingTable.setMaxHeight(180);
         bookingTable.setEditable(false);
-        int colWidth = 150;
 
         TableColumn<String[], String> loungeIdCol = new TableColumn<>("Lounge ID");
         loungeIdCol.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue()[0]));
@@ -385,5 +409,23 @@ public class NewBookingController implements Initializable {
 
         submitBookingContainer.getChildren().addAll(submitButton);
         return submitBookingContainer;
+    }
+
+    private void fillTable(ArrayList<Lounge> lounges) {
+        if (lounges == null) return;
+
+        for (Lounge lounge : lounges) {
+            this.bookingsTableData.add(new String[]{
+                    lounge.getId(),
+                    String.valueOf(lounge.getBeachId()),
+                    String.valueOf(lounge.getMaxCapacity())
+            });
+        }
+    }
+
+    private void resetData() {
+        this.bookingsTableData.clear();
+        this.checkStatus.setText("");
+        this.checkStatus.setStyle("-fx-font-size: 15px; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + ";");
     }
 }
