@@ -10,6 +10,8 @@ import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
 import cd.project.frontend.soap.entities.BookingSoap;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,8 +19,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -35,6 +35,8 @@ public class MyBookingsController implements Initializable {
     @FXML
     private VBox container;
 
+    private final StringProperty filter = new SimpleStringProperty();
+
     private ArrayList<BookingSoap> userBookings = new ArrayList<>();
 
     @Override
@@ -43,8 +45,16 @@ public class MyBookingsController implements Initializable {
         content.setPadding(new Insets(30));
         content.setSpacing(20);
 
+        HBox pageHeader = new HBox();
+        HBox.setHgrow(pageHeader, Priority.ALWAYS);
+        pageHeader.setAlignment(Pos.CENTER);
         Label title = new Label("My Bookings");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: " + Main.TITLE_COLOR_PRIMARY + ";");
+        HBox filler = new HBox();
+        HBox.setHgrow(filler, Priority.ALWAYS);
+        HBox filterSection = this.bookingFilter();
+
+        pageHeader.getChildren().addAll(title, filler, filterSection);
 
         ScrollPane bookingListing = new ScrollPane();
         bookingListing.getStylesheets().add(Styles.getPath());
@@ -53,12 +63,7 @@ public class MyBookingsController implements Initializable {
         myBookingsContainer.setAlignment(Pos.CENTER);
         myBookingsContainer.setSpacing(30);
 
-        // TODO: get user bookings and display them
-        try {
-            userBookings = BookingServiceSoap.getUserBookings();
-        } catch (UnauthorizedException e) {
-            SoapUtilities.handleExpiredSession();
-        }
+        this.userBookings = this.getUserBookings();
 
         for (BookingSoap userBooking : userBookings) {
             VBox bookingContainer = this.bookingContainer(
@@ -74,7 +79,12 @@ public class MyBookingsController implements Initializable {
 
         bookingListing.setContent(myBookingsContainer);
 
-        content.getChildren().addAll(title, bookingListing);
+        // updates bookings on filter change
+        this.filter.addListener((observable -> {
+            this.applyFiter(myBookingsContainer);
+        }));
+
+        content.getChildren().addAll(pageHeader, bookingListing);
         container.getChildren().addFirst(new AppMenu());
         container.getChildren().add(content);
         container.getChildren().addLast(new ProtocolLabel());
@@ -244,7 +254,64 @@ public class MyBookingsController implements Initializable {
         return bookingTableContainer;
     }
 
+    private HBox bookingFilter() {
+        HBox filterContainer = new HBox();
+        filterContainer.setAlignment(Pos.CENTER);
+        filterContainer.setSpacing(20);
+
+        Label filterLabel = new Label("Filter");
+        filterLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: " + Main.TEXT_COLOR_PRIMARY + ";");
+
+        ChoiceBox<String> filter = new ChoiceBox<>();
+        filter.getStylesheets().add(Styles.getPath());
+        filter.setStyle("-fx-font-size: 15px; -fx-border-width: 2;");
+        filter.getItems().addAll("All", "Active", "Expired");
+        filter.setValue("All");
+
+        filter.valueProperty().addListener((observable, oldValue, newValue) -> {
+            this.filter.setValue(newValue);
+        });
+
+        filterContainer.getChildren().addAll(filterLabel, filter);
+        return filterContainer;
+    }
+
     private ArrayList<BookingSoap> getUserBookings() {
-        return null;
+        try {
+            return BookingServiceSoap.getUserBookings();
+        } catch (UnauthorizedException e) {
+            SoapUtilities.handleExpiredSession();
+            return null;
+        }
+    }
+
+    private void applyFiter(VBox container) {
+        container.getChildren().clear();
+        String filterValue = this.filter.getValue();
+
+        for (BookingSoap booking : this.userBookings) {
+            VBox bookingContainer = this.bookingContainer(
+                    booking.getId(),
+                    LocalDate.parse(booking.getDate()),
+                    LocalTime.parse(booking.getFromTime()),
+                    LocalTime.parse(booking.getToTime()),
+                    LocalDateTime.parse(booking.getCreatedAt()),
+                    booking.getLounges()
+            );
+
+            LocalDate bookingDate = LocalDate.parse(booking.getDate());
+            LocalTime bookingToTime = LocalTime.parse(booking.getToTime());
+            LocalDateTime bookingDatetime = LocalDateTime.of(bookingDate, bookingToTime);
+            LocalDateTime now = LocalDateTime.now();
+            boolean active = bookingDatetime.isAfter(now);
+
+            if (filterValue == "Active") {
+                if (active) container.getChildren().add(bookingContainer);
+            } else if (filterValue.equals("Expired")) {
+                if (!active) container.getChildren().add(bookingContainer);
+            } else {
+                container.getChildren().add(bookingContainer);
+            }
+        }
     }
 }

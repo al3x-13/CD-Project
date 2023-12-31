@@ -25,6 +25,15 @@
     -fx-background-color: #2274AC;
 }
 
+.choice-box {
+    -fx-background-color: #181920;
+    -fx-background-radius: 6;
+    -fx-border-color: #2988c9;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-font-size: 14px;
+}
+
 .choice-box .label {
     -fx-text-fill: #2988c9;
 }
