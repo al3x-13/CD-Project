@@ -38,6 +38,27 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public ArrayList<Lounge> checkBookingAvailability(
+            char beachId,
+            String date,
+            String fromTime,
+            String toTime,
+            int individuals
+    ) {
+        try {
+            return bookingService.checkBookingAvailability(
+                    beachId,
+                    LocalDate.parse(date),
+                    LocalTime.parse(fromTime),
+                    LocalTime.parse(toTime),
+                    individuals
+            );
+        } catch (RemoteException e) {
+            throw new RuntimeException("Failed to execute remote method: " + e);
+        }
+    }
+
+    @Override
     public int createBooking(char beachId, String date, String fromTime, String toTime, int individuals) {
         MessageContext mc = webServiceContext.getMessageContext();
         HttpServletRequest request = (HttpServletRequest) mc.get("HTTP.REQUEST");

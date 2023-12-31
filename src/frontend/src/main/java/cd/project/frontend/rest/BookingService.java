@@ -12,7 +12,20 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public interface BookingService {
-    ArrayList<Lounge> getAvailableLounges(char beachId, String date, String fromTime, String toTime);
+    ArrayList<Lounge> getAvailableLounges(
+            char beachId,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime
+    );
+
+    ArrayList<Lounge> checkBookingAvailability(
+            char beachId,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime,
+            int individuals
+    );
 
     int createBooking(
             char beachId,

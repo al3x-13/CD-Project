@@ -31,14 +31,36 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @GET
     @Path("/getAvailableLouges")
-    public ArrayList<Lounge> getAvailableLounges(char beachId, String date, String fromTime, String toTime) {
+    public ArrayList<Lounge> getAvailableLounges(
+            char beachId,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime
+    ) {
         try {
             return bookingService.listAvailableLounges(
                     beachId,
-                    LocalDate.parse(date),
-                    LocalTime.parse(fromTime),
-                    LocalTime.parse(toTime)
+                    date,
+                    fromTime,
+                    toTime
             );
+        } catch (RemoteException e) {
+            throw new RuntimeException("Failed to execute remote method: " + e);
+        }
+    }
+
+    @Override
+    @POST
+    @Path("/checkBookingAvailability")
+    public ArrayList<Lounge> checkBookingAvailability(
+            char beachId,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime,
+            int individuals
+    ) {
+        try {
+            return bookingService.checkBookingAvailability(beachId, date, fromTime, toTime, individuals);
         } catch (RemoteException e) {
             throw new RuntimeException("Failed to execute remote method: " + e);
         }
