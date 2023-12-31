@@ -6,10 +6,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class UserSession {
     private static String username;
-    private static String passwordHash;
     private static String sessionToken = null;
-    private static final String testUsername = "test1337";
-    private static final String testPasswordHash = BCrypt.hashpw("testing", BCrypt.gensalt());
 
     public static String getUsername() {
         return username;
@@ -17,10 +14,6 @@ public class UserSession {
 
     public static void setUsername(String username) {
         username = username;
-    }
-
-    public static void setPasswordHash(String passwordHash) {
-        passwordHash = passwordHash;
     }
 
     public static boolean authenticate(String usernameInput, String passwordInput) {
@@ -63,6 +56,7 @@ public class UserSession {
     public static void invalidateSession() {
         if (Main.clientProtocol == CommunicationProtocol.SOAP) {
             AuthenticationServiceSoap.resetAuthHeader();
+            BookingServiceSoap.resetAuthHeader();
         } else {
             // TODO
         }
