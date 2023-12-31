@@ -2,6 +2,7 @@ package cd.project.client.ui.controllers;
 
 import cd.project.backend.domain.Lounge;
 import cd.project.client.Main;
+import cd.project.client.Router;
 import cd.project.client.core.BookingService;
 import cd.project.client.core.BookingServiceSoap;
 import cd.project.client.core.SoapUtilities;
@@ -10,6 +11,7 @@ import cd.project.client.ui.Styles;
 import cd.project.client.ui.components.AppMenu;
 import cd.project.client.ui.components.ProtocolLabel;
 import cd.project.frontend.soap.entities.BookingSoap;
+import javafx.animation.PauseTransition;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -23,6 +25,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -31,6 +34,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MyBookingsController implements Initializable {
@@ -120,27 +124,27 @@ public class MyBookingsController implements Initializable {
         HBox filler = new HBox();
         HBox.setHgrow(filler, Priority.ALWAYS);
         HBox mainSection = new HBox();
+        mainSection.setSpacing(10);
         HBox.setHgrow(mainSection, Priority.ALWAYS);
         mainSection.setAlignment(Pos.CENTER_LEFT);
         Label title = new Label("Booking #" + bookingId);
         title.getStyleClass().add("title");
+        Label cancelLabel = new Label("");
+        cancelLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #0AB613; -fx-font-weight: normal;");
         Button cancelButton = new Button("Cancel");
         cancelButton.getStyleClass().add("cancel-button");
 
-        // TODO: implement this
         cancelButton.setOnMouseClicked(mouseEvent -> {
-            try {
-                ArrayList<BookingSoap> temp = BookingServiceSoap.getUserBookings();
-                for (BookingSoap booking : temp) {
-                    System.out.println(booking.getId());
-                }
-            } catch (UnauthorizedException e) {
-                SoapUtilities.handleExpiredSession();
-            }
+            BookingService.cancelBooking(bookingId);
+            cancelLabel.setText("Booking has been cancelled");
+            cancelButton.setDisable(true);
+            PauseTransition delay = new PauseTransition(Duration.seconds(2));
+            delay.setOnFinished(actionEvent -> Router.navigateToMyBookings());
+            delay.play();
         });
 
         Separator separator = new Separator();
-        mainSection.getChildren().addAll(title, filler, cancelButton);
+        mainSection.getChildren().addAll(title, filler, cancelLabel, cancelButton);
         header.getChildren().addAll(mainSection, separator);
 
         // details section
