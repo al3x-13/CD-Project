@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
 public class MyBookingsController implements Initializable {
@@ -67,6 +68,9 @@ public class MyBookingsController implements Initializable {
         this.userBookings = BookingService.getUserBookings();
 
         if (userBookings != null) {
+            // order by 'recent -> old'
+            Collections.reverse(this.userBookings);
+
             for (BookingSoap userBooking : userBookings) {
                 VBox bookingContainer = this.bookingContainer(
                         userBooking.getId(),
@@ -127,7 +131,6 @@ public class MyBookingsController implements Initializable {
         cancelButton.setOnMouseClicked(mouseEvent -> {
             try {
                 ArrayList<BookingSoap> temp = BookingServiceSoap.getUserBookings();
-                System.out.println("--- TEMP ---");
                 for (BookingSoap booking : temp) {
                     System.out.println(booking.getId());
                 }
