@@ -63,6 +63,27 @@ public class BookingServiceSoap {
         }
     }
 
+    public static int createBooking(
+            char beachId,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime,
+            int individuals
+    ) throws UnauthorizedException {
+        try {
+            return bookingService.createBooking(
+                    beachId,
+                    date.toString(),
+                    fromTime.toString(),
+                    toTime.toString(),
+                    individuals
+            );
+        } catch (Exception e) {
+            SoapUtilities.checkUnauthorizedStatus(e);
+            return -1;
+        }
+    }
+
     public static void setAuthHeader(String token) {
         Map<String, List<String>> headers = new HashMap<>();
         headers.put("Authorization", Collections.singletonList("Bearer " + token));
