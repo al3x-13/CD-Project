@@ -116,9 +116,6 @@ public class AvailableLoungesController implements Initializable {
         ChoiceBox<Character> beachInput = new ChoiceBox<>();
         beachInput.getItems().addAll('A', 'B', 'C');
         beachInput.setValue('A');
-        beachInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-border-color: " +
-                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 14px; " +
-                "-fx-text-fill: white; -fx-background-radius: 8;");
         beachInput.getStylesheets().add(this.STYLES_PATH);
         this.beachId.setValue("A");
 
@@ -165,9 +162,6 @@ public class AvailableLoungesController implements Initializable {
         }
         fromTimeInput.setValue("08:00");
         this.fromTime.setValue(8);
-        fromTimeInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-border-color: " +
-                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 14px; " +
-                "-fx-text-fill: white; -fx-background-radius: 8;");
         fromTimeInput.getStylesheets().add(this.STYLES_PATH);
 
         fromTimeInput.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -196,9 +190,6 @@ public class AvailableLoungesController implements Initializable {
         }
         toTimeInput.setValue("09:00");
         this.toTime.setValue(9);
-        toTimeInput.setStyle("-fx-background-color: " + Main.BACKGROUND_COLOR + "; -fx-border-color: " +
-                Main.TITLE_COLOR_PRIMARY + "; -fx-border-radius: 6; -fx-border-width: 1; -fx-font-size: 14px; " +
-                "-fx-text-fill: white; -fx-background-radius: 8;");
         toTimeInput.getStylesheets().add(this.STYLES_PATH);
 
         // updates values when 'fromTime' changes
