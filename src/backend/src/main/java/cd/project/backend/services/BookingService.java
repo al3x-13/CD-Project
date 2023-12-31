@@ -36,8 +36,7 @@ public class BookingService extends UnicastRemoteObject implements BookingServic
             LocalDate date,
             LocalTime fromTime,
             LocalTime toTime,
-            int individuals,
-            int userId
+            int individuals
     ) throws RemoteException {
         return BookingServiceHelpers.checkBookingAvailability(beachId, date, fromTime, toTime, individuals);
     }

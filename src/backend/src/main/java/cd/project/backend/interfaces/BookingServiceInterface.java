@@ -43,8 +43,7 @@ public interface BookingServiceInterface extends Remote {
            LocalDate date,
            LocalTime fromTime,
            LocalTime toTime,
-           int individuals,
-           int userId
+           int individuals
    ) throws RemoteException;
 
     /**
