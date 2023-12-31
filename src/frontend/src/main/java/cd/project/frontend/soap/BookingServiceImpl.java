@@ -38,9 +38,22 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public int createBooking(char beachId, LocalDate date, LocalTime fromTime, LocalTime toTime, int individuals, int userId) {
+    public int createBooking(char beachId, String date, String fromTime, String toTime, int individuals) {
+        MessageContext mc = webServiceContext.getMessageContext();
+        HttpServletRequest request = (HttpServletRequest) mc.get("HTTP.REQUEST");
+        String authHeader = request.getHeader("Authorization");
+        String token = authHeader.split(" ")[1];
+        int userId = JwtHelper.getUserId(token);
+
         try {
-            return bookingService.createBooking(beachId, date, fromTime, toTime, individuals, userId);
+            return bookingService.createBooking(
+                    beachId,
+                    LocalDate.parse(date),
+                    LocalTime.parse(fromTime),
+                    LocalTime.parse(toTime),
+                    individuals,
+                    userId
+            );
         } catch (RemoteException e) {
             throw new RuntimeException("Failed to execute remote method: " + e);
         }

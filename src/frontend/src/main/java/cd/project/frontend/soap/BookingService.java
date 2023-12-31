@@ -16,14 +16,7 @@ public interface BookingService {
     ArrayList<Lounge> getAvailableLounges(char beachId, String date, String fromTime, String toTime);
 
     @WebMethod
-    int createBooking(
-            char beachId,
-            LocalDate date,
-            LocalTime fromTime,
-            LocalTime toTime,
-            int individuals,
-            int userId
-    );
+    int createBooking(char beachId, String date, String fromTime, String toTime, int individuals);
 
     @WebMethod
     boolean cancelBooking(int bookingId);
