@@ -2,6 +2,7 @@ package cd.project.client.ui.controllers;
 
 import cd.project.backend.domain.Lounge;
 import cd.project.client.Main;
+import cd.project.client.core.BookingService;
 import cd.project.client.core.BookingServiceSoap;
 import cd.project.client.core.SoapUtilities;
 import cd.project.client.core.UnauthorizedException;
@@ -63,7 +64,7 @@ public class MyBookingsController implements Initializable {
         myBookingsContainer.setAlignment(Pos.CENTER);
         myBookingsContainer.setSpacing(30);
 
-        this.userBookings = this.getUserBookings();
+        this.userBookings = BookingService.getUserBookings();
 
         for (BookingSoap userBooking : userBookings) {
             VBox bookingContainer = this.bookingContainer(
@@ -274,15 +275,6 @@ public class MyBookingsController implements Initializable {
 
         filterContainer.getChildren().addAll(filterLabel, filter);
         return filterContainer;
-    }
-
-    private ArrayList<BookingSoap> getUserBookings() {
-        try {
-            return BookingServiceSoap.getUserBookings();
-        } catch (UnauthorizedException e) {
-            SoapUtilities.handleExpiredSession();
-            return null;
-        }
     }
 
     private void applyFiter(VBox container) {

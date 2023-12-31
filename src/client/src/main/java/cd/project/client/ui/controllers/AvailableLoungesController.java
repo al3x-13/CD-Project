@@ -2,6 +2,7 @@ package cd.project.client.ui.controllers;
 
 import cd.project.backend.domain.Lounge;
 import cd.project.client.Main;
+import cd.project.client.core.BookingService;
 import cd.project.client.core.BookingServiceSoap;
 import cd.project.client.core.SoapUtilities;
 import cd.project.client.core.UnauthorizedException;
@@ -51,7 +52,6 @@ public class AvailableLoungesController implements Initializable {
 
         HBox titleContainer = this.titleContainer();
 
-        // TODO: add handlers for when the values in the inputs change
         HBox row1 = new HBox();
         HBox.setHgrow(row1, Priority.ALWAYS);
         row1.setAlignment(Pos.CENTER_LEFT);
@@ -274,25 +274,21 @@ public class AvailableLoungesController implements Initializable {
             this.checkAvailabilitySpinnerVisibility.setValue(true);
             ArrayList<Lounge> availableLounges = null;
 
-            try {
-                availableLounges = BookingServiceSoap.getAvailableLounges(
-                        this.beachId.getValue().charAt(0),
-                        this.date,
-                        LocalTime.of(this.fromTime.intValue(), 0),
-                        LocalTime.of(this.toTime.intValue(), 0)
-                );
+            availableLounges = BookingService.getAvailableLounges(
+                    this.beachId.getValue().charAt(0),
+                    this.date,
+                    LocalTime.of(this.fromTime.intValue(), 0),
+                    LocalTime.of(this.toTime.intValue(), 0)
+            );
 
-                if (availableLounges != null) {
-                    for (Lounge availableLounge : availableLounges) {
-                        this.bookingsTableData.add(new String[] {
-                                availableLounge.getId(),
-                                String.valueOf(availableLounge.getBeachId()),
-                                String.valueOf(availableLounge.getMaxCapacity())
-                        });
-                    }
+            if (availableLounges != null) {
+                for (Lounge availableLounge : availableLounges) {
+                    this.bookingsTableData.add(new String[] {
+                            availableLounge.getId(),
+                            String.valueOf(availableLounge.getBeachId()),
+                            String.valueOf(availableLounge.getMaxCapacity())
+                    });
                 }
-            } catch (UnauthorizedException e) {
-                SoapUtilities.handleExpiredSession();
             }
 
             this.checkAvailabilitySpinnerVisibility.setValue(false);
