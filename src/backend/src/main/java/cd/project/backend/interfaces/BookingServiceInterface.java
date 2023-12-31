@@ -35,7 +35,6 @@ public interface BookingServiceInterface extends Remote {
      * @param fromTime from time
      * @param toTime to time
      * @param individuals amount of people
-     * @param userId user id
      * @return Available lounges or null if no availability
      */
    ArrayList<Lounge> checkBookingAvailability(
