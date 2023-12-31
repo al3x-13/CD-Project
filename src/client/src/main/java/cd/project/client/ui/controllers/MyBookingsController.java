@@ -66,23 +66,25 @@ public class MyBookingsController implements Initializable {
 
         this.userBookings = BookingService.getUserBookings();
 
-        for (BookingSoap userBooking : userBookings) {
-            VBox bookingContainer = this.bookingContainer(
-                    userBooking.getId(),
-                    LocalDate.parse(userBooking.getDate()),
-                    LocalTime.parse(userBooking.getFromTime()),
-                    LocalTime.parse(userBooking.getToTime()),
-                    LocalDateTime.parse(userBooking.getCreatedAt()),
-                    userBooking.getLounges()
-            );
-            myBookingsContainer.getChildren().add(bookingContainer);
+        if (userBookings != null) {
+            for (BookingSoap userBooking : userBookings) {
+                VBox bookingContainer = this.bookingContainer(
+                        userBooking.getId(),
+                        LocalDate.parse(userBooking.getDate()),
+                        LocalTime.parse(userBooking.getFromTime()),
+                        LocalTime.parse(userBooking.getToTime()),
+                        LocalDateTime.parse(userBooking.getCreatedAt()),
+                        userBooking.getLounges()
+                );
+                myBookingsContainer.getChildren().add(bookingContainer);
+            }
         }
 
         bookingListing.setContent(myBookingsContainer);
 
         // updates bookings on filter change
         this.filter.addListener((observable -> {
-            this.applyFiter(myBookingsContainer);
+            this.applyFilter(myBookingsContainer);
         }));
 
         content.getChildren().addAll(pageHeader, bookingListing);
@@ -277,7 +279,9 @@ public class MyBookingsController implements Initializable {
         return filterContainer;
     }
 
-    private void applyFiter(VBox container) {
+    private void applyFilter(VBox container) {
+        if (this.userBookings == null) return;
+
         container.getChildren().clear();
         String filterValue = this.filter.getValue();
 
