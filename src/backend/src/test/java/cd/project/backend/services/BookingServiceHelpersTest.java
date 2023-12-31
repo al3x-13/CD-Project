@@ -2,6 +2,7 @@ package cd.project.backend.services;
 
 import cd.project.backend.database.DbConnection;
 import cd.project.backend.domain.Lounge;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Array;
@@ -107,6 +108,130 @@ class BookingServiceHelpersTest {
                 LocalTime.of(11, 0),
                 LocalTime.of(14, 0)
         ));
+    }
+
+    @Test
+    void checkBookingAvailability_AvailableLounges() {
+        ArrayList<String> expectedResult = new ArrayList<>(Arrays.asList(
+                "A16", "A1"
+        ));
+        ArrayList<String> realResult = new ArrayList<>(
+            BookingServiceHelpers.checkBookingAvailability(
+                    'A',
+                    LocalDate.of(2024, 6, 22),
+                    LocalTime.of(10, 0),
+                    LocalTime.of(11, 0),
+                    5
+            ).stream().map(Lounge::getId).collect(Collectors.toList())
+        );
+        boolean containsAllValues = true;
+        for (String id : realResult) {
+            if (!expectedResult.contains(id)) {
+                containsAllValues = false;
+                break;
+            }
+        }
+        assertTrue(containsAllValues);
+
+        expectedResult = new ArrayList<>(Arrays.asList(
+                "B11", "B6", "B1"
+        ));
+        realResult = new ArrayList<>(
+                BookingServiceHelpers.checkBookingAvailability(
+                        'B',
+                        LocalDate.of(2024, 6, 23),
+                        LocalTime.of(14, 0),
+                        LocalTime.of(18, 0),
+                        11
+                ).stream().map(Lounge::getId).collect(Collectors.toList())
+        );
+        containsAllValues = true;
+        for (String id : expectedResult) {
+            if (!realResult.contains(id)) {
+                containsAllValues = false;
+                break;
+            }
+        }
+        assertTrue(containsAllValues);
+
+        expectedResult = new ArrayList<>(Arrays.asList(
+                "C1", "C2", "C3", "C4"
+        ));
+        realResult = new ArrayList<>(
+                BookingServiceHelpers.checkBookingAvailability(
+                        'C',
+                        LocalDate.of(2024, 6, 24),
+                        LocalTime.of(14, 0),
+                        LocalTime.of(20, 0),
+                        7
+                ).stream().map(Lounge::getId).collect(Collectors.toList())
+        );
+        containsAllValues = true;
+        for (String id : expectedResult) {
+            if (!realResult.contains(id)) {
+                containsAllValues = false;
+                break;
+            }
+        }
+        assertTrue(containsAllValues);
+    }
+
+    @Test
+    void checkBookingAvailability_NoAvailability() {
+        ArrayList<String> bookingLounges = new ArrayList<>(Arrays.asList(
+                "B1", "B2", "B3", "B6", "B7", "B8", "B9"
+        ));
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (id, beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                435,
+                'B',
+                LocalDate.of(2024, 6, 24),
+                LocalTime.of(13, 0),
+                LocalTime.of(17, 0),
+                1,
+                DbConnection.stringListToVarcharArray(bookingLounges)
+        );
+        assertNull(
+                BookingServiceHelpers.checkBookingAvailability(
+                        'B',
+                        LocalDate.of(2024, 6, 24),
+                        LocalTime.of(13, 0),
+                        LocalTime.of(17, 0),
+                        12
+                )
+        );
+
+        bookingLounges = new ArrayList<>(Arrays.asList(
+                "C1", "C2", "C3", "C4"
+        ));
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (id, beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                436,
+                'C',
+                LocalDate.of(2024, 6, 24),
+                LocalTime.of(13, 0),
+                LocalTime.of(17, 0),
+                1,
+                DbConnection.stringListToVarcharArray(bookingLounges)
+        );
+        assertNull(
+                BookingServiceHelpers.checkBookingAvailability(
+                        'C',
+                        LocalDate.of(2024, 6, 24),
+                        LocalTime.of(13, 0),
+                        LocalTime.of(17, 0),
+                        14
+                )
+        );
+
+        // cleanup
+        DbConnection.executeUpdate(
+                "DELETE FROM bookings WHERE id IN (?,?)",
+                435,
+                436
+        );
     }
 
     @Test
