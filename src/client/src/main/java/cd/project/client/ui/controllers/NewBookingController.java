@@ -180,6 +180,14 @@ public class NewBookingController implements Initializable {
         dateInput.getStylesheets().add(this.STYLES_PATH);
         this.date = LocalDate.now();
 
+        dateInput.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.compareTo(LocalDate.now()) < 0);
+            }
+        });
+
         dateInput.valueProperty().addListener((observable, oldValue, newValue) -> {
             this.date = newValue;
             this.resetData();
@@ -408,7 +416,6 @@ public class NewBookingController implements Initializable {
         // only enabled if there are lounges in the table
         submitButton.disableProperty().bind(this.bookingButtonDisabled);
 
-        // TODO: implement this
         submitButton.setOnAction(actionEvent -> {
             int bookingId = BookingService.createBooking(
                     this.beachId.get().charAt(0),
