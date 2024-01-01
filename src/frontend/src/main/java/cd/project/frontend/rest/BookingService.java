@@ -2,6 +2,7 @@ package cd.project.frontend.rest;
 
 import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
+import cd.project.frontend.rest.entities.AvailableLoungesInput;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.Context;
 import jakarta.xml.ws.WebServiceContext;
@@ -12,12 +13,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public interface BookingService {
-    ArrayList<Lounge> getAvailableLounges(
-            char beachId,
-            LocalDate date,
-            LocalTime fromTime,
-            LocalTime toTime
-    );
+    ArrayList<Lounge> getAvailableLounges(AvailableLoungesInput data);
 
     ArrayList<Lounge> checkBookingAvailability(
             char beachId,

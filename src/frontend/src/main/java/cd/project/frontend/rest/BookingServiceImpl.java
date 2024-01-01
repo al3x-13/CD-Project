@@ -4,6 +4,7 @@ import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 import cd.project.backend.interfaces.BookingServiceInterface;
 import cd.project.frontend.auth.JwtHelper;
+import cd.project.frontend.rest.entities.AvailableLoungesInput;
 import cd.project.frontend.soap.client.rmi.BookingServiceClient;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,20 +30,15 @@ public class BookingServiceImpl implements BookingService {
     private HttpHeaders headers;
 
     @Override
-    @GET
-    @Path("/getAvailableLouges")
-    public ArrayList<Lounge> getAvailableLounges(
-            char beachId,
-            LocalDate date,
-            LocalTime fromTime,
-            LocalTime toTime
-    ) {
+    @POST
+    @Path("/getAvailableLounges")
+    public ArrayList<Lounge> getAvailableLounges(AvailableLoungesInput data) {
         try {
             return bookingService.listAvailableLounges(
-                    beachId,
-                    date,
-                    fromTime,
-                    toTime
+                    data.getBeachId(),
+                    LocalDate.parse(data.getDate()),
+                    LocalTime.parse(data.getFromTime()),
+                    LocalTime.parse(data.getToTime())
             );
         } catch (RemoteException e) {
             throw new RuntimeException("Failed to execute remote method: " + e);
