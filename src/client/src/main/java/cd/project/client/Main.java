@@ -45,10 +45,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         parseApplicationArguments(args);
-
-        // TODO: present the client protocol being used somewhere on the app.
-        // This helps the user know what protocol the client is currently using.
-
         launch();
     }
 

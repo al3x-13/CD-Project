@@ -61,7 +61,6 @@ public class AppMenu extends HBox {
         HBox whitespace = this.whitespace();
         HBox userDetails = this.userDetails();
 
-        // TODO: implement navigation items availability based on user being authenticated
         if (UserSession.isAuthenticated()) {
             buttons.getChildren().addAll(myBookings, availableLouges, about, newBooking);
             this.getChildren().addAll(logo, buttons, whitespace, userDetails);
