@@ -6,6 +6,7 @@ import cd.project.backend.interfaces.BookingServiceInterface;
 import cd.project.frontend.auth.JwtHelper;
 import cd.project.frontend.rest.entities.AvailableLoungesInput;
 import cd.project.frontend.rest.entities.BookingAvailabilityInput;
+import cd.project.frontend.rest.entities.CreateBookingInput;
 import cd.project.frontend.soap.client.rmi.BookingServiceClient;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -66,10 +67,17 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @POST
     @Path("/createBooking")
-    public int createBooking(char beachId, LocalDate date, LocalTime fromTime, LocalTime toTime, int individuals) {
+    public int createBooking(CreateBookingInput data) {
         int userId = this.getUserIdFromJWT();
         try {
-            return bookingService.createBooking(beachId, date, fromTime, toTime, individuals, userId);
+            return bookingService.createBooking(
+                    data.getBeachId(),
+                    LocalDate.parse(data.getDate()),
+                    LocalTime.parse(data.getFromTime()),
+                    LocalTime.parse(data.getToTime()),
+                    data.getIndividuals(),
+                    userId
+            );
         } catch (RemoteException e) {
             throw new RuntimeException("Failed to execute remote method: " + e);
         }

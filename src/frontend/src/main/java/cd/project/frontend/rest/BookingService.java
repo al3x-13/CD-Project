@@ -4,6 +4,7 @@ import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 import cd.project.frontend.rest.entities.AvailableLoungesInput;
 import cd.project.frontend.rest.entities.BookingAvailabilityInput;
+import cd.project.frontend.rest.entities.CreateBookingInput;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.Context;
 import jakarta.xml.ws.WebServiceContext;
@@ -18,13 +19,7 @@ public interface BookingService {
 
     ArrayList<Lounge> checkBookingAvailability(BookingAvailabilityInput data);
 
-    int createBooking(
-            char beachId,
-            LocalDate date,
-            LocalTime fromTime,
-            LocalTime toTime,
-            int individuals
-    );
+    int createBooking(CreateBookingInput data);
 
     boolean cancelBooking(int bookingId);
 
