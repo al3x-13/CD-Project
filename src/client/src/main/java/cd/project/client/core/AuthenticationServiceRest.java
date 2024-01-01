@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -36,7 +35,6 @@ public class AuthenticationServiceRest {
                 return null;
             }
 
-            System.out.println("OH YEAH BABY");
             JsonNode rootNode = mapper.readTree(res.body());
             return rootNode.path("token").asText();
         } catch (Exception e) {
