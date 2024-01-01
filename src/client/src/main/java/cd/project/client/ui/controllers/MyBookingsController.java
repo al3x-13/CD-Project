@@ -1,5 +1,6 @@
 package cd.project.client.ui.controllers;
 
+import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 import cd.project.client.Main;
 import cd.project.client.Router;
@@ -43,7 +44,7 @@ public class MyBookingsController implements Initializable {
 
     private final StringProperty filter = new SimpleStringProperty();
 
-    private ArrayList<BookingSoap> userBookings = new ArrayList<>();
+    private ArrayList<Booking> userBookings = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -75,13 +76,13 @@ public class MyBookingsController implements Initializable {
             // order by 'recent -> old'
             Collections.reverse(this.userBookings);
 
-            for (BookingSoap userBooking : userBookings) {
+            for (Booking userBooking : userBookings) {
                 VBox bookingContainer = this.bookingContainer(
                         userBooking.getId(),
-                        LocalDate.parse(userBooking.getDate()),
-                        LocalTime.parse(userBooking.getFromTime()),
-                        LocalTime.parse(userBooking.getToTime()),
-                        LocalDateTime.parse(userBooking.getCreatedAt()),
+                        userBooking.getDate(),
+                        userBooking.getFromTime(),
+                        userBooking.getToTime(),
+                        userBooking.getCreatedAt(),
                         userBooking.getLounges()
                 );
                 myBookingsContainer.getChildren().add(bookingContainer);
@@ -298,18 +299,18 @@ public class MyBookingsController implements Initializable {
         container.getChildren().clear();
         String filterValue = this.filter.getValue();
 
-        for (BookingSoap booking : this.userBookings) {
+        for (Booking booking : this.userBookings) {
             VBox bookingContainer = this.bookingContainer(
                     booking.getId(),
-                    LocalDate.parse(booking.getDate()),
-                    LocalTime.parse(booking.getFromTime()),
-                    LocalTime.parse(booking.getToTime()),
-                    LocalDateTime.parse(booking.getCreatedAt()),
+                    booking.getDate(),
+                    booking.getFromTime(),
+                    booking.getToTime(),
+                    booking.getCreatedAt(),
                     booking.getLounges()
             );
 
-            LocalDate bookingDate = LocalDate.parse(booking.getDate());
-            LocalTime bookingToTime = LocalTime.parse(booking.getToTime());
+            LocalDate bookingDate = booking.getDate();
+            LocalTime bookingToTime = booking.getToTime();
             LocalDateTime bookingDatetime = LocalDateTime.of(bookingDate, bookingToTime);
             LocalDateTime now = LocalDateTime.now();
             boolean active = bookingDatetime.isAfter(now);

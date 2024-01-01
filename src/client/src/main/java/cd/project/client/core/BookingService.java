@@ -1,5 +1,6 @@
 package cd.project.client.core;
 
+import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 import cd.project.client.CommunicationProtocol;
 import cd.project.client.Main;
@@ -8,6 +9,7 @@ import cd.project.frontend.soap.entities.BookingSoap;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class BookingService {
     private static final CommunicationProtocol proto = Main.clientProtocol;
@@ -34,15 +36,23 @@ public class BookingService {
         return null;
     }
 
-    public static ArrayList<BookingSoap> getUserBookings() {
+    public static ArrayList<Booking> getUserBookings() {
         if (proto == CommunicationProtocol.SOAP) {
             try {
-                return BookingServiceSoap.getUserBookings();
+                ArrayList<Booking> bookings = new ArrayList<>();
+                for (BookingSoap userBooking : Objects.requireNonNull(BookingServiceSoap.getUserBookings())) {
+                    bookings.add(SoapUtilities.soapBookingToBooking(userBooking));
+                }
+                return bookings;
             } catch (UnauthorizedException e) {
                 SoapUtilities.handleExpiredSession();
             }
         } else {
-            // TODO
+            try {
+                return BookingServiceRest.getUserBookings();
+            } catch (UnauthorizedException e) {
+                RestUtilities.handleExpiredSession();
+            }
         }
         return null;
     }

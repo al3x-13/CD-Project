@@ -1,14 +1,14 @@
 package cd.project.client.core;
 
+import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 import cd.project.client.Main;
 import cd.project.frontend.rest.entities.AvailableLoungesInput;
 import cd.project.frontend.rest.entities.BookingAvailabilityInput;
 import cd.project.frontend.rest.entities.CreateBookingInput;
-import cd.project.frontend.rest.entities.UserCredentials;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -23,7 +23,6 @@ public class BookingServiceRest {
     private static final HttpClient client = HttpClient.newHttpClient();
     private static String authToken = null;
 
-    // TODO
     public static ArrayList<Lounge> getAvailableLounges(
             char beachId,
             LocalDate date,
@@ -178,6 +177,40 @@ public class BookingServiceRest {
             return Boolean.parseBoolean(res.body().trim());
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    public static ArrayList<Booking> getUserBookings() throws UnauthorizedException {
+        try {
+            HttpRequest req = HttpRequest.newBuilder()
+                    .uri(URI.create(
+                            "http://" + Main.serverAddress + ":" + Main.serverPort + "/frontend/rest/booking/getUserBookings"
+                    ))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", authToken)
+                    .GET()
+                    .build();
+
+            HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+
+            RestUtilities.checkUnauthorizedStatus(res);
+            if (res.statusCode() != 200) {
+                return null;
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+
+            ArrayList<Booking> bookings = mapper.readValue(res.body(), new TypeReference<ArrayList<Booking>>() {
+                @Override
+                public Type getType() {
+                    return super.getType();
+                }
+            });
+
+            return bookings;
+        } catch (Exception e) {
+            return null;
         }
     }
 
