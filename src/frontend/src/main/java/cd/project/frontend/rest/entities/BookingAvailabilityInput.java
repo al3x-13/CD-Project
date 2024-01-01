@@ -1,21 +1,20 @@
 package cd.project.frontend.rest.entities;
 
-import jakarta.xml.bind.annotation.XmlType;
-
-@XmlType(name = "AvailableLoungesInput")
-public class AvailableLoungesInput {
+public class BookingAvailabilityInput {
     private char beachId;
-    String date;
-    String fromTime;
-    String toTime;
+    private String date;
+    private String fromTime;
+    private String toTime;
+    private int individuals;
 
-    public AvailableLoungesInput() {}
+    public BookingAvailabilityInput() {}
 
-    public AvailableLoungesInput(char beachId, String date, String fromTime, String toTime) {
+    public BookingAvailabilityInput(char beachId, String date, String fromTime, String toTime, int individuals) {
         this.beachId = beachId;
         this.date = date;
         this.fromTime = fromTime;
         this.toTime = toTime;
+        this.individuals = individuals;
     }
 
     public char getBeachId() {
@@ -34,6 +33,10 @@ public class AvailableLoungesInput {
         return toTime;
     }
 
+    public int getIndividuals() {
+        return individuals;
+    }
+
     public void setBeachId(char beachId) {
         this.beachId = beachId;
     }
@@ -48,5 +51,9 @@ public class AvailableLoungesInput {
 
     public void setToTime(String toTime) {
         this.toTime = toTime;
+    }
+
+    public void setIndividuals(int individuals) {
+        this.individuals = individuals;
     }
 }
