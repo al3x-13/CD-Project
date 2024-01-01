@@ -19,26 +19,30 @@ public class UserSession {
     public static boolean authenticate(String usernameInput, String passwordInput) {
         if (Main.clientProtocol == CommunicationProtocol.SOAP) {
             String token = AuthenticationServiceSoap.authenticate(usernameInput, passwordInput);
-            if (token == null) {
-                return false;
-            }
+            if (token == null) return false;
+
             AuthenticationServiceSoap.setAuthHeader(token);
             BookingServiceSoap.setAuthHeader(token);
             username = usernameInput;
             sessionToken = token;
             return true;
+        } else {
+            String token = AuthenticationServiceRest.authenticate(usernameInput, passwordInput);
+            if (token == null) return false;
+
+            BookingServiceRest.setAuthToken(token);
+            username = usernameInput;
+            sessionToken = token;
+            return true;
         }
-        // TODO: implement REST
-        return false;
     }
 
     public static boolean register(String username, String password) {
         if (Main.clientProtocol == CommunicationProtocol.SOAP) {
             return AuthenticationServiceSoap.register(username, password);
+        } else {
+            return AuthenticationServiceRest.register(username, password);
         }
-
-        // TODO: implement REST
-        return false;
     }
 
     public static String getSessionToken() {
@@ -58,7 +62,7 @@ public class UserSession {
             AuthenticationServiceSoap.resetAuthHeader();
             BookingServiceSoap.resetAuthHeader();
         } else {
-            // TODO
+            BookingServiceRest.resetAuthHeader();
         }
         sessionToken = null;
     }
