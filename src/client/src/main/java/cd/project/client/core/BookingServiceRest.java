@@ -3,6 +3,7 @@ package cd.project.client.core;
 import cd.project.backend.domain.Lounge;
 import cd.project.client.Main;
 import cd.project.frontend.rest.entities.AvailableLoungesInput;
+import cd.project.frontend.rest.entities.BookingAvailabilityInput;
 import cd.project.frontend.rest.entities.UserCredentials;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -49,6 +50,54 @@ public class BookingServiceRest {
                     .build();
 
             HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+
+            RestUtilities.checkUnauthorizedStatus(res);
+            if (res.statusCode() != 200) {
+                return null;
+            }
+
+            return mapper.readValue(res.body(), new TypeReference<ArrayList<Lounge>>() {
+                @Override
+                public Type getType() {
+                    return super.getType();
+                }
+            });
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static ArrayList<Lounge> checkBookingAvailability(
+            char beachId,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime,
+            int individuals
+    ) throws UnauthorizedException {
+        ObjectMapper mapper = new ObjectMapper();
+        BookingAvailabilityInput input = new BookingAvailabilityInput(
+                beachId,
+                date.toString(),
+                fromTime.toString(),
+                toTime.toString(),
+                individuals
+        );
+
+        try {
+            String data = mapper.writeValueAsString(input);
+
+            HttpRequest req = HttpRequest.newBuilder()
+                    .uri(URI.create(
+                            "http://" + Main.serverAddress + ":" + Main.serverPort + "/frontend/rest/booking/checkBookingAvailability"
+                    ))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", authToken)
+                    .POST(HttpRequest.BodyPublishers.ofString(data))
+                    .build();
+
+            HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+
+            RestUtilities.checkUnauthorizedStatus(res);
             if (res.statusCode() != 200) {
                 return null;
             }

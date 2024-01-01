@@ -61,7 +61,11 @@ public class BookingService {
                 SoapUtilities.handleExpiredSession();
             }
         } else {
-            // TODO
+            try {
+                return BookingServiceRest.checkBookingAvailability(beachId, date, fromTime, toTime, individuals);
+            } catch (UnauthorizedException e) {
+                RestUtilities.handleExpiredSession();
+            }
         }
         return null;
     }
