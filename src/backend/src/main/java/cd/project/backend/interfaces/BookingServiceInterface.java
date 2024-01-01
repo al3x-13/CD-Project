@@ -76,4 +76,12 @@ public interface BookingServiceInterface extends Remote {
      * @return Bookings List
      */
    ArrayList<Booking> getUserBookings(int userId) throws RemoteException;
+
+    /**
+     * Check if the user owns the booking.
+     * @param userId user id
+     * @param bookingId booking id
+     * @return Whether the user owns the booking
+     */
+   boolean userOwnsBooking(int userId, int bookingId) throws RemoteException;
 }

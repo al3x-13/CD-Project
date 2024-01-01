@@ -63,4 +63,9 @@ public class BookingService extends UnicastRemoteObject implements BookingServic
     public ArrayList<Booking> getUserBookings(int userId) throws RemoteException {
        return BookingServiceHelpers.getUserBookings(userId);
     }
+
+    @Override
+    public boolean userOwnsBooking(int userId, int bookingId) throws RemoteException {
+        return BookingServiceHelpers.userOwnsBooking(userId, bookingId);
+    }
 }

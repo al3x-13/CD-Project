@@ -224,6 +224,27 @@ public class BookingServiceHelpers {
     }
 
     /**
+     * Check if the given user owns the given booking.
+     * @param userId user id
+     * @param bookingId booking id
+     * @return Whether the user owns the booking
+     */
+    public static boolean userOwnsBooking(int userId, int bookingId) {
+        ResultSet data = DbConnection.executeQuery(
+                "SELECT user_id FROM bookings WHERE id = ?",
+                bookingId
+        );
+
+        try {
+            if (!data.next()) return false;
+            int bookingUserId = data.getInt("user_id");
+            return userId == bookingUserId;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Cancels a booking by id.
      * @param bookingId booking id
      * @return SUCCESS
