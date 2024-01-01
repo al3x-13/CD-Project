@@ -36,7 +36,9 @@ public class AuthenticationServiceRest {
             }
 
             JsonNode rootNode = mapper.readTree(res.body());
-            return rootNode.path("token").asText();
+            JsonNode token = rootNode.path("token");
+            if (token.isNull()) return null;
+            return token.asText();
         } catch (Exception e) {
             return null;
         }
