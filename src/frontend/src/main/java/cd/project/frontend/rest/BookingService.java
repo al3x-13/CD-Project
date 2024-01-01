@@ -32,8 +32,7 @@ public interface BookingService {
             LocalDate date,
             LocalTime fromTime,
             LocalTime toTime,
-            int individuals,
-            int userId
+            int individuals
     );
 
     boolean cancelBooking(int bookingId);

@@ -60,11 +60,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public int createBooking(char beachId, String date, String fromTime, String toTime, int individuals) {
-        MessageContext mc = webServiceContext.getMessageContext();
-        HttpServletRequest request = (HttpServletRequest) mc.get("HTTP.REQUEST");
-        String authHeader = request.getHeader("Authorization");
-        String token = authHeader.split(" ")[1];
-        int userId = JwtHelper.getUserId(token);
+        int userId = this.getUserIdFromJWT();
 
         try {
             return bookingService.createBooking(
@@ -82,7 +78,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public boolean cancelBooking(int bookingId) {
+        int userId = this.getUserIdFromJWT();
         try {
+            if (!bookingService.userOwnsBooking(userId, bookingId)) {
+                return false;
+            }
             return bookingService.cancelBooking(bookingId);
         } catch (RemoteException e) {
             throw new RuntimeException("Failed to execute remote method: " + e);
@@ -91,11 +91,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public ArrayList<BookingSoap> getUserBookings() {
-        MessageContext mc = webServiceContext.getMessageContext();
-        HttpServletRequest request = (HttpServletRequest) mc.get("HTTP.REQUEST");
-        String authHeader = request.getHeader("Authorization");
-        String token = authHeader.split(" ")[1];
-        int userId = JwtHelper.getUserId(token);
+        int userId = this.getUserIdFromJWT();
 
         try {
             ArrayList<Booking> bookings = bookingService.getUserBookings(userId);
@@ -125,5 +121,14 @@ public class BookingServiceImpl implements BookingService {
 
     public String test() {
         return "DEEZ NUTZ";
+    }
+
+
+    private int getUserIdFromJWT() {
+        MessageContext mc = this.webServiceContext.getMessageContext();
+        HttpServletRequest request = (HttpServletRequest) mc.get("HTTP.REQUEST");
+        String authHeader = request.getHeader("Authorization");
+        String token = authHeader.split(" ")[1];
+        return JwtHelper.getUserId(token);
     }
 }

@@ -69,7 +69,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @POST
     @Path("/createBooking")
-    public int createBooking(char beachId, LocalDate date, LocalTime fromTime, LocalTime toTime, int individuals, int userId) {
+    public int createBooking(char beachId, LocalDate date, LocalTime fromTime, LocalTime toTime, int individuals) {
+        int userId = this.getUserIdFromJWT();
         try {
             return bookingService.createBooking(beachId, date, fromTime, toTime, individuals, userId);
         } catch (RemoteException e) {
@@ -81,7 +82,11 @@ public class BookingServiceImpl implements BookingService {
     @POST
     @Path("/cancelBooking")
     public boolean cancelBooking(int bookingId) {
+        int userId = this.getUserIdFromJWT();
         try {
+            if (!bookingService.userOwnsBooking(userId, bookingId)) {
+                return false;
+            }
             return bookingService.cancelBooking(bookingId);
         } catch (RemoteException e) {
             throw new RuntimeException("Failed to execute remote method: " + e);
@@ -92,9 +97,7 @@ public class BookingServiceImpl implements BookingService {
     @GET
     @Path("/getUserBookings")
     public ArrayList<Booking> getUserBookings() {
-        String authHeader = headers.getRequestHeader("Authorization").getFirst();
-        String token = authHeader.split(" ")[1];
-        int userId = JwtHelper.getUserId(token);
+        int userId = this.getUserIdFromJWT();
 
         try {
             return bookingService.getUserBookings(userId);
@@ -107,5 +110,11 @@ public class BookingServiceImpl implements BookingService {
     @Path("/test")
     public String test() {
         return "DEEZ NUTZ";
+    }
+
+    private int getUserIdFromJWT() {
+        String authHeader = headers.getRequestHeader("Authorization").getFirst();
+        String token = authHeader.split(" ")[1];
+        return JwtHelper.getUserId(token);
     }
 }
