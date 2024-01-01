@@ -101,7 +101,11 @@ public class BookingService {
                 SoapUtilities.handleExpiredSession();
             }
         } else {
-            // TODO
+            try {
+                return BookingServiceRest.cancelBooking(bookingId);
+            } catch (UnauthorizedException e) {
+                RestUtilities.handleExpiredSession();
+            }
         }
         return false;
     }

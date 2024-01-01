@@ -155,6 +155,32 @@ public class BookingServiceRest {
         }
     }
 
+    public static boolean cancelBooking(int bookingId) throws UnauthorizedException {
+        try {
+            String data = String.valueOf(bookingId);
+
+            HttpRequest req = HttpRequest.newBuilder()
+                    .uri(URI.create(
+                            "http://" + Main.serverAddress + ":" + Main.serverPort + "/frontend/rest/booking/cancelBooking"
+                    ))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", authToken)
+                    .POST(HttpRequest.BodyPublishers.ofString(data))
+                    .build();
+
+            HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+
+            RestUtilities.checkUnauthorizedStatus(res);
+            if (res.statusCode() != 200) {
+                return false;
+            }
+
+            return Boolean.parseBoolean(res.body().trim());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public static void setAuthToken(String token) {
         authToken = "Bearer " + token;
     }
