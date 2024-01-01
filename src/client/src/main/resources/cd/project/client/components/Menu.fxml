@@ -4,7 +4,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 
-<MenuBar fx:id="menu" style="-fx-background-color: #636363;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cd.project.client.components.AppMenu">
+<MenuBar fx:id="menu" style="-fx-background-color: #636363;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cd.project.client.ui.components.AppMenu">
     <menus>
         <Menu mnemonicParsing="false" text="Application">
             <items>

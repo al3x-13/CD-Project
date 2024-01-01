@@ -31,6 +31,17 @@ public class BookingService extends UnicastRemoteObject implements BookingServic
     }
 
     @Override
+    public ArrayList<Lounge> checkBookingAvailability(
+            char beachId,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime,
+            int individuals
+    ) throws RemoteException {
+        return BookingServiceHelpers.checkBookingAvailability(beachId, date, fromTime, toTime, individuals);
+    }
+
+    @Override
     public int createBooking(
             char beachId,
             LocalDate date,
@@ -51,5 +62,10 @@ public class BookingService extends UnicastRemoteObject implements BookingServic
     @Override
     public ArrayList<Booking> getUserBookings(int userId) throws RemoteException {
        return BookingServiceHelpers.getUserBookings(userId);
+    }
+
+    @Override
+    public boolean userOwnsBooking(int userId, int bookingId) throws RemoteException {
+        return BookingServiceHelpers.userOwnsBooking(userId, bookingId);
     }
 }

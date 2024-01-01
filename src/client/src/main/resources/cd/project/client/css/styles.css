@@ -1,0 +1,290 @@
+.hyperlink {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5e6d88;
+    -fx-underline: false;
+    -fx-focus-color: transparent;
+}
+
+.hyperlink:hover {
+    -fx-underline: false;
+    -fx-text-fill: #2988c9;
+}
+
+.book-button {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #B8B8B8;
+    -fx-background-radius: 4;
+    -fx-background-color: #2988c9;
+    -fx-cursor: hand;
+    -fx-padding: 6px 10px;
+}
+
+.book-button:hover {
+    -fx-background-color: #2274AC;
+}
+
+.choice-box {
+    -fx-background-color: #181920;
+    -fx-background-radius: 6;
+    -fx-border-color: #2988c9;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-font-size: 14px;
+}
+
+.choice-box .label {
+    -fx-text-fill: #2988c9;
+}
+
+.choice-box:hover .label {
+    -fx-background-color: #31344C;
+    -fx-background-radius: 6;
+}
+
+.choice-box:hover {
+    -fx-cursor: hand;
+}
+
+.choice-box .context-menu {
+    -fx-background-color: #31344C;
+}
+
+.choice-box .context-menu:hover {
+    -fx-cursor: hand;
+}
+
+.choice-box .context-menu .menu-item:hover, .choice-box .context-menu .menu-item:focused,
+.choice-box .context-menu .menu-item:hover .label, .choice-box .context-menu .menu-item:focused .label {
+    -fx-background-color: #2988c9;
+    -fx-text-fill: #31344C;
+}
+
+.spinner {
+    -fx-base: #31344C;
+    -fx-body-color: black;
+}
+
+.spinner .text-field {
+    -fx-background-color: #31344C;
+    -fx-text-fill: #2988c9;
+}
+
+.date-picker {
+    -fx-background-color: #2988c9;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-radius: 6;
+}
+
+.date-picker:hover {
+    -fx-cursor: hand;
+}
+
+.date-picker .text-field {
+    -fx-background-color: #181920;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-text-fill: #2988c9;
+    -fx-font-size: 14px;
+}
+
+.date-picker-popup {
+    -fx-background-color: #2988c9;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+}
+
+.date-picker-popup:hover {
+    -fx-cursor: hand;
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #2988c9;
+}
+
+.date-picker-popup .month-year-pane .label {
+    -fx-background-color: #2988c9;
+    -fx-text-fill: #31344C;
+    -fx-font-weight: bold;
+}
+
+.date-picker-popup .week-number-cell, .date-picker-popup .day-name-cell {
+    -fx-background-color: #1F2033 !important;
+    -fx-border-color: #1F2033 !important;
+    -fx-text-fill: #2988c9 !important;
+}
+
+.date-picker-popup .cell:first-child {
+    -fx-background-color: #1F2033 !important;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: #2988c9;
+    -fx-background-radius: 0 6 6 0;
+    -fx-border-color: #2988c9;
+    -fx-border-width: 2;
+    -fx-border-radius: 0 6 6 0;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: #31344C;
+}
+
+.date-picker .cell {
+    -fx-background-color: #31344C;
+    -fx-border-color: #31344C;
+    -fx-text-fill: #2988c9;
+}
+
+.date-picker .cell:hover, .date-picker .cell:focused {
+    -fx-background-color: #2988c9;
+    -fx-border-color: #2988c9;
+    -fx-text-fill: #31344C;
+}
+
+.date-picker-popup .spinner .button {
+    -fx-background-color: #2988c9;
+    -fx-background-radius: 3;
+}
+
+.date-picker-popup .spinner .button:hover {
+    -fx-background-color: #68B5EA;
+}
+
+.date-picker-popup .spinner .button .left-arrow,
+.date-picker-popup .spinner .button .right-arrow {
+	-fx-background-color: #31344C;
+}
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #31344C;
+    -fx-background-radius: 6;
+    -fx-border-width: 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: #31344C;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-radius: 6;
+    -fx-padding: 5px 0;
+}
+
+.table-view .column-header .label {
+    -fx-background-radius: 6;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #31344C;
+    -fx-text-fill: #2988c9;
+    -fx-background-radius: 6 6 0 0;
+    -fx-padding: 5px 0;
+}
+
+.table-view .column-header-background .label {
+    -fx-text-fill: #5e6d88;
+    -fx-font-size: 13px;
+}
+
+.table-view .table-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2988c9;
+    -fx-font-size: 15px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 12px 0;
+    -fx-alignment: center;
+}
+
+.table-view .table-row-cell {
+    -fx-border-color: #31344C;
+    -fx-border-width: 0;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: rgba(16, 137, 219, 0.1) !important;
+}
+
+.table-view .table-row-cell:even {
+    -fx-background-color: #181920 !important;
+}
+
+.table-view .scroll-bar:vertical {
+    -fx-background-color: #181920;
+    -fx-border-width: 0 0 0 2;
+    -fx-border-color: #31344C;
+    -fx-padding: 4px 2px;
+}
+
+.table-view .scroll-bar:vertical .thumb {
+    -fx-pref-width: 3px;
+    -fx-background-color: #31344C;
+    -fx-background-radius: 8;
+}
+
+.booking-container {
+    -fx-max-width: 600px;
+    -fx-background-color: transparent;
+    -fx-border-width: 2;
+    -fx-border-color: #31344C;
+    -fx-border-radius: 12;
+}
+
+.booking-container .label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5e6d88;
+}
+
+.booking-container .title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2988c9;
+}
+
+.booking-container .separator *.line {
+    -fx-border-color: #31344C;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-padding: 0;
+}
+
+.booking-container .cancel-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-text-fill: #BE1F1F;
+    -fx-font-size: 13px;
+    -fx-border-color: #BE1F1F;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 6px;
+    -fx-cursor: hand;
+}
+
+.booking-container .cancel-button:hover {
+    -fx-background-color: #BE1F1F;
+    -fx-text-fill: #181920;
+}
+
+.scroll-pane {
+    -fx-background-color: #181920;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: #181920;
+}
+
+.scroll-pane .scroll-bar {
+    -fx-background-color: #31344C;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #202334;
+    -fx-background-radius: 8;
+}

@@ -1,5 +1,6 @@
 package cd.project.client;
 
+import cd.project.client.core.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Router {
-    private static ArrayList<String> noAuthScenes = new ArrayList<>(Arrays.asList(
+    private static final ArrayList<String> noAuthScenes = new ArrayList<>(Arrays.asList(
             "home.fxml",
             "login.fxml",
             "register.fxml",
@@ -25,7 +26,7 @@ public class Router {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("scenes/" + fxmlFileToLoad));
             Parent page = loader.load();
             Stage stage = new Stage();
-            Scene scene = new Scene(page, 800, 600);
+            Scene scene = new Scene(page, 1000, 750);
             stage.setScene(scene);
             Stage rootStage = Main.getRootStage();
             rootStage.setScene(scene);
@@ -64,7 +65,17 @@ public class Router {
     }
 
     @FXML
-    public static void navigateToDashboard() {
-        loadAndSetScene("dashboard.fxml");
+    public static void navigateToMyBookings() {
+        loadAndSetScene("mybookings.fxml");
+    }
+
+    @FXML
+    public static void navigateToNewBooking() {
+        loadAndSetScene("newbooking.fxml");
+    }
+
+    @FXML
+    public static void navigateToListLounges() {
+        loadAndSetScene("availablelounges.fxml");
     }
 }

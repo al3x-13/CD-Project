@@ -7,6 +7,7 @@ import cd.project.backend.domain.Lounge;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +91,47 @@ public class BookingServiceHelpers {
             totalSeats += lounge.getMaxCapacity();
         }
         return totalSeats;
+    }
+
+    /**
+     * Checks for booking availability for with the provided details.
+     * @param beachId beach id
+     * @param date date
+     * @param fromTime from time
+     * @param toTime to time
+     * @param individuals amount of people
+     * @return Available lounges or null if no availability
+     */
+    public static ArrayList<Lounge> checkBookingAvailability(
+            char beachId,
+            LocalDate date,
+            LocalTime fromTime,
+            LocalTime toTime,
+            int individuals
+    ) {
+        ArrayList<Lounge> availableLounges = getAvailableLounges(beachId, date, fromTime, toTime);
+        ArrayList<Lounge> bookingLounges = new ArrayList<>();
+        if (availableLounges == null) return null;
+        int totalSeats = getTotalLoungeSeats(availableLounges);
+        int remainingSeats = individuals;
+
+        if (totalSeats < individuals) {
+            return null;
+        }
+
+        while (remainingSeats > 0) {
+            if (remainingSeats >= 4 && verifySeatAvailability(availableLounges, 4)) {
+                remainingSeats -= 4;
+                moveLoungeFromAvailableToBooked(availableLounges, bookingLounges, 4);
+            } else if (remainingSeats >= 3 && verifySeatAvailability(availableLounges, 3)) {
+                remainingSeats -= 3;
+                moveLoungeFromAvailableToBooked(availableLounges, bookingLounges, 3);
+            } else {
+                remainingSeats -= 2;
+                moveLoungeFromAvailableToBooked(availableLounges, bookingLounges, 2);;
+            }
+        }
+        return bookingLounges;
     }
 
     /**
@@ -182,6 +224,27 @@ public class BookingServiceHelpers {
     }
 
     /**
+     * Check if the given user owns the given booking.
+     * @param userId user id
+     * @param bookingId booking id
+     * @return Whether the user owns the booking
+     */
+    public static boolean userOwnsBooking(int userId, int bookingId) {
+        ResultSet data = DbConnection.executeQuery(
+                "SELECT user_id FROM bookings WHERE id = ?",
+                bookingId
+        );
+
+        try {
+            if (!data.next()) return false;
+            int bookingUserId = data.getInt("user_id");
+            return userId == bookingUserId;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Cancels a booking by id.
      * @param bookingId booking id
      * @return SUCCESS
@@ -202,7 +265,7 @@ public class BookingServiceHelpers {
         ArrayList<Booking> userBookings = new ArrayList<>();
 
         ResultSet bookingsData = DbConnection.executeQuery(
-                "SELECT id, beach_id, date, from_time, to_time, lounge_ids " +
+                "SELECT id, beach_id, date, from_time, to_time, created_at, lounge_ids " +
                         "FROM bookings WHERE user_id = ?",
                 userId
         );
@@ -215,6 +278,7 @@ public class BookingServiceHelpers {
                 LocalDate date = bookingsData.getDate("date").toLocalDate();
                 LocalTime fromTime = bookingsData.getTime("from_time").toLocalTime();
                 LocalTime toTime = bookingsData.getTime("to_time").toLocalTime();
+                LocalDateTime createdAt = bookingsData.getObject("created_at", LocalDateTime.class);
                 ArrayList<String> loungeIds = new ArrayList<>(
                         List.of((String[]) bookingsData
                         .getArray("lounge_ids")
@@ -227,6 +291,7 @@ public class BookingServiceHelpers {
                                 date,
                                 fromTime,
                                 toTime,
+                                createdAt,
                                 userId,
                                 Lounge.getLoungesByID(loungeIds)
                         )

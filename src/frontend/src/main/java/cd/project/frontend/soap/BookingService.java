@@ -2,6 +2,7 @@ package cd.project.frontend.soap;
 
 import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
+import cd.project.frontend.soap.entities.BookingSoap;
 import jakarta.jws.WebMethod;
 import jakarta.jws.WebService;
 
@@ -15,20 +16,22 @@ public interface BookingService {
     ArrayList<Lounge> getAvailableLounges(char beachId, String date, String fromTime, String toTime);
 
     @WebMethod
-    int createBooking(
+    ArrayList<Lounge> checkBookingAvailability(
             char beachId,
-            LocalDate date,
-            LocalTime fromTime,
-            LocalTime toTime,
-            int individuals,
-            int userId
+            String date,
+            String fromTime,
+            String toTime,
+            int individuals
     );
+
+    @WebMethod
+    int createBooking(char beachId, String date, String fromTime, String toTime, int individuals);
 
     @WebMethod
     boolean cancelBooking(int bookingId);
 
     @WebMethod
-    ArrayList<Booking> getUserBookings(int userId);
+    ArrayList<BookingSoap> getUserBookings();
 
     @WebMethod
     String test();

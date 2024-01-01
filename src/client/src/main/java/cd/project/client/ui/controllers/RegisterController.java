@@ -1,7 +1,15 @@
-package cd.project.client.controllers;
+package cd.project.client.ui.controllers;
 
+import cd.project.client.CommunicationProtocol;
+import cd.project.client.Main;
 import cd.project.client.Router;
-import cd.project.client.components.AppMenu;
+import cd.project.client.core.AuthenticationServiceSoap;
+import cd.project.client.core.UserSession;
+import cd.project.client.ui.components.AppMenu;
+import cd.project.client.ui.components.ProtocolLabel;
+import cd.project.client.ui.components.SuccessLabel;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -9,12 +17,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,6 +45,8 @@ public class RegisterController implements Initializable {
     private Text usernameConstraint;
     @FXML
     private Text passwordConstraint;
+    @FXML
+    private Label successLabel;
     private final BooleanProperty validUsername = new SimpleBooleanProperty(false);
     private final BooleanProperty validPassword = new SimpleBooleanProperty(false);
     private final BooleanProperty validCredentials = new SimpleBooleanProperty(true);
@@ -42,6 +54,9 @@ public class RegisterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         container.getChildren().addFirst(new AppMenu());
+        container.getChildren().addLast(new ProtocolLabel());
+
+        Platform.runLater(() -> username.requestFocus());
 
         username.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER) {
@@ -70,11 +85,11 @@ public class RegisterController implements Initializable {
                 String originalInputStyle = username.getStyle();
 
                 if (newValue.length() >= 4 && newValue.length() <= 15) {
-                    username.setStyle(originalInputStyle + "-fx-border-radius: 2; -fx-border-color: green;");
+                    username.setStyle(originalInputStyle + "-fx-border-radius: 6; -fx-border-color: green;");
                     usernameConstraint.setFill(Color.GREEN);
                     validUsername.set(true);
                 } else {
-                    username.setStyle(originalInputStyle + "-fx-border-radius: 2; -fx-border-color: red;");
+                    username.setStyle(originalInputStyle + "-fx-border-radius: 6; -fx-border-color: red;");
                     usernameConstraint.setFill(Color.RED);
                     validUsername.set(false);
                 }
@@ -114,6 +129,15 @@ public class RegisterController implements Initializable {
     }
 
     private void handleSubmit() {
-        System.out.println("user: " + username.getText() + ", pw: " + password.getText());
+        boolean registerSuccess = UserSession.register(username.getText(), password.getText());
+
+        if (!registerSuccess) {
+            new SuccessLabel(this.successLabel, "Username already exists", false);
+        } else {
+            new SuccessLabel(this.successLabel, "Account created successfully", true);
+            PauseTransition delay = new PauseTransition(Duration.seconds(2));
+            delay.setOnFinished(actionEvent -> Router.navigateToLogin());
+            delay.play();
+        }
     }
 }

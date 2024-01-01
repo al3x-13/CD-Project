@@ -1,7 +1,8 @@
-package cd.project.client.controllers;
+package cd.project.client.ui.controllers;
 
 import cd.project.client.Router;
-import cd.project.client.components.AppMenu;
+import cd.project.client.ui.components.AppMenu;
+import cd.project.client.ui.components.ProtocolLabel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -23,5 +24,6 @@ public class HomeController implements Initializable {
         container.getChildren().addFirst(new AppMenu());
         login.setOnAction(actionEvent -> Router.navigateToLogin());
         register.setOnAction(actionEvent -> Router.navigateToRegister());
+        container.getChildren().addLast(new ProtocolLabel());
     }
 }

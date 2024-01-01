@@ -32,7 +32,7 @@
         </jaxrs:serviceBeans>
 
         <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider"/>
+            <bean class="cd.project.frontend.rest.mappers.CustomJsonProvider" />
         </jaxrs:providers>
     </jaxrs:server>
 </beans>

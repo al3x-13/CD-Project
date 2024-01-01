@@ -2,6 +2,7 @@ package cd.project.backend.services;
 
 import cd.project.backend.database.DbConnection;
 import cd.project.backend.domain.Lounge;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Array;
@@ -110,6 +111,130 @@ class BookingServiceHelpersTest {
     }
 
     @Test
+    void checkBookingAvailability_AvailableLounges() {
+        ArrayList<String> expectedResult = new ArrayList<>(Arrays.asList(
+                "A16", "A1"
+        ));
+        ArrayList<String> realResult = new ArrayList<>(
+            BookingServiceHelpers.checkBookingAvailability(
+                    'A',
+                    LocalDate.of(2024, 6, 22),
+                    LocalTime.of(10, 0),
+                    LocalTime.of(11, 0),
+                    5
+            ).stream().map(Lounge::getId).collect(Collectors.toList())
+        );
+        boolean containsAllValues = true;
+        for (String id : realResult) {
+            if (!expectedResult.contains(id)) {
+                containsAllValues = false;
+                break;
+            }
+        }
+        assertTrue(containsAllValues);
+
+        expectedResult = new ArrayList<>(Arrays.asList(
+                "B11", "B6", "B1"
+        ));
+        realResult = new ArrayList<>(
+                BookingServiceHelpers.checkBookingAvailability(
+                        'B',
+                        LocalDate.of(2024, 6, 23),
+                        LocalTime.of(14, 0),
+                        LocalTime.of(18, 0),
+                        11
+                ).stream().map(Lounge::getId).collect(Collectors.toList())
+        );
+        containsAllValues = true;
+        for (String id : expectedResult) {
+            if (!realResult.contains(id)) {
+                containsAllValues = false;
+                break;
+            }
+        }
+        assertTrue(containsAllValues);
+
+        expectedResult = new ArrayList<>(Arrays.asList(
+                "C1", "C2", "C3", "C4"
+        ));
+        realResult = new ArrayList<>(
+                BookingServiceHelpers.checkBookingAvailability(
+                        'C',
+                        LocalDate.of(2024, 6, 24),
+                        LocalTime.of(14, 0),
+                        LocalTime.of(20, 0),
+                        7
+                ).stream().map(Lounge::getId).collect(Collectors.toList())
+        );
+        containsAllValues = true;
+        for (String id : expectedResult) {
+            if (!realResult.contains(id)) {
+                containsAllValues = false;
+                break;
+            }
+        }
+        assertTrue(containsAllValues);
+    }
+
+    @Test
+    void checkBookingAvailability_NoAvailability() {
+        ArrayList<String> bookingLounges = new ArrayList<>(Arrays.asList(
+                "B1", "B2", "B3", "B6", "B7", "B8", "B9"
+        ));
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (id, beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                435,
+                'B',
+                LocalDate.of(2024, 6, 24),
+                LocalTime.of(13, 0),
+                LocalTime.of(17, 0),
+                1,
+                DbConnection.stringListToVarcharArray(bookingLounges)
+        );
+        assertNull(
+                BookingServiceHelpers.checkBookingAvailability(
+                        'B',
+                        LocalDate.of(2024, 6, 24),
+                        LocalTime.of(13, 0),
+                        LocalTime.of(17, 0),
+                        12
+                )
+        );
+
+        bookingLounges = new ArrayList<>(Arrays.asList(
+                "C1", "C2", "C3", "C4"
+        ));
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (id, beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                436,
+                'C',
+                LocalDate.of(2024, 6, 24),
+                LocalTime.of(13, 0),
+                LocalTime.of(17, 0),
+                1,
+                DbConnection.stringListToVarcharArray(bookingLounges)
+        );
+        assertNull(
+                BookingServiceHelpers.checkBookingAvailability(
+                        'C',
+                        LocalDate.of(2024, 6, 24),
+                        LocalTime.of(13, 0),
+                        LocalTime.of(17, 0),
+                        14
+                )
+        );
+
+        // cleanup
+        DbConnection.executeUpdate(
+                "DELETE FROM bookings WHERE id IN (?,?)",
+                435,
+                436
+        );
+    }
+
+    @Test
     void createBooking_ValidBookings() {
         int booking1 = BookingServiceHelpers.createBooking(
                 'A',
@@ -184,6 +309,112 @@ class BookingServiceHelpersTest {
                 1,
                 1
         ));
+    }
+
+    @Test
+    void userOwnsBooking_True() {
+        DbConnection.executeUpdate(
+                "INSERT INTO users (id, username, password_hash) VALUES (?,?,?)",
+                437, "james", "whocaresbruh"
+        );
+        DbConnection.executeUpdate(
+                    "INSERT INTO bookings (id, beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    384,
+                    'A',
+                    LocalDate.of(2024, 8, 26),
+                    LocalTime.of(9, 0),
+                    LocalTime.of(13, 0),
+                    437,
+                    DbConnection.stringListToVarcharArray(new ArrayList<>(Arrays.asList(
+                            "A1", "A2"
+                    )))
+        );
+
+        DbConnection.executeUpdate(
+                "INSERT INTO users (id, username, password_hash) VALUES (?,?,?)",
+                438, "sarah", "whocaresbruh"
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (id, beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                385,
+                'C',
+                LocalDate.of(2024, 8, 26),
+                LocalTime.of(9, 0),
+                LocalTime.of(14, 0),
+                438,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(Arrays.asList(
+                        "C1", "C2", "C3"
+                )))
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (id, beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                386,
+                'C',
+                LocalDate.of(2024, 8, 27),
+                LocalTime.of(9, 0),
+                LocalTime.of(14, 0),
+                438,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(Arrays.asList(
+                        "C1", "C2", "C3", "C4"
+                )))
+        );
+
+        assertTrue(BookingServiceHelpers.userOwnsBooking(437, 384));
+        assertTrue(BookingServiceHelpers.userOwnsBooking(438, 385));
+        assertTrue(BookingServiceHelpers.userOwnsBooking(438, 386));
+
+        // cleanup
+        DbConnection.executeUpdate("DELETE FROM bookings WHERE id IN (384, 385, 386)");
+        DbConnection.executeUpdate("DELETE FROM users WHERE id IN (437, 438)");
+    }
+
+    @Test
+    void userOwnsBooking_False() {
+        DbConnection.executeUpdate(
+                "INSERT INTO users (id, username, password_hash) VALUES (?,?,?)",
+                442, "jacob", "whocaresbruh"
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (id, beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                394,
+                'A',
+                LocalDate.of(2024, 8, 25),
+                LocalTime.of(14, 0),
+                LocalTime.of(16, 0),
+                442,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(Arrays.asList(
+                        "A1", "A2"
+                )))
+        );
+
+        DbConnection.executeUpdate(
+                "INSERT INTO users (id, username, password_hash) VALUES (?,?,?)",
+                443, "mia", "whocaresbruh"
+        );
+        DbConnection.executeUpdate(
+                "INSERT INTO bookings (id, beach_id, date, from_time, to_time, user_id, lounge_ids) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                395,
+                'B',
+                LocalDate.of(2024, 8, 26),
+                LocalTime.of(9, 0),
+                LocalTime.of(14, 0),
+                443,
+                DbConnection.stringListToVarcharArray(new ArrayList<>(Arrays.asList(
+                        "B1", "B2", "B6"
+                )))
+        );
+
+        assertFalse(BookingServiceHelpers.userOwnsBooking(442, 395));
+        assertFalse(BookingServiceHelpers.userOwnsBooking(443, 394));
+
+        // cleanup
+        DbConnection.executeUpdate("DELETE FROM bookings WHERE id IN (394, 395)");
+        DbConnection.executeUpdate("DELETE FROM users WHERE id IN (442, 443)");
     }
 
     @Test

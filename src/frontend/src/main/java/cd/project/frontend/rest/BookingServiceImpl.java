@@ -3,9 +3,20 @@ package cd.project.frontend.rest;
 import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 import cd.project.backend.interfaces.BookingServiceInterface;
+import cd.project.frontend.auth.JwtHelper;
+import cd.project.frontend.rest.entities.AvailableLoungesInput;
+import cd.project.frontend.rest.entities.BookingAvailabilityInput;
+import cd.project.frontend.rest.entities.CreateBookingInput;
 import cd.project.frontend.soap.client.rmi.BookingServiceClient;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.xml.ws.WebServiceContext;
+import jakarta.xml.ws.handler.MessageContext;
+import org.apache.cxf.transport.http.AbstractHTTPDestination;
 
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -17,17 +28,36 @@ import java.util.ArrayList;
 @Path("/booking")
 public class BookingServiceImpl implements BookingService {
     private final BookingServiceInterface bookingService = new BookingServiceClient().getBookingService();
+    @Context
+    private HttpHeaders headers;
 
     @Override
-    @GET
-    @Path("/getAvailableLouges")
-    public ArrayList<Lounge> getAvailableLounges(char beachId, String date, String fromTime, String toTime) {
+    @POST
+    @Path("/getAvailableLounges")
+    public ArrayList<Lounge> getAvailableLounges(AvailableLoungesInput data) {
         try {
             return bookingService.listAvailableLounges(
-                    beachId,
-                    LocalDate.parse(date),
-                    LocalTime.parse(fromTime),
-                    LocalTime.parse(toTime)
+                    data.getBeachId(),
+                    LocalDate.parse(data.getDate()),
+                    LocalTime.parse(data.getFromTime()),
+                    LocalTime.parse(data.getToTime())
+            );
+        } catch (RemoteException e) {
+            throw new RuntimeException("Failed to execute remote method: " + e);
+        }
+    }
+
+    @Override
+    @POST
+    @Path("/checkBookingAvailability")
+    public ArrayList<Lounge> checkBookingAvailability(BookingAvailabilityInput data) {
+        try {
+            return bookingService.checkBookingAvailability(
+                    data.getBeachId(),
+                    LocalDate.parse(data.getDate()),
+                    LocalTime.parse(data.getFromTime()),
+                    LocalTime.parse(data.getToTime()),
+                    data.getIndividuals()
             );
         } catch (RemoteException e) {
             throw new RuntimeException("Failed to execute remote method: " + e);
@@ -37,9 +67,17 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @POST
     @Path("/createBooking")
-    public int createBooking(char beachId, LocalDate date, LocalTime fromTime, LocalTime toTime, int individuals, int userId) {
+    public int createBooking(CreateBookingInput data) {
+        int userId = this.getUserIdFromJWT();
         try {
-            return bookingService.createBooking(beachId, date, fromTime, toTime, individuals, userId);
+            return bookingService.createBooking(
+                    data.getBeachId(),
+                    LocalDate.parse(data.getDate()),
+                    LocalTime.parse(data.getFromTime()),
+                    LocalTime.parse(data.getToTime()),
+                    data.getIndividuals(),
+                    userId
+            );
         } catch (RemoteException e) {
             throw new RuntimeException("Failed to execute remote method: " + e);
         }
@@ -49,7 +87,11 @@ public class BookingServiceImpl implements BookingService {
     @POST
     @Path("/cancelBooking")
     public boolean cancelBooking(int bookingId) {
+        int userId = this.getUserIdFromJWT();
         try {
+            if (!bookingService.userOwnsBooking(userId, bookingId)) {
+                return false;
+            }
             return bookingService.cancelBooking(bookingId);
         } catch (RemoteException e) {
             throw new RuntimeException("Failed to execute remote method: " + e);
@@ -59,7 +101,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @GET
     @Path("/getUserBookings")
-    public ArrayList<Booking> getUserBookings(int userId) {
+    public ArrayList<Booking> getUserBookings() {
+        int userId = this.getUserIdFromJWT();
+
         try {
             return bookingService.getUserBookings(userId);
         } catch (RemoteException e) {
@@ -71,5 +115,11 @@ public class BookingServiceImpl implements BookingService {
     @Path("/test")
     public String test() {
         return "DEEZ NUTZ";
+    }
+
+    private int getUserIdFromJWT() {
+        String authHeader = headers.getRequestHeader("Authorization").getFirst();
+        String token = authHeader.split(" ")[1];
+        return JwtHelper.getUserId(token);
     }
 }

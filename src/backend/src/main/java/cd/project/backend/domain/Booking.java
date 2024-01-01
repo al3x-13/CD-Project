@@ -63,6 +63,7 @@ public class Booking {
             LocalDate date,
             LocalTime fromTime,
             LocalTime toTime,
+            LocalDateTime createdAt,
             int userID,
             ArrayList<Lounge> lounges
     ){
@@ -71,6 +72,7 @@ public class Booking {
         this.date = date;
         this.fromTime = fromTime;
         this.toTime = toTime;
+        this.createdAt = createdAt;
         this.userID = userID;
         this.lounges = lounges;
     }

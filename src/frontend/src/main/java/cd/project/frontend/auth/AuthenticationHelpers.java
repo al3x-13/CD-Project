@@ -38,12 +38,14 @@ public class AuthenticationHelpers {
      * @return User session token or null
      */
     public static String authenticate(String username, String password) {
-        ResultSet data = DbConnection.executeQuery("SELECT password_hash FROM users WHERE username = ?", username);
+        ResultSet data = DbConnection.executeQuery("SELECT id, password_hash FROM users WHERE username = ?", username);
         boolean validPassword = false;
+        int userId = -1;
 
         try {
             if (!data.next()) return null;
             validPassword = BCrypt.checkpw(password, data.getString("password_hash"));
+            userId = data.getInt("id");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -51,7 +53,7 @@ public class AuthenticationHelpers {
         if (!validPassword) return null;
 
         // generate new jwt token
-        return JwtHelper.createToken(username);
+        return JwtHelper.createToken(username, userId);
     }
 
     /**
