@@ -12,6 +12,8 @@ import java.util.ArrayList;
 public interface BookingServiceInterface extends Remote {
     String test(String data) throws RemoteException;
 
+    int getPort() throws RemoteException;
+
     /**
      * Gets all the available lounges for the provided beach in the specified date
      * and time interval.

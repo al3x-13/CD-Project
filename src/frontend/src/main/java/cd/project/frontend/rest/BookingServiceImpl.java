@@ -7,16 +7,11 @@ import cd.project.frontend.auth.JwtHelper;
 import cd.project.frontend.rest.entities.AvailableLoungesInput;
 import cd.project.frontend.rest.entities.BookingAvailabilityInput;
 import cd.project.frontend.rest.entities.CreateBookingInput;
-import cd.project.frontend.soap.client.rmi.BookingServiceClient;
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
+import cd.project.frontend.rmi.client.BookingServiceRmiClient;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.xml.ws.WebServiceContext;
-import jakarta.xml.ws.handler.MessageContext;
-import org.apache.cxf.transport.http.AbstractHTTPDestination;
 
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -27,7 +22,6 @@ import java.util.ArrayList;
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/booking")
 public class BookingServiceImpl implements BookingService {
-    private final BookingServiceInterface bookingService = new BookingServiceClient().getBookingService();
     @Context
     private HttpHeaders headers;
 
@@ -35,6 +29,7 @@ public class BookingServiceImpl implements BookingService {
     @POST
     @Path("/getAvailableLounges")
     public ArrayList<Lounge> getAvailableLounges(AvailableLoungesInput data) {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         try {
             return bookingService.listAvailableLounges(
                     data.getBeachId(),
@@ -51,6 +46,7 @@ public class BookingServiceImpl implements BookingService {
     @POST
     @Path("/checkBookingAvailability")
     public ArrayList<Lounge> checkBookingAvailability(BookingAvailabilityInput data) {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         try {
             return bookingService.checkBookingAvailability(
                     data.getBeachId(),
@@ -68,7 +64,9 @@ public class BookingServiceImpl implements BookingService {
     @POST
     @Path("/createBooking")
     public int createBooking(CreateBookingInput data) {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         int userId = this.getUserIdFromJWT();
+
         try {
             return bookingService.createBooking(
                     data.getBeachId(),
@@ -87,7 +85,9 @@ public class BookingServiceImpl implements BookingService {
     @POST
     @Path("/cancelBooking")
     public boolean cancelBooking(int bookingId) {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         int userId = this.getUserIdFromJWT();
+
         try {
             if (!bookingService.userOwnsBooking(userId, bookingId)) {
                 return false;
@@ -102,6 +102,7 @@ public class BookingServiceImpl implements BookingService {
     @GET
     @Path("/getUserBookings")
     public ArrayList<Booking> getUserBookings() {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         int userId = this.getUserIdFromJWT();
 
         try {

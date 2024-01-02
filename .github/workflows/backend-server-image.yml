@@ -3,7 +3,7 @@ name: Publish backend server docker image
 on:
   push:
     paths:
-      - 'src/backend/*'
+      - 'src/backend/**/*'
   workflow_dispatch:
 
 jobs:

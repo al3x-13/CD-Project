@@ -4,7 +4,7 @@ import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 import cd.project.backend.interfaces.BookingServiceInterface;
 import cd.project.frontend.auth.JwtHelper;
-import cd.project.frontend.soap.client.rmi.BookingServiceClient;
+import cd.project.frontend.rmi.client.BookingServiceRmiClient;
 import cd.project.frontend.soap.entities.BookingSoap;
 import jakarta.annotation.Resource;
 import jakarta.jws.WebService;
@@ -19,12 +19,12 @@ import java.util.ArrayList;
 
 @WebService(endpointInterface = "cd.project.frontend.soap.BookingService", serviceName = "BookingService")
 public class BookingServiceImpl implements BookingService {
-    private final BookingServiceInterface bookingService = new BookingServiceClient().getBookingService();
     @Resource
     private WebServiceContext webServiceContext;
 
     @Override
     public ArrayList<Lounge> getAvailableLounges(char beachId, String date, String fromTime, String toTime) {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         try {
             return bookingService.listAvailableLounges(
                     beachId,
@@ -45,6 +45,7 @@ public class BookingServiceImpl implements BookingService {
             String toTime,
             int individuals
     ) {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         try {
             return bookingService.checkBookingAvailability(
                     beachId,
@@ -60,6 +61,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public int createBooking(char beachId, String date, String fromTime, String toTime, int individuals) {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         int userId = this.getUserIdFromJWT();
 
         try {
@@ -78,7 +80,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public boolean cancelBooking(int bookingId) {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         int userId = this.getUserIdFromJWT();
+
         try {
             if (!bookingService.userOwnsBooking(userId, bookingId)) {
                 return false;
@@ -91,6 +95,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public ArrayList<BookingSoap> getUserBookings() {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         int userId = this.getUserIdFromJWT();
 
         try {
