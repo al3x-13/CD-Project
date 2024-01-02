@@ -13,28 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class BookingServiceRmiClient {
     private static final ArrayList<BookingServiceInterface> clients = discoverRmiRegistries();
-    private static AtomicInteger currentClientIndex = new AtomicInteger(0);
-
-    /*public BookingServiceRmiClient() {
-        try {
-            this.bookingService = new BookingService();
-
-            // create stub
-            UnicastRemoteObject.unexportObject((BookingServiceInterface) this.bookingService, true);
-            BookingServiceInterface bookingServiceStub = (BookingServiceInterface)
-                    UnicastRemoteObject.exportObject((BookingServiceInterface) this.bookingService, 0);
-
-            // registry setup (local)
-            Registry registry = LocateRegistry.getRegistry("localhost", 1333);
-            try {
-                registry.bind("BookingService", bookingServiceStub);
-            } catch (AlreadyBoundException e) {
-                registry.rebind("BookingService", bookingServiceStub);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to instantiate booking service: " + e);
-        }
-    }*/
+    private static final AtomicInteger currentClientIndex = new AtomicInteger(0);
 
     // Returns rmi registry using 'Round-Robin' style algorithm
     public static BookingServiceInterface getClient() {
