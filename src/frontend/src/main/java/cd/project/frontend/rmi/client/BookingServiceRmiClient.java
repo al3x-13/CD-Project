@@ -9,9 +9,11 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class BookingServiceRmiClient {
     private static final ArrayList<BookingServiceInterface> clients = discoverRmiRegistries();
+    private static AtomicInteger currentClientIndex = new AtomicInteger(0);
 
     /*public BookingServiceRmiClient() {
         try {
@@ -34,11 +36,10 @@ public class BookingServiceRmiClient {
         }
     }*/
 
-    // Returns rmi registry using 'Round-Robin' algorithm
+    // Returns rmi registry using 'Round-Robin' style algorithm
     public static BookingServiceInterface getClient() {
-        // TODO: gets a rmi registry a function can use to invoke methods
-        // TODO: implement round-robin algorithm
-        return clients.getFirst();
+        currentClientIndex.getAndUpdate(index -> (index + 1) % clients.size());
+        return clients.get(currentClientIndex.get());
     }
 
     public static int getIndex(BookingServiceInterface client) {
