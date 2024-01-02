@@ -7,16 +7,11 @@ import cd.project.frontend.auth.JwtHelper;
 import cd.project.frontend.rest.entities.AvailableLoungesInput;
 import cd.project.frontend.rest.entities.BookingAvailabilityInput;
 import cd.project.frontend.rest.entities.CreateBookingInput;
-import cd.project.frontend.soap.client.rmi.BookingServiceClient;
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
+import cd.project.frontend.rmi.client.BookingServiceRmiClient;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.xml.ws.WebServiceContext;
-import jakarta.xml.ws.handler.MessageContext;
-import org.apache.cxf.transport.http.AbstractHTTPDestination;
 
 import java.rmi.RemoteException;
 import java.time.LocalDate;
@@ -27,7 +22,7 @@ import java.util.ArrayList;
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/booking")
 public class BookingServiceImpl implements BookingService {
-    private final BookingServiceInterface bookingService = new BookingServiceClient().getBookingService();
+    private final BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
     @Context
     private HttpHeaders headers;
 

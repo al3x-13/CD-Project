@@ -4,7 +4,7 @@ import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 import cd.project.backend.interfaces.BookingServiceInterface;
 import cd.project.frontend.auth.JwtHelper;
-import cd.project.frontend.soap.client.rmi.BookingServiceClient;
+import cd.project.frontend.rmi.client.BookingServiceRmiClient;
 import cd.project.frontend.soap.entities.BookingSoap;
 import jakarta.annotation.Resource;
 import jakarta.jws.WebService;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 @WebService(endpointInterface = "cd.project.frontend.soap.BookingService", serviceName = "BookingService")
 public class BookingServiceImpl implements BookingService {
-    private final BookingServiceInterface bookingService = new BookingServiceClient().getBookingService();
+    private final BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
     @Resource
     private WebServiceContext webServiceContext;
 
@@ -94,6 +94,9 @@ public class BookingServiceImpl implements BookingService {
         int userId = this.getUserIdFromJWT();
 
         try {
+            // TODO: remove this
+            System.out.println("CLIENT INDEX: " + BookingServiceRmiClient.getIndex(bookingService));
+
             ArrayList<Booking> bookings = bookingService.getUserBookings(userId);
             return parseBookingsToSoapBookings(bookings);
         } catch (RemoteException e) {
