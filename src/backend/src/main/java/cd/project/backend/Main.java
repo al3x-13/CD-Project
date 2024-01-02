@@ -1,6 +1,5 @@
 package cd.project.backend;
 
-import cd.project.backend.database.DbConnection;
 import cd.project.backend.services.BookingService;
 import cd.project.backend.interfaces.BookingServiceInterface;
 
