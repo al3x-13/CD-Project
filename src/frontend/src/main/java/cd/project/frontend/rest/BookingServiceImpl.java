@@ -22,7 +22,6 @@ import java.util.ArrayList;
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/booking")
 public class BookingServiceImpl implements BookingService {
-    private final BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
     @Context
     private HttpHeaders headers;
 
@@ -30,6 +29,7 @@ public class BookingServiceImpl implements BookingService {
     @POST
     @Path("/getAvailableLounges")
     public ArrayList<Lounge> getAvailableLounges(AvailableLoungesInput data) {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         try {
             return bookingService.listAvailableLounges(
                     data.getBeachId(),
@@ -46,6 +46,7 @@ public class BookingServiceImpl implements BookingService {
     @POST
     @Path("/checkBookingAvailability")
     public ArrayList<Lounge> checkBookingAvailability(BookingAvailabilityInput data) {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         try {
             return bookingService.checkBookingAvailability(
                     data.getBeachId(),
@@ -63,7 +64,9 @@ public class BookingServiceImpl implements BookingService {
     @POST
     @Path("/createBooking")
     public int createBooking(CreateBookingInput data) {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         int userId = this.getUserIdFromJWT();
+
         try {
             return bookingService.createBooking(
                     data.getBeachId(),
@@ -82,7 +85,9 @@ public class BookingServiceImpl implements BookingService {
     @POST
     @Path("/cancelBooking")
     public boolean cancelBooking(int bookingId) {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         int userId = this.getUserIdFromJWT();
+
         try {
             if (!bookingService.userOwnsBooking(userId, bookingId)) {
                 return false;
@@ -97,6 +102,7 @@ public class BookingServiceImpl implements BookingService {
     @GET
     @Path("/getUserBookings")
     public ArrayList<Booking> getUserBookings() {
+        BookingServiceInterface bookingService = BookingServiceRmiClient.getClient();
         int userId = this.getUserIdFromJWT();
 
         try {
