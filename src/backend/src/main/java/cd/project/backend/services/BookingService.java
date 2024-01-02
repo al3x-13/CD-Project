@@ -1,5 +1,6 @@
 package cd.project.backend.services;
 
+import cd.project.backend.Main;
 import cd.project.backend.domain.Booking;
 import cd.project.backend.domain.Lounge;
 import cd.project.backend.interfaces.BookingServiceInterface;
@@ -17,6 +18,11 @@ public class BookingService extends UnicastRemoteObject implements BookingServic
     @Override
     public String test(String data) throws RemoteException {
         return "TESTING: " + data;
+    }
+
+    @Override
+    public int getPort() throws RemoteException {
+        return Main.getPort();
     }
 
     @Override

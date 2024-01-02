@@ -14,9 +14,10 @@ public class Main {
     // It can be caused by GC due to objects not being strongly referenced in the code.
     // A possible solution to this would be to store the objects in a list or
     // call some objects periodically to make sure they don't get GCed.
+    private static int port;
+
     public static void main(String[] args) {
         checkEnvironmentVariables();
-        int port = Integer.parseInt(System.getenv("SERVER_PORT"));
 
         try {
             // services
@@ -42,6 +43,7 @@ public class Main {
         if (System.getenv("SERVER_PORT") == null) {
             throw new RuntimeException("'SERVER_PORT' env variable does not exist");
         }
+        port = Integer.parseInt(System.getenv("SERVER_PORT"));
         try {
             Integer.parseInt(System.getenv("SERVER_PORT"));
         } catch (NumberFormatException e) {
@@ -56,5 +58,9 @@ public class Main {
         if (System.getenv("DB_PASSWORD") == null) {
             throw new RuntimeException("'DB_PASSWORD' env variable does not exist");
         }
+    }
+
+    public static int getPort() {
+        return port;
     }
 }
