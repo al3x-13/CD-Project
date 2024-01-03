@@ -40,7 +40,10 @@ public class BookingService {
         if (proto == CommunicationProtocol.SOAP) {
             try {
                 ArrayList<Booking> bookings = new ArrayList<>();
-                for (BookingSoap userBooking : Objects.requireNonNull(BookingServiceSoap.getUserBookings())) {
+
+                ArrayList<BookingSoap> userBookings = BookingServiceSoap.getUserBookings();
+                if (userBookings == null) return null;
+                for (BookingSoap userBooking : userBookings) {
                     bookings.add(SoapUtilities.soapBookingToBooking(userBooking));
                 }
                 return bookings;
